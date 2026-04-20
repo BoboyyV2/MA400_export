@@ -6,6 +6,8 @@ using ACadSharp;
 using ACadSharp.IO;
 using ACadSharp.Entities;
 using ACadSharp.Objects;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace UnitTestProject
 {
@@ -39,8 +41,19 @@ namespace UnitTestProject
 
         }
 
-        
 
+        [TestMethod]
+        public void TestContent()
+        {
+            string path = "../testfiles/test.dxf";
+            FileSystem fs = new FileSystem();
+            if (File.Exists(path))
+            {
+                fs.OpenDxfFile(path);
+            }
+            List<Circle> list = fs.Studs;
+            Assert.IsTrue(list.Count > 0);
+        }
 
 
     }

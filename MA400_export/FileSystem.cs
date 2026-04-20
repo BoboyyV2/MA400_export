@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -46,7 +47,7 @@ namespace MA400_export
 
 
         public CadDocument Doc;
-
+        public List<Circle> Studs {  get; private set; }
 
 
         /**
@@ -55,32 +56,54 @@ namespace MA400_export
         public FileSystem()
         {
             Doc = new CadDocument();
+            Studs = new List<Circle>();
         }
 
-        
-        public List<Circle> ScanStud()
+
+        /**
+        * <summary>Scan the document's entities and attempt to get Stud candidates as well as the dimentions of the document <br></br>
+        * any stud candidate will be removed from the document, they would be added if we were to save the document to a file.</summary>
+        * <returns> true if everything went well, false otherwise </returns>
+        */
+        public bool ScanEntities()
         {
-            List<Circle> studs = new List<Circle>();
             if (Doc == null)
             {
-                return studs;
+                return false;
             }
             foreach(var item in Doc.Entities)
             {
-                if (item.ObjectType == ObjectType.CIRCLE)
+                switch (item.ObjectType)
                 {
-                    Circle candidate = (Circle)item;
-
-                    if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
+                    case ObjectType.CIRCLE :
                     {
-                        Circle stud = candidate;
-                        studs.Add(stud);
+                        Circle candidate = (Circle)item;
+
+                        if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
+                        {
+                            Circle stud = candidate;
+                            Studs.Add(stud);
+                        }
+                        break;
                     }
+                    case ObjectType.DIMENSION_LINEAR :
+                    {
+                        DimensionLinear candidate = (DimensionLinear)item;
+                            //TODO get dimention & store it somehow
+
+                        break;
+                    }
+                    default:
+                        break;
+                
                 }
             }
-            return studs;
+            return true;
 
         }
+
+       
+       
 
         /**
          * <summary>Open a file at the location specified by path and load it if it exist. </summary>
@@ -103,9 +126,32 @@ namespace MA400_export
 
         }
 
-
-
         
+
+        /**
+        * <summary>Open a file using a stream and load it if it possible. </summary>
+        * <returns>true if the file was loaded succesfully, false if an error occured</returns>
+        */
+        public bool OpenDxfFile(Stream stream)
+        {
+            if (stream == null)
+            {
+                return false;
+            }
+
+            using (DxfReader reader = new DxfReader(stream))
+            {
+                //Inform about non critical error
+                reader.OnNotification += NotificationHelper.LogConsoleNotification;
+                Doc = reader.Read();
+            }
+            return true;
+
+        }
+
+
+
+
 
     }
 }

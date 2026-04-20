@@ -387,11 +387,13 @@ namespace MA400_export
 
         private void ouvrirToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    this.fs.OpenDxfFile(this.ouvrirToolStripMenuItem.Text.ToString());
+                    this.fs.OpenDxfFile(this.openFileDialog1.FileName);
+                    this.fs.ScanEntities();
                 }
                 catch (SecurityException ex)
                 {
@@ -399,12 +401,15 @@ namespace MA400_export
                     $"Details:\n\n{ex.StackTrace}");
                 }
 
-                List<Circle> ToAdd =  this.fs.ScanStud();
+                List<Circle> ToAdd =  this.fs.Studs;
                 foreach (var circle in ToAdd) 
                 {
                     AddStud(circle);
                 }
+
+                this.WorkZone.Refresh();
                 //TODO
+                //s'assurer des dimentions
                 //on va ouvrir le ficheir ici
                 //donc on aura note FileSystem qui va l'ouvrir et faire des bétises avec
                 //puis ce sera le display qui va ensuite l'afficher, en plus de ce que le Filesystem va détecter comme goujon et donc q'uil va falloir highlight
