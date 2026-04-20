@@ -368,7 +368,6 @@ namespace MA400_export
             Stud selected = StudList_Display.SelectedItem as Stud;
             if (selected != null)
             {
-
                 //TODO multiselect
                 //List<Stud> selected = (StudList_Display.SelectedItems).toList(Studs);
 
