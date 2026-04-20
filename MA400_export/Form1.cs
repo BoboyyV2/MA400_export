@@ -16,24 +16,17 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace MA400_export
 {
-    public enum EditMode
-    {
-        Cursor,
-        AddStud,
-        RemoveStud
-    }
+    
 
     public partial class MA400_export : Form
     {
 
         //used variables
-        public float _Zoom = 1.4f;
-        public const float Max_Zoom = 5.0f;
-        public const float Min_Zoom = 0.7f;
-        public PointF Origin_Coord = new PointF(50.0f, 50.0f);
-        public PointF WorkZoneLimits_Coord = new PointF(800.0f, 800.0f);
 
+
+        public float _Zoom = 1.4f;
         public FileSystem fs = new FileSystem();
+        public GraphicsContainer gc;
         public BindingList<Stud> Studs = new BindingList<Stud>();
         public int StudCurrentIndex = 0;
 
@@ -46,143 +39,7 @@ namespace MA400_export
 
         }
 
-        /**
-         * <summary>draw a circle whose center is at positionX ; positionY  in the given graphics</summary>
-         */
-        public void DrawCircle(ref Graphics graphics, float positionX, float positionY, float radius)
-        {
-            RectangleF shape = new RectangleF();
-            shape.X = positionX - radius;
-            shape.Y = positionY - radius;
-            shape.Width = 2 * radius;
-            shape.Height = 2 * radius;
-
-            SolidBrush drawBrush = new SolidBrush(Color.Purple);
-            graphics.FillEllipse(drawBrush, shape);
-            graphics.DrawEllipse(Pens.White, shape);
-
-        }
-
-        public void Draw_Stud(ref Graphics graphics, Circle stud)
-        {
-            float StudRadius = (float)stud.Radius;
-            RectangleF shape = new RectangleF();
-            shape.X = (float)stud.Center.X - StudRadius + Origin_Coord.X;
-            shape.Y = (float)stud.Center.Y - StudRadius + Origin_Coord.Y;
-            shape.Width = 2 * StudRadius;
-            shape.Height = 2 * StudRadius;
-
-            SolidBrush drawBrush = new SolidBrush(Color.Green);
-            graphics.FillEllipse(drawBrush, shape);
-
-        }
-        public void Draw_Studs(ref Graphics graphics)
-        {
-            foreach (var item in this.Studs)
-            {
-                Draw_Stud(ref graphics, item.circle);
-            }
-
-        }
-
-
-
-
-        private void Draw_CoordSystem(ref Graphics graphics)
-        {
-
-            Pen pen = new Pen(Color.Green);
-            // Create font and brush.
-            Font drawFont = new Font("Arial", 11);
-            SolidBrush drawBrush = new SolidBrush(Color.Green);
-            // Create point for upper-left corner of drawing.
-            PointF Xtarget = PointF.Empty;
-            PointF Ytarget = PointF.Empty;
-            PointF Origin = PointF.Empty;
-
-
-            // Set Maximum and minimum points
-            Xtarget.X = 50;
-            Xtarget.Y = 20;
-            Ytarget.X = 20;
-            Ytarget.Y = 50;
-            Origin.X = 20;
-            Origin.Y = 20;
-
-
-
-            // Draw (dashed) connection line
-            int delta = 4;
-            float[] dashValues = { 6, delta };
-            Pen dashPen = new Pen(Color.Green, 1);
-            dashPen.DashPattern = dashValues;
-
-            graphics.DrawLine(dashPen, Origin, Ytarget);
-
-            //the tip
-            graphics.DrawLine(Pens.Green, Ytarget.X, Ytarget.Y + 1, Ytarget.X - delta, Ytarget.Y - delta + 1);
-            graphics.DrawLine(Pens.Green, Ytarget.X, Ytarget.Y + 1, Ytarget.X + delta, Ytarget.Y - delta + 1);
-
-            graphics.DrawString("y", drawFont, drawBrush, Ytarget.X - 6, Ytarget.Y);
-
-            //x arrow
-            graphics.DrawLine(dashPen, Origin, Xtarget);
-
-            //the tip
-            graphics.DrawLine(Pens.Green, Xtarget.X + 1, Xtarget.Y, Xtarget.X - delta + 1, Xtarget.Y + delta);
-            graphics.DrawLine(Pens.Green, Xtarget.X + 1, Xtarget.Y, Xtarget.X - delta + 1, Xtarget.Y - delta);
-            graphics.DrawString("x", drawFont, drawBrush, Xtarget.X, Xtarget.Y - 9);
-
-            //draw the scale indicator
-            PointF ScaleStart = PointF.Empty;
-            ScaleStart.X = 100;
-            ScaleStart.Y = 25;
-
-            PointF ScaleEnd = PointF.Empty;
-            ScaleEnd.X = 200;
-            ScaleEnd.Y = 25;
-
-            graphics.DrawLine(Pens.Purple, ScaleStart, ScaleEnd);
-
-            //draw tips
-            graphics.DrawLine(Pens.Purple, ScaleStart.X, ScaleStart.Y, ScaleStart.X + 5, ScaleStart.Y - 5);
-            graphics.DrawLine(Pens.Purple, ScaleStart.X, ScaleStart.Y, ScaleStart.X + 5, ScaleStart.Y + 5);
-            graphics.DrawLine(Pens.Purple, ScaleEnd.X, ScaleEnd.Y, ScaleEnd.X - 5, ScaleEnd.Y - 5);
-            graphics.DrawLine(Pens.Purple, ScaleEnd.X, ScaleEnd.Y, ScaleEnd.X - 5, ScaleEnd.Y + 5);
-
-            drawFont = new Font("Arial", 10);
-            drawBrush = new SolidBrush(Color.Purple);
-            graphics.DrawString("10cm = 100u", drawFont, drawBrush, ScaleStart.X + 9, ScaleStart.Y - 18);
-
-
-
-        }
-
-        private void Draw_WorkZoneLimits(ref Graphics graphics)
-        {
-
-            // Draw (dashed) connection line
-            int delta = 5;
-            float[] dashValues = { delta, delta };
-            Pen dashPen = new Pen(Color.Red, 1);
-            dashPen.DashPattern = dashValues;
-
-            graphics.DrawLine(dashPen, Origin_Coord.X, Origin_Coord.Y, Origin_Coord.X, WorkZoneLimits_Coord.Y);
-            graphics.DrawLine(dashPen, Origin_Coord.X, WorkZoneLimits_Coord.Y, WorkZoneLimits_Coord.X, WorkZoneLimits_Coord.Y);
-            graphics.DrawLine(dashPen, WorkZoneLimits_Coord.X, WorkZoneLimits_Coord.Y, WorkZoneLimits_Coord.X, Origin_Coord.Y);
-            graphics.DrawLine(dashPen, WorkZoneLimits_Coord.X, Origin_Coord.Y, Origin_Coord.X, Origin_Coord.Y);
-
-
-        }
-
-
-
-        private void Draw_ReferenceCircles(ref Graphics graphics)
-        {
-            float radius = 5.0f;
-            DrawCircle(ref graphics, Origin_Coord.X + radius + 5, Origin_Coord.Y - radius, radius);
-        }
-
+        
 
         private void WorkZone_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
@@ -190,22 +47,20 @@ namespace MA400_export
             //including but not restricted to :
             //the background, the rectangular coordinate system, the scale
             //the workzone, the landmarks
-            Graphics graphics = e.Graphics;
-            graphics.ScaleTransform(_Zoom, _Zoom);
 
-            graphics.Clear(Color.Black);
+            gc = new GraphicsContainer(e.Graphics);
+            //Graphics graphics = e.Graphics;
+            gc.graphics.ScaleTransform(_Zoom, _Zoom);
 
 
-            Draw_CoordSystem(ref graphics);
-            Draw_WorkZoneLimits(ref graphics);
-            Draw_ReferenceCircles(ref graphics);
-            Draw_Studs(ref graphics);
+
+            gc.Paint(Studs);
 
         }
 
         public Decimal GetOffsetedCoords(float coord)
         {
-            return Math.Round((Decimal)(coord / _Zoom - Origin_Coord.X), 0, MidpointRounding.AwayFromZero);
+            return Math.Round((Decimal)(coord / _Zoom - Constants.Origin_Coord.X), 0, MidpointRounding.AwayFromZero);
         }
 
         /**
@@ -220,7 +75,6 @@ namespace MA400_export
         public void UpdateCoords()
         {
             System.Drawing.Point point = WorkZone.PointToClient(Cursor.Position);
-            //display a rounded up version of the coordonate (4 numbers after 0)
             XCoord_Display.Text = " X = " + GetOffsetedCoords(point.X) + " ";
             YCoord_Display.Text = " Y = " + GetOffsetedCoords(point.Y) + " ";
         }
@@ -233,21 +87,29 @@ namespace MA400_export
         private void WorkZone_Zoom(object sender, MouseEventArgs e)
         {
 
-            if (e.Delta > 0 && _Zoom < Max_Zoom)
+            if (e.Delta > 0 && _Zoom < Constants.Max_Zoom)
             {
-                _Zoom *= 1.1f;
-                if ( _Zoom > Max_Zoom)
+                if ( _Zoom * 1.1f > Constants.Max_Zoom)
                 {
-                    _Zoom = Max_Zoom;
+                    _Zoom = Constants.Max_Zoom;
+                }
+                else
+                {
+                    _Zoom *= 1.1f;
                 }
             }
-            else if (_Zoom > Min_Zoom)
+            else if ( _Zoom > Constants.Min_Zoom)
             {
-                _Zoom *= 0.9f;
-                if (_Zoom < Min_Zoom)
+                if ( _Zoom * 0.9f < Constants.Min_Zoom)
                 {
-                    _Zoom = Min_Zoom;
+                    _Zoom = Constants.Min_Zoom;
                 }
+                else
+                {
+                    _Zoom *= 0.9f;
+
+                }
+
             }
             WorkZone.Refresh();
             UpdateCoords();
@@ -359,11 +221,11 @@ namespace MA400_export
 
             //Bounds
             //TODO remplacer la zone de travail par la pièce en elle même, aussi mettre une sécu si il n'y a pas de pièce
-            if (X > this.WorkZoneLimits_Coord.X || X < 0)
+            if (X > Constants.WorkZoneLimits_Coord.X || X < 0)
             {
                 error += "La coordonée X saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
             }
-            if (Y > this.WorkZoneLimits_Coord.X || Y < 0)
+            if (Y > Constants.WorkZoneLimits_Coord.X || Y < 0)
             {
                 error += "La coordonée Y saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
             }
@@ -415,11 +277,12 @@ namespace MA400_export
 
             //Bounds
             //TODO remplacer la zone de travail par la pièce en elle même, aussi mettre une sécu si il n'y a pas de pièce
-            if (X > this.WorkZoneLimits_Coord.X || X < 0)
+
+            if (X > Constants.WorkZoneLimits_Coord.X || X < 0)
             {
                 error += "La coordonée X n'est pas un emplacement valide pour poser un goujon.\r\n";
             }
-            if (Y > this.WorkZoneLimits_Coord.X || Y < 0)
+            if (Y > Constants.WorkZoneLimits_Coord.X || Y < 0)
             {
                 error += "La coordonée Y saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
             }
@@ -463,7 +326,6 @@ namespace MA400_export
 
 
 
-            String item = "G" + this.StudCurrentIndex + " : X = " + X_string + "; Y = " + Y_string + " D = " + Diam_string;
             int x = Int32.Parse(X_string);
             int y = Int32.Parse(Y_string);
             int diam = Int32.Parse(Diam_string);
@@ -473,8 +335,6 @@ namespace MA400_export
 
             if (!this.IsPossibleToAddStud(Stud))
             {
-                //TODO message already exist
-                MessageBox.Show("position invalide pour poser un goujon.\r\nTrop près d'un goujon existant");
                 return;
             }
 
@@ -503,27 +363,22 @@ namespace MA400_export
             // Shutdown the painting of the ListBox as items are removed.
             StudList_Display.BeginUpdate();
 
-            //remove from the local collection
-            foreach (var item in StudList_Display.SelectedItems)
-            {
-                string stud = item.ToString();
-
-            }
+            
             //start by getting the data
             Stud selected = StudList_Display.SelectedItem as Stud;
-            if (selected == null)
+            if (selected != null)
             {
-                return;
+
+                //TODO multiselect
+                //List<Stud> selected = (StudList_Display.SelectedItems).toList(Studs);
+
+                //remove from the display is automatcally done by the linked datasource
+                Studs.Remove(selected);
+                StudList_Display.ClearSelected();
+
+
+                // Allow the ListBox to repaint and display the remaining items.
             }
-            //TODO multiselect
-            //List<Stud> selected = (StudList_Display.SelectedItems).toList(Studs);
-
-            //remove from the display is automatcally done by the linked datasource
-            Studs.Remove(selected);
-            StudList_Display.ClearSelected();
-
-
-            // Allow the ListBox to repaint and display the remaining items.
             StudList_Display.EndUpdate();
 
             //refresh l'affichage
@@ -601,19 +456,26 @@ namespace MA400_export
                 case EditMode.Cursor:
                     //nothing
                     break;
+
                 case EditMode.AddStud:
                     
                     System.Drawing.Point p = getCoords();
                     string diam_String = this.comboBoxDiam.Text;
-                    if (!AddStudButtonOnClick_CheckInput(p.X, p.Y, diam_String))
+                    if (!AddStudButtonOnClick_CheckInput((double)GetOffsetedCoords(p.X), (double)GetOffsetedCoords(p.Y), diam_String))
                     {
                         return;
                     }
                     double radius = (Double.Parse(diam_String))/2;
                     Circle circle = createStud((double)GetOffsetedCoords(p.X), (double)GetOffsetedCoords(p.Y), radius);
+                    if (!IsPossibleToAddStud(circle) )
+                    {
+                        return;
+                    }
+
                     AddStud(circle);
                     this.WorkZone.Refresh();
                     break;
+
                 case EditMode.RemoveStud:
                     //TODO
                     System.Drawing.Point p_rm = getCoords();

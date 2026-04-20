@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace MA400_export
 {
@@ -35,6 +36,7 @@ namespace MA400_export
             {
                 if (getStudDistance(candidate.circle, Stud.circle) < (Stud.circle.Radius + candidate.circle.Radius))
                 {
+                    MessageBox.Show("position invalide pour poser un goujon.\r\nTrop près d'un goujon existant");
                     return false;
                 }
             }
@@ -50,6 +52,7 @@ namespace MA400_export
             {
                 if (getStudDistance(candidate.circle, Stud) < (Stud.Radius + candidate.circle.Radius))
                 {
+                    MessageBox.Show("position invalide pour poser un goujon.\r\nTrop près d'un goujon existant");
                     return false;
                 }
             }
@@ -109,6 +112,7 @@ namespace MA400_export
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MA400_export));
+            this.WorkZone = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,7 +151,6 @@ namespace MA400_export
             this.buttonRemoveStud = new System.Windows.Forms.Button();
             this.buttonAddStud = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.WorkZone = new System.Windows.Forms.Panel();
             this.YCoord_Display = new System.Windows.Forms.Label();
             this.XCoord_Display = new System.Windows.Forms.Label();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
