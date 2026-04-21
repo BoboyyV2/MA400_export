@@ -32,6 +32,7 @@ namespace MA400_export
         public const float Min_Zoom = 0.7f;
 
         public static PointF Origin_Coord { get; private set; } = new PointF(50.0f, 50.0f);
+
         public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
     }
 
@@ -149,8 +150,7 @@ namespace MA400_export
 
         }
 
-
-
+        
 
 
     }

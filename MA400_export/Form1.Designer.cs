@@ -26,6 +26,11 @@ namespace MA400_export
             return Math.Sqrt(Math.Pow(from.X - to.Center.X, 2) + Math.Pow(from.Y - to.Center.Y, 2));
         }
 
+        private double getStudDistance(PointF from, Circle to)
+        {
+            return Math.Sqrt(Math.Pow(from.X - to.Center.X, 2) + Math.Pow(from.Y - to.Center.Y, 2));
+        }
+
         /**
          * <summary>check if the stud are all further away than both there radius combined</summary>
          * <returns>true if it is possible to add the stud false otherwise</returns>
@@ -164,10 +169,23 @@ namespace MA400_export
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxDiam = new System.Windows.Forms.ComboBox();
             this.fileSystemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.origin_offset_label = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
             this.SuspendLayout();
+            // 
+            // WorkZone
+            // 
+            this.WorkZone.AutoSize = true;
+            this.WorkZone.Location = new System.Drawing.Point(0, 52);
+            this.WorkZone.Name = "WorkZone";
+            this.WorkZone.Size = new System.Drawing.Size(800, 600);
+            this.WorkZone.TabIndex = 10;
+            this.WorkZone.Click += new System.EventHandler(this.WorkZone_Click);
+            this.WorkZone.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkZone_Paint);
+            this.WorkZone.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorkZone_MouseMove);
+            this.WorkZone.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Zoom);
             // 
             // menuStrip1
             // 
@@ -487,18 +505,6 @@ namespace MA400_export
             this.openFileDialog1.Filter = "DXF files (*.dxf)|*dxf";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
-            // WorkZone
-            // 
-            this.WorkZone.AutoSize = true;
-            this.WorkZone.Location = new System.Drawing.Point(0, 57);
-            this.WorkZone.Name = "WorkZone";
-            this.WorkZone.Size = new System.Drawing.Size(800, 595);
-            this.WorkZone.TabIndex = 10;
-            this.WorkZone.Click += new System.EventHandler(this.WorkZone_Click);
-            this.WorkZone.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkZone_Paint);
-            this.WorkZone.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorkZone_MouseMove);
-            this.WorkZone.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Zoom);
-            // 
             // YCoord_Display
             // 
             this.YCoord_Display.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -619,11 +625,21 @@ namespace MA400_export
             this.comboBoxDiam.TabIndex = 21;
             this.comboBoxDiam.Text = "3";
             // 
+            // origin_offset_label
+            // 
+            this.origin_offset_label.AutoSize = true;
+            this.origin_offset_label.Location = new System.Drawing.Point(864, 355);
+            this.origin_offset_label.Name = "origin_offset_label";
+            this.origin_offset_label.Size = new System.Drawing.Size(19, 13);
+            this.origin_offset_label.TabIndex = 22;
+            this.origin_offset_label.Text = "=>";
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 681);
+            this.Controls.Add(this.origin_offset_label);
             this.Controls.Add(this.comboBoxDiam);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -710,6 +726,7 @@ namespace MA400_export
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBoxDiam;
         private System.Windows.Forms.BindingSource fileSystemBindingSource;
+        private Label origin_offset_label;
     }
 }
 

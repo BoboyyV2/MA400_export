@@ -1,4 +1,5 @@
-﻿using ACadSharp.Entities;
+﻿using ACadSharp;
+using ACadSharp.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,11 +25,19 @@ namespace MA400_export
         //used variables
 
 
-        public float _Zoom = 1.4f;
+        public float _Zoom = 1.0f;
+        float zoomValue = 0.2f;
+        public PointF Origin_Offset = new PointF(0f, 0f);
+        public PointF CursorPosition = new PointF(0f, 0f);
+
         public FileSystem fs = new FileSystem();
         public GraphicsContainer gc;
+
         public BindingList<Stud> Studs = new BindingList<Stud>();
         public int StudCurrentIndex = 0;
+
+
+       
 
         public EditMode editMode = EditMode.Cursor;
 
@@ -49,19 +58,22 @@ namespace MA400_export
             //the workzone, the landmarks
 
             gc = new GraphicsContainer(e.Graphics);
-            //Graphics graphics = e.Graphics;
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
-
-
+            gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
             gc.Paint(Studs);
 
         }
 
-        public Decimal GetOffsetedCoords(float coord)
+        /**
+         * <returns>the coordinates of the point in the panel after taking into account the offset and the zoom</returns>
+         * <param name="p">the point where the cusror is on the panel (without prior modification)</param>
+         */
+        public PointF GetOffsetedCoords(PointF p)
         {
-            return Math.Round((Decimal)(coord / _Zoom - Constants.Origin_Coord.X), 0, MidpointRounding.AwayFromZero);
+            return new PointF(Origin_Offset.X - Constants.Origin_Coord.X + ( p.X  / _Zoom ), Origin_Offset.Y - Constants.Origin_Coord.Y + (p.Y  / _Zoom) );
         }
+        
 
         /**
          *<returns>a point to the coordonate of the cursor in the pannel without adjusting it</returns>
@@ -75,8 +87,14 @@ namespace MA400_export
         public void UpdateCoords()
         {
             System.Drawing.Point point = WorkZone.PointToClient(Cursor.Position);
-            XCoord_Display.Text = " X = " + GetOffsetedCoords(point.X) + " ";
-            YCoord_Display.Text = " Y = " + GetOffsetedCoords(point.Y) + " ";
+
+            CursorPosition = GetOffsetedCoords(point);
+            //XCoord_Display.Text = " X = " + point.X + " ";
+            //YCoord_Display.Text = " Y = " + point.Y + " ";
+            XCoord_Display.Text = " X = " + CursorPosition.X + " ";
+            YCoord_Display.Text = " Y = " + CursorPosition.Y + " ";
+
+            this.origin_offset_label.Text = "offset : X = "+Origin_Offset.X+" Y = "+Origin_Offset.Y;
         }
 
         private void WorkZone_MouseMove(object sender, MouseEventArgs e)
@@ -84,36 +102,79 @@ namespace MA400_export
             UpdateCoords();
         }
 
-        private void WorkZone_Zoom(object sender, MouseEventArgs e)
+        private void updateOrigin_Offset(float zoom_delta)
         {
 
-            if (e.Delta > 0 && _Zoom < Constants.Max_Zoom)
+            Origin_Offset.X += CursorPosition.X / _Zoom * zoom_delta ;
+            Origin_Offset.Y += CursorPosition.Y / _Zoom * zoom_delta;
+
+        }
+
+        private void updateOrigin_Offset(PointF predicted_offset, float offsetX_min, float offsetX_max, float offsetY_min, float offsetY_max, float zoom_delta)
+        {
+
+            //offsetX
+            if(predicted_offset.X < offsetX_min)
             {
-                if ( _Zoom * 1.1f > Constants.Max_Zoom)
-                {
-                    _Zoom = Constants.Max_Zoom;
-                }
-                else
-                {
-                    _Zoom *= 1.1f;
-                }
-            }
-            else if ( _Zoom > Constants.Min_Zoom)
+                Origin_Offset.X = offsetX_min;
+
+            }else if (predicted_offset.X > offsetX_max)
             {
-                if ( _Zoom * 0.9f < Constants.Min_Zoom)
-                {
-                    _Zoom = Constants.Min_Zoom;
-                }
-                else
-                {
-                    _Zoom *= 0.9f;
+                Origin_Offset.X = offsetX_max;
+            }
+            else
+            {
+                Origin_Offset.X = predicted_offset.X;
+            }
 
-                }
+            //offsetY
+            if (predicted_offset.Y < offsetY_min)
+            {
+                Origin_Offset.Y = offsetY_min;
 
             }
-            WorkZone.Refresh();
-            UpdateCoords();
+            else if (predicted_offset.Y > offsetY_max)
+            {
+                Origin_Offset.Y = offsetY_max;
+            }
+            else
+            {
+                Origin_Offset.Y = predicted_offset.Y;
+            }
 
+        }
+
+        private void WorkZone_Zoom(object sender, MouseEventArgs e)
+        {
+            //compute the zoom values
+            float zoom_delta = (e.Delta > 0 ? zoomValue : -zoomValue);
+            float new_Zoom = Math.Max(Math.Min(_Zoom + zoom_delta, Constants.Max_Zoom),Constants.Min_Zoom);
+
+            //if needs be
+            if (new_Zoom != _Zoom)
+            {
+                //update
+                UpdateCoords();
+                zoom_delta = new_Zoom - _Zoom;
+
+                //check if we stay in bounds
+                PointF predicted_offset = new PointF(Origin_Offset.X + CursorPosition.X / _Zoom * zoom_delta, Origin_Offset.Y + CursorPosition.Y / _Zoom * zoom_delta);
+                float offsetX_min = -Constants.Origin_Coord.X - 141.6f;
+                float offsetY_min = -Constants.Origin_Coord.X ;
+
+
+                //depends on the zoom (can't see further away than 50 ou of the worspace)
+                float offsetX_max = Constants.WorkZoneLimits_Coord.X + Constants.Origin_Coord.X - (WorkZone.Width / new_Zoom) + 141.6f;
+                float offsetY_max = Constants.WorkZoneLimits_Coord.Y + Constants.Origin_Coord.Y - (WorkZone.Height / new_Zoom);
+                
+                
+                updateOrigin_Offset(predicted_offset, offsetX_min, offsetX_max, offsetY_min, offsetY_max, zoom_delta);
+                
+                _Zoom = new_Zoom;
+
+                WorkZone.Invalidate();
+                UpdateCoords();
+            }
         }
 
 
@@ -465,12 +526,13 @@ namespace MA400_export
                     
                     System.Drawing.Point p = getCoords();
                     string diam_String = this.comboBoxDiam.Text;
-                    if (!AddStudButtonOnClick_CheckInput((double)GetOffsetedCoords(p.X), (double)GetOffsetedCoords(p.Y), diam_String))
+                    PointF offseted_p = GetOffsetedCoords(p);
+                    if (!AddStudButtonOnClick_CheckInput((double)offseted_p.X, (double)offseted_p.Y, diam_String))
                     {
                         return;
                     }
                     double radius = (Double.Parse(diam_String))/2;
-                    Circle circle = createStud((double)GetOffsetedCoords(p.X), (double)GetOffsetedCoords(p.Y), radius);
+                    Circle circle = createStud((double)offseted_p.X, (double)offseted_p.Y, radius);
                     if (!IsPossibleToAddStud(circle) )
                     {
                         return;
@@ -481,10 +543,8 @@ namespace MA400_export
                     break;
 
                 case EditMode.RemoveStud:
-                    //TODO
-                    System.Drawing.Point p_rm = getCoords();
-                    p_rm.X = (int)GetOffsetedCoords(p_rm.X);
-                    p_rm.Y = (int)GetOffsetedCoords(p_rm.Y);
+                    PointF p_rm = getCoords();
+                    p_rm = GetOffsetedCoords(p_rm);
 
                     bool removed = false;
                     foreach (Stud stud in Studs)
