@@ -1,10 +1,12 @@
 ﻿using ACadSharp.Entities;
 using Svg;
 using Svg.FilterEffects;
+using Svg.Transforms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -193,26 +195,29 @@ namespace MA400_export
 
         private void RenderSVG()
         {
-            // Create rectangle for source image.
-            //RectangleF srcRect = svg.Bounds;
-            RectangleF srcRect = new Rectangle((int)Constants.Origin_Coord.X, (int)Constants.Origin_Coord.Y, (int)svg.Bounds.Width, (int)svg.Bounds.Height);
-            //DEBUG
-            MessageBox.Show("look at " + srcRect.X + " ; " + srcRect.Y);
+            
+            if (svg == null) return;
 
-            //create image.
-            Image newImage = Image.FromFile(path);
+            SizeF dims = svg.GetDimensions();
+            if (dims.Width <= 0 || dims.Height <= 0) return;
 
-            //coordinates for upper-left corner of image.
-            float x = 50.0f;
-            float y = 50.0f;
+            int renderWidth = (int)dims.Width;
+            int renderHeight = (int)dims.Height;
 
+            string bmpPath = AppDomain.CurrentDomain.BaseDirectory + @"\tmp\bmp.BMP";
+            var bmp = svg.Draw();
+            bmp.Save(bmpPath, ImageFormat.Bmp);
+            using (Bitmap svgBitmap = svg.Draw(renderWidth, renderHeight))
+            {
+                graphics.DrawImage(
+                    svgBitmap,
+                    Constants.Origin_Coord.X,
+                    Constants.Origin_Coord.Y
+                );
 
-            GraphicsUnit units = GraphicsUnit.Pixel;
-
-
-            // Draw image to screen.
-            graphics.DrawImage(newImage, x, y, srcRect, units);
-            //graphics.DrawImage(newImage, x, y, new Rectangle(50,50,300,450), units);
+            }
+            
+            
 
         }
 
@@ -243,7 +248,10 @@ namespace MA400_export
             Draw_CoordSystem();
             Draw_WorkZoneLimits();
             Draw_ReferenceCircles();
-            DrawSVG();
+            if (open && svg != null)
+            {
+                DrawSVG();
+            }
             Draw_Studs(Studs);
 
         }

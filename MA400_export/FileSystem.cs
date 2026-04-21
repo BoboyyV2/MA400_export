@@ -1,6 +1,7 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
 using ACadSharp.IO;
+using Svg;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -181,12 +182,14 @@ namespace MA400_export
             
             Directory.CreateDirectory(path);
 
-            using (SvgWriter writer = new SvgWriter(path+@"\display.svg", Doc))
+            string svgPath = path + @"\display.svg";
+
+            using (SvgWriter writer = new SvgWriter(svgPath, Doc))
             {
                 writer.OnNotification += NotificationHelper.LogConsoleNotification;
                 writer.Write();
             }
-            
+            //FixSVGTransform(svgPath);
         }
 
 

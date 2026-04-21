@@ -478,6 +478,7 @@ namespace MA400_export
                 }
 
                 this.WorkZone.Invalidate();
+                    
                 //TODO
                 //s'assurer des dimentions
                 //on va ouvrir le ficheir ici
