@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -27,6 +28,7 @@ namespace MA400_export
 
         public float _Zoom = 1.0f;
         float zoomValue = 0.2f;
+
         public PointF Origin_Offset = new PointF(0f, 0f);
         public PointF CursorPosition = new PointF(0f, 0f);
 
@@ -94,7 +96,12 @@ namespace MA400_export
             XCoord_Display.Text = " X = " + CursorPosition.X + " ";
             YCoord_Display.Text = " Y = " + CursorPosition.Y + " ";
 
+            //debug
+            /*
             this.origin_offset_label.Text = "offset : X = "+Origin_Offset.X+" Y = "+Origin_Offset.Y;
+            this.cursorPositionLabel.Text = "cursor position on panel : X = " + point.X + " Y = " + point.Y;
+            */
+
         }
 
         private void WorkZone_MouseMove(object sender, MouseEventArgs e)
@@ -102,13 +109,6 @@ namespace MA400_export
             UpdateCoords();
         }
 
-        private void updateOrigin_Offset(float zoom_delta)
-        {
-
-            Origin_Offset.X += CursorPosition.X / _Zoom * zoom_delta ;
-            Origin_Offset.Y += CursorPosition.Y / _Zoom * zoom_delta;
-
-        }
 
         private void updateOrigin_Offset(PointF predicted_offset, float offsetX_min, float offsetX_max, float offsetY_min, float offsetY_max, float zoom_delta)
         {

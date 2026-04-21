@@ -169,7 +169,6 @@ namespace MA400_export
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxDiam = new System.Windows.Forms.ComboBox();
             this.fileSystemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.origin_offset_label = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -625,21 +624,11 @@ namespace MA400_export
             this.comboBoxDiam.TabIndex = 21;
             this.comboBoxDiam.Text = "3";
             // 
-            // origin_offset_label
-            // 
-            this.origin_offset_label.AutoSize = true;
-            this.origin_offset_label.Location = new System.Drawing.Point(864, 355);
-            this.origin_offset_label.Name = "origin_offset_label";
-            this.origin_offset_label.Size = new System.Drawing.Size(19, 13);
-            this.origin_offset_label.TabIndex = 22;
-            this.origin_offset_label.Text = "=>";
-            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 681);
-            this.Controls.Add(this.origin_offset_label);
             this.Controls.Add(this.comboBoxDiam);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -726,7 +715,6 @@ namespace MA400_export
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBoxDiam;
         private System.Windows.Forms.BindingSource fileSystemBindingSource;
-        private Label origin_offset_label;
     }
 }
 
