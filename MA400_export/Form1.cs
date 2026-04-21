@@ -33,7 +33,7 @@ namespace MA400_export
         public PointF CursorPosition = new PointF(0f, 0f);
 
         public FileSystem fs = new FileSystem();
-        public GraphicsContainer gc;
+        public GraphicsContainer gc = new GraphicsContainer();
 
         public BindingList<Stud> Studs = new BindingList<Stud>();
         public int StudCurrentIndex = 0;
@@ -59,7 +59,7 @@ namespace MA400_export
             //the background, the rectangular coordinate system, the scale
             //the workzone, the landmarks
 
-            gc = new GraphicsContainer(e.Graphics);
+            gc.graphics = e.Graphics;
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
@@ -451,15 +451,24 @@ namespace MA400_export
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                bool open = false;
                 try
                 {
-                    this.fs.OpenDxfFile(this.openFileDialog1.FileName);
-                    this.fs.ScanEntities();
+                    open = this.fs.OpenDxfFile(this.openFileDialog1.FileName);
                 }
                 catch (SecurityException ex)
                 {
                     MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
                     $"Details:\n\n{ex.StackTrace}");
+                }
+
+                if (open)
+                {
+                    gc.OpenSVG();
+                }
+                else
+                {
+                    gc.CloseSVG();
                 }
 
                 List<Circle> ToAdd =  this.fs.Studs;
@@ -468,7 +477,7 @@ namespace MA400_export
                     AddStud(circle);
                 }
 
-                this.WorkZone.Refresh();
+                this.WorkZone.Invalidate();
                 //TODO
                 //s'assurer des dimentions
                 //on va ouvrir le ficheir ici

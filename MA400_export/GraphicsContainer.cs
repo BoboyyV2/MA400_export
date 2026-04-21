@@ -1,4 +1,6 @@
 ﻿using ACadSharp.Entities;
+using Svg;
+using Svg.FilterEffects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,13 +24,28 @@ namespace MA400_export
         /**
          * <summary>the actual graphics</summary>
          */
-        public Graphics graphics {  get; set; }
+        public Graphics graphics { get; set; }
 
-        
+        /**
+         * <summary>the static path to the exported svg, beware of remnant</summary>
+         */
+        private String path = AppDomain.CurrentDomain.BaseDirectory + @"tmp\display.svg";//.exe loc
+        //private String path = AppDomain.CurrentDomain.BaseDirectory + @"tmp\truite.jpg";//used for debug
+
+
+        private SvgDocument svg = null;
+        private bool open { get; set; }
 
         public GraphicsContainer(Graphics graphics)
         {
             this.graphics = graphics;
+            open = false;
+        }
+
+        public GraphicsContainer()
+        {
+            this.graphics = null;
+            open = false;
         }
 
 
@@ -162,6 +179,50 @@ namespace MA400_export
         }
 
 
+        public void OpenSVG()
+        {
+            open = true;
+            svg = SvgDocument.Open(path);
+        }
+
+        public void CloseSVG()
+        {
+            open = false;
+            svg = null;
+        }
+
+        private void RenderSVG()
+        {
+            // Create rectangle for source image.
+            //RectangleF srcRect = svg.Bounds;
+            RectangleF srcRect = new Rectangle((int)Constants.Origin_Coord.X, (int)Constants.Origin_Coord.Y, (int)svg.Bounds.Width, (int)svg.Bounds.Height);
+            //DEBUG
+            MessageBox.Show("look at " + srcRect.X + " ; " + srcRect.Y);
+
+            //create image.
+            Image newImage = Image.FromFile(path);
+
+            //coordinates for upper-left corner of image.
+            float x = 50.0f;
+            float y = 50.0f;
+
+
+            GraphicsUnit units = GraphicsUnit.Pixel;
+
+
+            // Draw image to screen.
+            graphics.DrawImage(newImage, x, y, srcRect, units);
+            //graphics.DrawImage(newImage, x, y, new Rectangle(50,50,300,450), units);
+
+        }
+
+        public void DrawSVG()
+        {
+            if (open)
+            {
+                RenderSVG();
+            }
+        }
 
         private void Draw_ReferenceCircles()
         {
@@ -182,6 +243,7 @@ namespace MA400_export
             Draw_CoordSystem();
             Draw_WorkZoneLimits();
             Draw_ReferenceCircles();
+            DrawSVG();
             Draw_Studs(Studs);
 
         }

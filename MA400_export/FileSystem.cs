@@ -60,13 +60,17 @@ namespace MA400_export
             Studs = new List<Circle>();
         }
 
-
+        private void reset()
+        {
+            Doc = new CadDocument();
+            Studs = new List<Circle>();
+        }
         /**
         * <summary>Scan the document's entities and attempt to get Stud candidates as well as the dimentions of the document <br></br>
         * any stud candidate will be removed from the document, they would be added if we were to save the document to a file.</summary>
         * <returns> true if everything went well, false otherwise </returns>
         */
-        public bool ScanEntities()
+        private bool ScanEntities()
         {
             if (Doc == null)
             {
@@ -87,17 +91,13 @@ namespace MA400_export
                         }
                         break;
                     }
-                    case ObjectType.DIMENSION_LINEAR :
-                    {
-                        DimensionLinear candidate = (DimensionLinear)item;
-                            //TODO get dimention & store it somehow
-
-                        break;
-                    }
                     default:
                         break;
                 
                 }
+            }
+            foreach(Circle candidate in Studs) {
+                Doc.Entities.Remove(candidate);
             }
             return true;
 
@@ -114,6 +114,7 @@ namespace MA400_export
         {
             if (!(File.Exists(path)))
             {
+                reset();
                 return false;
             }
 
@@ -123,6 +124,13 @@ namespace MA400_export
                 reader.OnNotification += NotificationHelper.LogConsoleNotification;
                 Doc = reader.Read();
             }
+            ScanEntities();
+
+            String outputpath = AppDomain.CurrentDomain.BaseDirectory+@"tmp\";//.exe loc
+            //MessageBox.Show("" + outputpath);
+
+            WriteToSVG(outputpath);//local tmp file
+
             return true;
 
         }
@@ -137,6 +145,7 @@ namespace MA400_export
         {
             if (stream == null)
             {
+                reset();
                 return false;
             }
 
@@ -146,12 +155,42 @@ namespace MA400_export
                 reader.OnNotification += NotificationHelper.LogConsoleNotification;
                 Doc = reader.Read();
             }
+
+            ScanEntities();
+
+            String outputpath = AppDomain.CurrentDomain.BaseDirectory+@"\tmp";//.exe loc
+            //MessageBox.Show(""+ outputpath);
+
+            WriteToSVG(outputpath);//local tmp file
+
             return true;
 
         }
 
-        
+        public void SaveToFile(string path) 
+        {
+            using (DxfWriter writer = new DxfWriter(path, Doc))
+            {
+                writer.OnNotification += NotificationHelper.LogConsoleNotification;
+                writer.Write();
+            }
+        }
+
+        private void WriteToSVG(string path)
+        {
+            
+            Directory.CreateDirectory(path);
+
+            using (SvgWriter writer = new SvgWriter(path+@"\display.svg", Doc))
+            {
+                writer.OnNotification += NotificationHelper.LogConsoleNotification;
+                writer.Write();
+            }
+            
+        }
 
 
+
+        /*______________________________________________*/
     }
 }
