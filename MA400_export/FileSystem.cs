@@ -127,9 +127,10 @@ namespace MA400_export
          */
         public bool OpenDxfFile(string path)
         {
+            reset();
+
             if (!(File.Exists(path)))
             {
-                reset();
                 return false;
             }
 
@@ -157,9 +158,10 @@ namespace MA400_export
         */
         public bool OpenDxfFile(Stream stream)
         {
+            reset();
+
             if (stream == null)
             {
-                reset();
                 return false;
             }
 
@@ -183,13 +185,27 @@ namespace MA400_export
 
         /*_____________________________________SAVE_____________________________________*/
 
-        public void SaveToFile(string path)
+        
+        public void SaveToFile(BindingList<Stud> Studs, string path)
         {
+
+            //retour des goujons sur le document à sauvegarder
+            foreach (Stud stud in Studs)
+            {
+                stud.circle.Color = ACadSharp.Color.Green;//bien visible, bien en vert
+                Doc.Entities.Add(stud.circle);
+            }
             using (DxfWriter writer = new DxfWriter(path, Doc))
             {
                 writer.OnNotification += NotificationHelper.LogConsoleNotification;
                 writer.Write();
-                //TODO retour des goujons
+                
+            }
+
+            //pour des question de logique et de propriété des Circle il FAUT les retirer de la collection
+            foreach (Stud stud in Studs)
+            {
+                Doc.Entities.Remove(stud.circle);
             }
         }
 

@@ -38,7 +38,7 @@ namespace MA400_export
         public BindingList<Stud> Studs = new BindingList<Stud>();
         public int StudCurrentIndex = 0;
 
-
+        private string savepath = string.Empty;
        
 
         public EditMode editMode = EditMode.Cursor;
@@ -425,19 +425,20 @@ namespace MA400_export
 
             
             //start by getting the data
-            Stud selected = StudList_Display.SelectedItem as Stud;
-            if (selected != null)
+            List<Stud> selectedList = new List<Stud>();
+            foreach( Stud selected in StudList_Display.SelectedItems)
             {
-                //TODO multiselect
-                //List<Stud> selected = (StudList_Display.SelectedItems).toList(Studs);
-
-                //remove from the display is automatcally done by the linked datasource
-                Studs.Remove(selected);
-                StudList_Display.ClearSelected();
-
-
-                // Allow the ListBox to repaint and display the remaining items.
+                selectedList.Add(selected);
             }
+
+            foreach (Stud selected in selectedList)
+            {
+                Studs.Remove(selected);
+            }
+
+
+            StudList_Display.ClearSelected();
+
             StudList_Display.EndUpdate();
 
             //refresh l'affichage
@@ -447,48 +448,46 @@ namespace MA400_export
 
         private void ouvrirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                bool open = false;
-                try
-                {
-                    open = this.fs.OpenDxfFile(this.openFileDialog1.FileName);
-                }
-                catch (SecurityException ex)
-                {
-                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
-                    $"Details:\n\n{ex.StackTrace}");
-                }
-
-                if (open)
-                {
-                    gc.OpenSVG();
-                }
-                else
-                {
-                    gc.CloseSVG();
-                }
-
-                List<Circle> ToAdd =  this.fs.Studs;
-                foreach (var circle in ToAdd) 
-                {
-                    AddStud(circle);
-                }
-
-                this.WorkZone.Invalidate();
-                    
-                //TODO
-                //s'assurer des dimentions
-                //on va ouvrir le ficheir ici
-                //donc on aura note FileSystem qui va l'ouvrir et faire des bétises avec
-                //puis ce sera le display qui va ensuite l'afficher, en plus de ce que le Filesystem va détecter comme goujon et donc q'uil va falloir highlight
-            }
+            openFileDialogOpen.ShowDialog();
+            
         }
 
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        private void openFileDialogOpen_FileOk(object sender, CancelEventArgs e)
         {
+            bool open = false;
+            try
+            {
+                open = this.fs.OpenDxfFile(this.openFileDialogOpen.FileName);
+            }
+            catch (SecurityException ex)
+            {
+                MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                $"Details:\n\n{ex.StackTrace}");
+            }
 
+            if (open)
+            {
+                gc.OpenSVG();
+            }
+            else
+            {
+                gc.CloseSVG();
+            }
+
+            List<Circle> ToAdd = this.fs.Studs;
+            EmptyStuds();
+            foreach (var circle in ToAdd)
+            {
+                AddStud(circle);
+            }
+
+            this.WorkZone.Invalidate();
+
+            //TODO
+            //s'assurer des dimentions
+            //on va ouvrir le ficheir ici
+            //donc on aura note FileSystem qui va l'ouvrir et faire des bétises avec
+            //puis ce sera le display qui va ensuite l'afficher, en plus de ce que le Filesystem va détecter comme goujon et donc qu'il va falloir highlight
         }
 
         public void setEditMode(EditMode mode)
@@ -586,7 +585,31 @@ namespace MA400_export
             //fs.GenerateProdFiles(ref Studs); // en dernier, une fois que tout est bien rempli
         }
 
+        private void enregistrerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (savepath.Length == 0)
+            {
+                //pas encore de sauvegarde, on ouvre un menu
+                saveFileDialogSave.ShowDialog();
+            }
 
+        }
+
+        private void enregistrersousToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialogSave.ShowDialog();
+        }
+
+        private void saveFileDialogSave_FileOk(object sender, CancelEventArgs e)
+        {
+            savepath = saveFileDialogSave.FileName;
+            fs.SaveToFile(Studs, savepath);
+        }
+
+        
+
+
+        /*___________________________________________|___________________________________________*/
     }
 }
 

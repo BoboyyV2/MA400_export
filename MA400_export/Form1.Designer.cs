@@ -64,6 +64,10 @@ namespace MA400_export
             return true;
         }
 
+        public void EmptyStuds()
+        {
+            Studs.Clear();
+        }
         /**
          * <summary>add a stud to the local collection</summary>
          */
@@ -155,7 +159,7 @@ namespace MA400_export
             this.buttonNextStud = new System.Windows.Forms.Button();
             this.buttonRemoveStud = new System.Windows.Forms.Button();
             this.buttonAddStud = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.openFileDialogOpen = new System.Windows.Forms.OpenFileDialog();
             this.YCoord_Display = new System.Windows.Forms.Label();
             this.XCoord_Display = new System.Windows.Forms.Label();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -170,6 +174,7 @@ namespace MA400_export
             this.comboBoxDiam = new System.Windows.Forms.ComboBox();
             this.fileSystemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonGenerer = new System.Windows.Forms.Button();
+            this.saveFileDialogSave = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -251,12 +256,14 @@ namespace MA400_export
             this.enregistrerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.enregistrerToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.enregistrerToolStripMenuItem.Text = "&Enregistrer";
+            this.enregistrerToolStripMenuItem.Click += new System.EventHandler(this.enregistrerToolStripMenuItem_Click);
             // 
             // enregistrersousToolStripMenuItem
             // 
             this.enregistrersousToolStripMenuItem.Name = "enregistrersousToolStripMenuItem";
             this.enregistrersousToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.enregistrersousToolStripMenuItem.Text = "Enregistrer &sous";
+            this.enregistrersousToolStripMenuItem.Click += new System.EventHandler(this.enregistrersousToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -310,20 +317,20 @@ namespace MA400_export
             // 
             this.annulerToolStripMenuItem.Name = "annulerToolStripMenuItem";
             this.annulerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.annulerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.annulerToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.annulerToolStripMenuItem.Text = "&Annuler";
             // 
             // rétablirToolStripMenuItem
             // 
             this.rétablirToolStripMenuItem.Name = "rétablirToolStripMenuItem";
             this.rétablirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.rétablirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rétablirToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.rétablirToolStripMenuItem.Text = "&Rétablir";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(161, 6);
             // 
             // couperToolStripMenuItem
             // 
@@ -331,7 +338,7 @@ namespace MA400_export
             this.couperToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.couperToolStripMenuItem.Name = "couperToolStripMenuItem";
             this.couperToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.couperToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.couperToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.couperToolStripMenuItem.Text = "&Couper";
             // 
             // copierToolStripMenuItem
@@ -340,7 +347,7 @@ namespace MA400_export
             this.copierToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.copierToolStripMenuItem.Name = "copierToolStripMenuItem";
             this.copierToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copierToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copierToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.copierToolStripMenuItem.Text = "Co&pier";
             // 
             // collerToolStripMenuItem
@@ -349,18 +356,18 @@ namespace MA400_export
             this.collerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.collerToolStripMenuItem.Name = "collerToolStripMenuItem";
             this.collerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.collerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.collerToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.collerToolStripMenuItem.Text = "Co&ller";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(161, 6);
             // 
             // sélectionnertoutToolStripMenuItem
             // 
             this.sélectionnertoutToolStripMenuItem.Name = "sélectionnertoutToolStripMenuItem";
-            this.sélectionnertoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sélectionnertoutToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.sélectionnertoutToolStripMenuItem.Text = "Sélectio&nner tout";
             // 
             // outilsToolStripMenuItem
@@ -375,13 +382,13 @@ namespace MA400_export
             // personnaliserToolStripMenuItem
             // 
             this.personnaliserToolStripMenuItem.Name = "personnaliserToolStripMenuItem";
-            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.personnaliserToolStripMenuItem.Text = "&Personnaliser";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // aideToolStripMenuItem
@@ -399,30 +406,30 @@ namespace MA400_export
             // sommaireToolStripMenuItem
             // 
             this.sommaireToolStripMenuItem.Name = "sommaireToolStripMenuItem";
-            this.sommaireToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sommaireToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.sommaireToolStripMenuItem.Text = "&Sommaire";
             // 
             // indexToolStripMenuItem
             // 
             this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.indexToolStripMenuItem.Text = "&Index";
             // 
             // rechercherToolStripMenuItem
             // 
             this.rechercherToolStripMenuItem.Name = "rechercherToolStripMenuItem";
-            this.rechercherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rechercherToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.rechercherToolStripMenuItem.Text = "&Rechercher";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(144, 6);
             // 
             // àproposdeToolStripMenuItem
             // 
             this.àproposdeToolStripMenuItem.Name = "àproposdeToolStripMenuItem";
-            this.àproposdeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.àproposdeToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.àproposdeToolStripMenuItem.Text = "À &propos de...";
             // 
             // toolStrip1
@@ -440,9 +447,10 @@ namespace MA400_export
             // 
             this.StudList_Display.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.StudList_Display.FormattingEnabled = true;
-            this.StudList_Display.Location = new System.Drawing.Point(831, 80);
+            this.StudList_Display.Location = new System.Drawing.Point(830, 80);
             this.StudList_Display.Name = "StudList_Display";
-            this.StudList_Display.Size = new System.Drawing.Size(197, 95);
+            this.StudList_Display.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.StudList_Display.Size = new System.Drawing.Size(200, 95);
             this.StudList_Display.TabIndex = 2;
             // 
             // StudsMenuLabel
@@ -499,11 +507,10 @@ namespace MA400_export
             this.buttonAddStud.UseVisualStyleBackColor = true;
             this.buttonAddStud.Click += new System.EventHandler(this.buttonAddStud_Click);
             // 
-            // openFileDialog1
+            // openFileDialogOpen
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "DXF files (*.dxf)|*dxf";
-            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
+            this.openFileDialogOpen.Filter = "DXF files (*.dxf)|*dxf";
+            this.openFileDialogOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialogOpen_FileOk);
             // 
             // YCoord_Display
             // 
@@ -643,6 +650,10 @@ namespace MA400_export
             this.buttonGenerer.UseVisualStyleBackColor = true;
             this.buttonGenerer.Click += new System.EventHandler(this.buttonGenerer_Click);
             // 
+            // saveFileDialogSave
+            // 
+            this.saveFileDialogSave.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialogSave_FileOk);
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -720,7 +731,7 @@ namespace MA400_export
         private System.Windows.Forms.Button buttonNextStud;
         private System.Windows.Forms.Button buttonRemoveStud;
         private System.Windows.Forms.Button buttonAddStud;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialogOpen;
         private System.Windows.Forms.Panel WorkZone;
         private System.Windows.Forms.Label YCoord_Display;
         private System.Windows.Forms.Label XCoord_Display;
@@ -736,6 +747,7 @@ namespace MA400_export
         private System.Windows.Forms.ComboBox comboBoxDiam;
         private System.Windows.Forms.BindingSource fileSystemBindingSource;
         private Button buttonGenerer;
+        private SaveFileDialog saveFileDialogSave;
     }
 }
 
