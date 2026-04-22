@@ -35,6 +35,8 @@ namespace MA400_export
         public static PointF Origin_Coord { get; private set; } = new PointF(50.0f, 50.0f);
 
         public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
+        public static String outputpath { get; private set; } = ""+AppDomain.CurrentDomain.BaseDirectory;//.exe loc
+
     }
 
     public enum EditMode
@@ -44,11 +46,18 @@ namespace MA400_export
         RemoveStud
     }
 
+    public enum Machine
+    {
+        MA400S,
+        Other
+    }
+
     public class FileSystem
     {
 
 
         public CadDocument Doc;
+        public bool open {  get; private set; }
         public List<Circle> Studs {  get; private set; }
 
 
@@ -58,11 +67,13 @@ namespace MA400_export
         public FileSystem()
         {
             Doc = new CadDocument();
+            open = false;
             Studs = new List<Circle>();
         }
 
         private void reset()
         {
+            open = false;
             Doc = new CadDocument();
             Studs = new List<Circle>();
         }
@@ -127,11 +138,10 @@ namespace MA400_export
             }
             ScanEntities();
 
-            String outputpath = AppDomain.CurrentDomain.BaseDirectory+@"tmp\";//.exe loc
-            //MessageBox.Show("" + outputpath);
 
-            WriteToSVG(outputpath);//local tmp file
+            WriteToSVG(Constants.outputpath + @"tmp\");//local tmp file
 
+            open = true;
             return true;
 
         }
@@ -159,27 +169,30 @@ namespace MA400_export
 
             ScanEntities();
 
-            String outputpath = AppDomain.CurrentDomain.BaseDirectory+@"\tmp";//.exe loc
-            //MessageBox.Show(""+ outputpath);
 
-            WriteToSVG(outputpath);//local tmp file
+            WriteToSVG(Constants.outputpath + @"tmp\");//local tmp file
 
+            open = true;
             return true;
 
         }
 
-        public void SaveToFile(string path) 
+
+        /*_____________________________________SAVE_____________________________________*/
+
+        public void SaveToFile(string path)
         {
             using (DxfWriter writer = new DxfWriter(path, Doc))
             {
                 writer.OnNotification += NotificationHelper.LogConsoleNotification;
                 writer.Write();
+                //TODO retour des goujons
             }
         }
 
         private void WriteToSVG(string path)
         {
-            
+
             Directory.CreateDirectory(path);
 
             string svgPath = path + @"\display.svg";
@@ -192,8 +205,9 @@ namespace MA400_export
             //FixSVGTransform(svgPath);
         }
 
-
+        
 
         /*______________________________________________*/
+
     }
 }

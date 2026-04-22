@@ -169,6 +169,7 @@ namespace MA400_export
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxDiam = new System.Windows.Forms.ComboBox();
             this.fileSystemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.buttonGenerer = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -309,20 +310,20 @@ namespace MA400_export
             // 
             this.annulerToolStripMenuItem.Name = "annulerToolStripMenuItem";
             this.annulerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.annulerToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.annulerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.annulerToolStripMenuItem.Text = "&Annuler";
             // 
             // rétablirToolStripMenuItem
             // 
             this.rétablirToolStripMenuItem.Name = "rétablirToolStripMenuItem";
             this.rétablirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.rétablirToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.rétablirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rétablirToolStripMenuItem.Text = "&Rétablir";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // couperToolStripMenuItem
             // 
@@ -330,7 +331,7 @@ namespace MA400_export
             this.couperToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.couperToolStripMenuItem.Name = "couperToolStripMenuItem";
             this.couperToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.couperToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.couperToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.couperToolStripMenuItem.Text = "&Couper";
             // 
             // copierToolStripMenuItem
@@ -339,7 +340,7 @@ namespace MA400_export
             this.copierToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.copierToolStripMenuItem.Name = "copierToolStripMenuItem";
             this.copierToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copierToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.copierToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.copierToolStripMenuItem.Text = "Co&pier";
             // 
             // collerToolStripMenuItem
@@ -348,18 +349,18 @@ namespace MA400_export
             this.collerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.collerToolStripMenuItem.Name = "collerToolStripMenuItem";
             this.collerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.collerToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.collerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.collerToolStripMenuItem.Text = "Co&ller";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // sélectionnertoutToolStripMenuItem
             // 
             this.sélectionnertoutToolStripMenuItem.Name = "sélectionnertoutToolStripMenuItem";
-            this.sélectionnertoutToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.sélectionnertoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sélectionnertoutToolStripMenuItem.Text = "Sélectio&nner tout";
             // 
             // outilsToolStripMenuItem
@@ -374,13 +375,13 @@ namespace MA400_export
             // personnaliserToolStripMenuItem
             // 
             this.personnaliserToolStripMenuItem.Name = "personnaliserToolStripMenuItem";
-            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.personnaliserToolStripMenuItem.Text = "&Personnaliser";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // aideToolStripMenuItem
@@ -398,30 +399,30 @@ namespace MA400_export
             // sommaireToolStripMenuItem
             // 
             this.sommaireToolStripMenuItem.Name = "sommaireToolStripMenuItem";
-            this.sommaireToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.sommaireToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sommaireToolStripMenuItem.Text = "&Sommaire";
             // 
             // indexToolStripMenuItem
             // 
             this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.indexToolStripMenuItem.Text = "&Index";
             // 
             // rechercherToolStripMenuItem
             // 
             this.rechercherToolStripMenuItem.Name = "rechercherToolStripMenuItem";
-            this.rechercherToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.rechercherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rechercherToolStripMenuItem.Text = "&Rechercher";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // àproposdeToolStripMenuItem
             // 
             this.àproposdeToolStripMenuItem.Name = "àproposdeToolStripMenuItem";
-            this.àproposdeToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.àproposdeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.àproposdeToolStripMenuItem.Text = "À &propos de...";
             // 
             // toolStrip1
@@ -568,6 +569,7 @@ namespace MA400_export
             // 
             // textBox_StudCoord_X
             // 
+            this.textBox_StudCoord_X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_StudCoord_X.Location = new System.Drawing.Point(957, 245);
             this.textBox_StudCoord_X.Name = "textBox_StudCoord_X";
             this.textBox_StudCoord_X.Size = new System.Drawing.Size(57, 20);
@@ -575,6 +577,7 @@ namespace MA400_export
             // 
             // textBox_StudCoord_Y
             // 
+            this.textBox_StudCoord_Y.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox_StudCoord_Y.Location = new System.Drawing.Point(957, 271);
             this.textBox_StudCoord_Y.Name = "textBox_StudCoord_Y";
             this.textBox_StudCoord_Y.Size = new System.Drawing.Size(57, 20);
@@ -582,6 +585,7 @@ namespace MA400_export
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.label1.Location = new System.Drawing.Point(851, 248);
@@ -593,6 +597,7 @@ namespace MA400_export
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(851, 275);
             this.label2.Name = "label2";
@@ -603,6 +608,7 @@ namespace MA400_export
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(865, 302);
             this.label3.Name = "label3";
@@ -613,6 +619,7 @@ namespace MA400_export
             // 
             // comboBoxDiam
             // 
+            this.comboBoxDiam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxDiam.FormattingEnabled = true;
             this.comboBoxDiam.ItemHeight = 13;
             this.comboBoxDiam.Items.AddRange(new object[] {
@@ -624,11 +631,24 @@ namespace MA400_export
             this.comboBoxDiam.TabIndex = 21;
             this.comboBoxDiam.Text = "3";
             // 
+            // buttonGenerer
+            // 
+            this.buttonGenerer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGenerer.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            this.buttonGenerer.Location = new System.Drawing.Point(854, 462);
+            this.buttonGenerer.Name = "buttonGenerer";
+            this.buttonGenerer.Size = new System.Drawing.Size(160, 57);
+            this.buttonGenerer.TabIndex = 22;
+            this.buttonGenerer.Text = "Générer";
+            this.buttonGenerer.UseVisualStyleBackColor = true;
+            this.buttonGenerer.Click += new System.EventHandler(this.buttonGenerer_Click);
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 681);
+            this.Controls.Add(this.buttonGenerer);
             this.Controls.Add(this.comboBoxDiam);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -715,6 +735,7 @@ namespace MA400_export
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBoxDiam;
         private System.Windows.Forms.BindingSource fileSystemBindingSource;
+        private Button buttonGenerer;
     }
 }
 

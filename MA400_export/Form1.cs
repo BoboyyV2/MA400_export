@@ -576,7 +576,15 @@ namespace MA400_export
             }
         }
 
-       
+        private void buttonGenerer_Click(object sender, EventArgs e)
+        {
+            if (!fs.open)
+            {
+                MessageBox.Show("impossible de générer les fichiers de production :\r\nAucun fichier dxf n'est ouvert.");
+            }
+        }
+
+
     }
 }
 
