@@ -4,6 +4,7 @@ using ACadSharp.IO;
 using Svg;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -59,6 +60,8 @@ namespace MA400_export
         public CadDocument Doc;
         public bool open {  get; private set; }
         public List<Circle> Studs {  get; private set; }
+
+        private ProdFileGenerator Gen;
 
 
         /**
@@ -205,7 +208,12 @@ namespace MA400_export
             //FixSVGTransform(svgPath);
         }
 
-        
+        /*_____________________________________PRODUCTION_FILES_____________________________________*/
+
+        public void GenerateProdFiles(ref BindingList<Stud> Studs, Rectangle Dimension, System.Drawing.Point Offset, GeneratorData Data) 
+        {
+            Gen = new ProdFileGenerator(ref Studs, Dimension, Offset, Data);
+        }
 
         /*______________________________________________*/
 

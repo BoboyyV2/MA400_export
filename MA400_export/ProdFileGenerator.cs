@@ -12,33 +12,42 @@ using System.Threading.Tasks;
 namespace MA400_export
 {
 
+    public struct GeneratorData
+    {
+        public int ProgrammeNumber;
+        public string Company;
+        public string PartDesignation;
+        public string PartNumber;
+        public string DrawingNumber;
+        public string Notes;
+        public Machine machine;
+
+        //dates toujours sur 10 char DD.MM.YYYY si non renseigné : on écrit 10 espaces.
+        //TODO gestion chaine vide 
+        public string DateCreation;
+        public string DateModification;
+
+    }
+
     internal class ProdFileGenerator
     {
 
         private int reoccuring_number = 233; //TODO savoir qui c'est celui là
-        private BindingList<Stud> Studs;//can't use ref or pointer it seems
+        private BindingList<Stud> Studs;//can't use ref or pointer it 
 
-        private int ProgrammeNumber;
-        private string Company;
-        private string PartDesignation;
-        private string PartNumber;
-        private string DrawingNumber;
-        private string Notes;
-        private Machine machine;
-
-        //dates toujours sur 10 char DD.MM.YYYY si non renseigné : on écrit 10 espaces.
-        //TODO gestion chaine vide 
-        private string DateCreation;
-        private string DateModification;
+        private GeneratorData Data;
 
         private Rectangle Dimension;
         private System.Drawing.Point Offset;
 
 
 
-        public ProdFileGenerator(ref BindingList<Stud> Studs)//should work but C# and ref being themselves 
+        public ProdFileGenerator(ref BindingList<Stud> Studs, Rectangle Dimension, System.Drawing.Point Offset, GeneratorData Data)//should work but C# and ref being themselves 
         {
-            this.Studs = Studs; 
+            this.Studs = Studs;
+            this.Dimension = Dimension;
+            this.Offset = Offset;
+            this.Data = Data;
         }
 
         /*_____________________________________EXPORT_____________________________________*/
@@ -110,9 +119,9 @@ namespace MA400_export
             N9 (Nullpunkt        : X0 Y0 Z0/400/160)
              */
             
-            sw.WriteLine( "N1 (P"+ProgrammeNumber+")" + Environment.NewLine);
+            sw.WriteLine( "N1 (P"+ Data.ProgrammeNumber +")" + Environment.NewLine);
             string machineName;
-            switch (machine)
+            switch (Data.machine)
             {
                 case Machine.MA400S:
                     machineName = "MA-400-S";
@@ -122,12 +131,12 @@ namespace MA400_export
                     break;
             }
             sw.WriteLine( "N2 (Steuerung        : " + machineName + ")" + Environment.NewLine);
-            sw.WriteLine( "N3 (Firma            : " + Company + ")" + Environment.NewLine);
-            sw.WriteLine( "N4 (Teilebezeichnung : " + PartDesignation + ")" + Environment.NewLine);
-            sw.WriteLine( "N5 (Teilenummer      : " + PartNumber + ")" + Environment.NewLine);
-            sw.WriteLine( "N6 (Zeichnungsnummer : " + DrawingNumber + ")" + Environment.NewLine);
-            sw.WriteLine( "N7 (Erstellt am      : " + DateCreation + ")" + Environment.NewLine);
-            sw.WriteLine( "N8 (Geändert am      : " + DateModification + ")" + Environment.NewLine);
+            sw.WriteLine( "N3 (Firma            : " + Data.Company  + ")" + Environment.NewLine);
+            sw.WriteLine( "N4 (Teilebezeichnung : " + Data.PartDesignation + ")" + Environment.NewLine);
+            sw.WriteLine( "N5 (Teilenummer      : " + Data.PartNumber + ")" + Environment.NewLine);
+            sw.WriteLine( "N6 (Zeichnungsnummer : " + Data.DrawingNumber + ")" + Environment.NewLine);
+            sw.WriteLine( "N7 (Erstellt am      : " + Data.DateCreation + ")" + Environment.NewLine);
+            sw.WriteLine( "N8 (Geändert am      : " + Data.DateModification + ")" + Environment.NewLine);
             string nullpoint = $"X{Dimension.X}  Y{Dimension.Y} Z0/{Dimension.Width}/{Dimension.Height}";
             sw.WriteLine( "N9 (Nullpunkt        : " + nullpoint + ")" + Environment.NewLine);
             //9 lignes
@@ -270,13 +279,13 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".DAT"))
             {
-                sw.WriteLine(Company + Environment.NewLine);
-                sw.WriteLine(PartDesignation + Environment.NewLine);
-                sw.WriteLine(PartNumber + Environment.NewLine);
-                sw.WriteLine(DrawingNumber + Environment.NewLine);
-                sw.WriteLine(Notes + Environment.NewLine);
-                sw.WriteLine(DateCreation + Environment.NewLine);
-                sw.WriteLine(DateModification + Environment.NewLine);
+                sw.WriteLine(Data.Company + Environment.NewLine);
+                sw.WriteLine(Data.PartDesignation + Environment.NewLine);
+                sw.WriteLine(Data.PartNumber + Environment.NewLine);
+                sw.WriteLine(Data.DrawingNumber + Environment.NewLine);
+                sw.WriteLine(Data.Notes + Environment.NewLine);
+                sw.WriteLine(Data.DateCreation + Environment.NewLine);
+                sw.WriteLine(Data.DateModification + Environment.NewLine);
 
             }
         }

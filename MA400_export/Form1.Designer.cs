@@ -440,9 +440,9 @@ namespace MA400_export
             // 
             this.StudList_Display.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.StudList_Display.FormattingEnabled = true;
-            this.StudList_Display.Location = new System.Drawing.Point(854, 80);
+            this.StudList_Display.Location = new System.Drawing.Point(831, 80);
             this.StudList_Display.Name = "StudList_Display";
-            this.StudList_Display.Size = new System.Drawing.Size(160, 95);
+            this.StudList_Display.Size = new System.Drawing.Size(197, 95);
             this.StudList_Display.TabIndex = 2;
             // 
             // StudsMenuLabel
@@ -458,7 +458,7 @@ namespace MA400_export
             // buttonPreviousStud
             // 
             this.buttonPreviousStud.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPreviousStud.Location = new System.Drawing.Point(1026, 87);
+            this.buttonPreviousStud.Location = new System.Drawing.Point(1034, 87);
             this.buttonPreviousStud.Name = "buttonPreviousStud";
             this.buttonPreviousStud.Size = new System.Drawing.Size(13, 39);
             this.buttonPreviousStud.TabIndex = 4;
@@ -469,7 +469,7 @@ namespace MA400_export
             // buttonNextStud
             // 
             this.buttonNextStud.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonNextStud.Location = new System.Drawing.Point(1026, 129);
+            this.buttonNextStud.Location = new System.Drawing.Point(1034, 129);
             this.buttonNextStud.Name = "buttonNextStud";
             this.buttonNextStud.Size = new System.Drawing.Size(13, 39);
             this.buttonNextStud.TabIndex = 5;
@@ -480,7 +480,7 @@ namespace MA400_export
             // buttonRemoveStud
             // 
             this.buttonRemoveStud.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRemoveStud.Location = new System.Drawing.Point(854, 182);
+            this.buttonRemoveStud.Location = new System.Drawing.Point(850, 182);
             this.buttonRemoveStud.Name = "buttonRemoveStud";
             this.buttonRemoveStud.Size = new System.Drawing.Size(158, 23);
             this.buttonRemoveStud.TabIndex = 7;
@@ -491,7 +491,7 @@ namespace MA400_export
             // buttonAddStud
             // 
             this.buttonAddStud.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAddStud.Location = new System.Drawing.Point(854, 210);
+            this.buttonAddStud.Location = new System.Drawing.Point(850, 210);
             this.buttonAddStud.Name = "buttonAddStud";
             this.buttonAddStud.Size = new System.Drawing.Size(158, 23);
             this.buttonAddStud.TabIndex = 8;
@@ -570,7 +570,7 @@ namespace MA400_export
             // textBox_StudCoord_X
             // 
             this.textBox_StudCoord_X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_StudCoord_X.Location = new System.Drawing.Point(957, 245);
+            this.textBox_StudCoord_X.Location = new System.Drawing.Point(953, 245);
             this.textBox_StudCoord_X.Name = "textBox_StudCoord_X";
             this.textBox_StudCoord_X.Size = new System.Drawing.Size(57, 20);
             this.textBox_StudCoord_X.TabIndex = 14;
@@ -578,7 +578,7 @@ namespace MA400_export
             // textBox_StudCoord_Y
             // 
             this.textBox_StudCoord_Y.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox_StudCoord_Y.Location = new System.Drawing.Point(957, 271);
+            this.textBox_StudCoord_Y.Location = new System.Drawing.Point(953, 271);
             this.textBox_StudCoord_Y.Name = "textBox_StudCoord_Y";
             this.textBox_StudCoord_Y.Size = new System.Drawing.Size(57, 20);
             this.textBox_StudCoord_Y.TabIndex = 15;
@@ -588,7 +588,7 @@ namespace MA400_export
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label1.Location = new System.Drawing.Point(851, 248);
+            this.label1.Location = new System.Drawing.Point(847, 248);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 13);
             this.label1.TabIndex = 17;
@@ -599,7 +599,7 @@ namespace MA400_export
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(851, 275);
+            this.label2.Location = new System.Drawing.Point(847, 275);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(100, 13);
             this.label2.TabIndex = 18;
@@ -610,7 +610,7 @@ namespace MA400_export
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(865, 302);
+            this.label3.Location = new System.Drawing.Point(861, 302);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(74, 13);
             this.label3.TabIndex = 19;
@@ -625,7 +625,7 @@ namespace MA400_export
             this.comboBoxDiam.Items.AddRange(new object[] {
             "3",
             "4"});
-            this.comboBoxDiam.Location = new System.Drawing.Point(957, 298);
+            this.comboBoxDiam.Location = new System.Drawing.Point(953, 298);
             this.comboBoxDiam.Name = "comboBoxDiam";
             this.comboBoxDiam.Size = new System.Drawing.Size(57, 21);
             this.comboBoxDiam.TabIndex = 21;
@@ -635,9 +635,9 @@ namespace MA400_export
             // 
             this.buttonGenerer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerer.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
-            this.buttonGenerer.Location = new System.Drawing.Point(854, 462);
+            this.buttonGenerer.Location = new System.Drawing.Point(850, 496);
             this.buttonGenerer.Name = "buttonGenerer";
-            this.buttonGenerer.Size = new System.Drawing.Size(160, 57);
+            this.buttonGenerer.Size = new System.Drawing.Size(160, 54);
             this.buttonGenerer.TabIndex = 22;
             this.buttonGenerer.Text = "Générer";
             this.buttonGenerer.UseVisualStyleBackColor = true;

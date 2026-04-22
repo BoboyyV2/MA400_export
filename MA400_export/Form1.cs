@@ -91,10 +91,8 @@ namespace MA400_export
             System.Drawing.Point point = WorkZone.PointToClient(Cursor.Position);
 
             CursorPosition = GetOffsetedCoords(point);
-            //XCoord_Display.Text = " X = " + point.X + " ";
-            //YCoord_Display.Text = " Y = " + point.Y + " ";
-            XCoord_Display.Text = " X = " + CursorPosition.X + " ";
-            YCoord_Display.Text = " Y = " + CursorPosition.Y + " ";
+            XCoord_Display.Text = " X = " + (CursorPosition.X).ToString("0.0") + " ";
+            YCoord_Display.Text = " Y = " + (CursorPosition.Y).ToString("0.0") + " ";
 
             //debug
             /*
@@ -232,12 +230,13 @@ namespace MA400_export
          */
         private bool AddStudButton_CheckInput(string X_string, string Y_string, string Diam_string)
         {
+            string regexp_int = @"^[0-9]+$";//int
 
-            string regexp = "^[0-9]+$";
+            string regexp_nb = @"^[0-9]+(\.[0-9]+)?$";//nombre
             string error = "";
 
             //correct form
-            if (!System.Text.RegularExpressions.Regex.IsMatch(X_string, regexp))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(X_string, regexp_int))
             {
                 if (X_string.Length > 0)
                 {
@@ -248,7 +247,7 @@ namespace MA400_export
                     error += "Veuillez saisir une coordonnée X pour ajouter un goujon.\r\n";
                 }
             }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(Y_string, regexp))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(Y_string, regexp_int))
             {
                 if (Y_string.Length > 0)
                 {
@@ -259,7 +258,7 @@ namespace MA400_export
                     error += "Veuillez saisir une coordonnée Y pour ajouter un goujon.\r\n";
                 }
             }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(Diam_string, regexp))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(Diam_string, regexp_int))
             {
                 if (Diam_string.Length > 0)
                 {
@@ -276,8 +275,8 @@ namespace MA400_export
                 return false;
             }
             //correct values
-            int X = Int32.Parse(X_string);
-            int Y = Int32.Parse(Y_string);
+            Int32 X = Int32.Parse(X_string);
+            Int32 Y = Int32.Parse(Y_string);
             int D = Int32.Parse(Diam_string);
 
             //Bounds
@@ -313,11 +312,11 @@ namespace MA400_export
         private bool AddStudButtonOnClick_CheckInput(double X, double Y, string Diam_string)
         {
 
-            string regexp = "[0-9]+";
+            string regexp_int = "[0-9]+";
             string error = "";
 
             //correct form
-            if (!System.Text.RegularExpressions.Regex.IsMatch(Diam_string, regexp))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(Diam_string, regexp_int))
             {
                 if (Diam_string.Length > 0)
                 {
@@ -581,7 +580,10 @@ namespace MA400_export
             if (!fs.open)
             {
                 MessageBox.Show("impossible de générer les fichiers de production :\r\nAucun fichier dxf n'est ouvert.");
+                return;
             }
+
+            //fs.GenerateProdFiles(ref Studs); // en dernier, une fois que tout est bien rempli
         }
 
 

@@ -34,7 +34,7 @@ namespace MA400_export
         public override string ToString()
         {
             return string.Format("G{0} : X = {1}; Y = {2}; D = {3}",
-              id, circle.Center.X, circle.Center.Y, circle.Radius*2);
+              id, circle.Center.X.ToString("0.0"), circle.Center.Y.ToString("0.0"), circle.Radius*2);
 
         }
     }
