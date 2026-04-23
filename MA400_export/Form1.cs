@@ -12,6 +12,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
@@ -25,23 +26,29 @@ namespace MA400_export
 
         //used variables
 
-
+        //Zoom variables
         public float _Zoom = 1.0f;
         float zoomValue = 0.2f;
 
+        //position variables
         public PointF Origin_Offset = new PointF(0f, 0f);
         public PointF CursorPosition = new PointF(0f, 0f);
+
 
         public FileSystem fs = new FileSystem();
         public GraphicsContainer gc = new GraphicsContainer();
 
+        //Studs informations
         public BindingList<Stud> Studs = new BindingList<Stud>();
         public int StudCurrentIndex = 0;
 
         private string savepath = string.Empty;
        
-
+        //Edit variables
         public EditMode editMode = EditMode.Cursor;
+        public DateTime LastModified = default(DateTime);
+        GeneratorData data = new GeneratorData();
+
 
         public MA400_export()
         {
@@ -230,7 +237,7 @@ namespace MA400_export
          */
         private bool AddStudButton_CheckInput(string X_string, string Y_string, string Diam_string)
         {
-            string regexp_int = @"^[0-9]+$";//int
+            string regexp_int = @"^\s*[0-9]+\s*$";//int
 
             string regexp_nb = @"^[0-9]+(\.[0-9]+)?$";//nombre
             string error = "";
@@ -312,7 +319,7 @@ namespace MA400_export
         private bool AddStudButtonOnClick_CheckInput(double X, double Y, string Diam_string)
         {
 
-            string regexp_int = "[0-9]+";
+            string regexp_int = @"\s*[0-9]+\s*";
             string error = "";
 
             //correct form
@@ -433,7 +440,7 @@ namespace MA400_export
 
             foreach (Stud selected in selectedList)
             {
-                Studs.Remove(selected);
+                //Studs.Remove(selected);
             }
 
 
@@ -574,6 +581,52 @@ namespace MA400_export
             }
         }
 
+        private RectangleF getFileDimensions()
+        {
+            return new RectangleF(0 , 0, 210, 110);
+        }
+         
+        private PointF getFileOffset()
+        {
+            return new PointF(708.35f, 71.70f);
+        }
+
+        /**
+         * <summary>Open the Form to generate the driver's files and get the data.</summary>
+         * <returns>true if the data was succesfully retrived (press OK), false otherwise.</returns>
+         */
+        private bool GetFormData()
+        {
+            //depending on whether we already created the program
+            if (LastModified != default(DateTime))
+            {
+                using (FormGenerateInfo formInfo = new FormGenerateInfo())
+                {
+                    if (formInfo.ShowDialog() == DialogResult.OK)
+                    {
+                        data = formInfo.Data;
+                        return true;
+                    }
+                    
+                }
+            }
+            else
+            {
+                using (FormGenerateInfo formInfo = new FormGenerateInfo())
+                {
+                    if (formInfo.ShowDialog() == DialogResult.OK)
+                    {
+                        data = formInfo.Data;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /**
+         * <summary>Attempt to generate the files for the MA400 driver to function.</summary>
+         */
         private void buttonGenerer_Click(object sender, EventArgs e)
         {
             if (!fs.open)
@@ -582,7 +635,11 @@ namespace MA400_export
                 return;
             }
 
-            //fs.GenerateProdFiles(ref Studs); // en dernier, une fois que tout est bien rempli
+            GetFormData();
+            RectangleF dim = getFileDimensions();
+            PointF offset = getFileOffset();
+            Scale scale= new Scale(1, -1);
+            fs.GenerateProdFiles(ref Studs, dim, offset, data, scale); // en dernier, une fois que tout est bien rempli
         }
 
         private void enregistrerToolStripMenuItem_Click(object sender, EventArgs e)

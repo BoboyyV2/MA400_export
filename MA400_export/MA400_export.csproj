@@ -72,6 +72,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormGenerateInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormGenerateInfo.Designer.cs">
+      <DependentUpon>FormGenerateInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="GraphicsContainer.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Form1.cs">
@@ -87,6 +93,9 @@
     <Compile Include="Stud.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormGenerateInfo.resx">
+      <DependentUpon>FormGenerateInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

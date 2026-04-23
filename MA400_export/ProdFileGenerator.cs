@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace MA400_export
 
     public struct GeneratorData
     {
-        public int ProgrammeNumber;
+        public int ProgramNumber;
         public string Company;
         public string PartDesignation;
         public string PartNumber;
@@ -34,30 +35,65 @@ namespace MA400_export
 
         private int reoccuring_number = 233; //TODO savoir qui c'est celui là
         private BindingList<Stud> Studs;//can't use ref or pointer it 
+        private CadObjectCollection<Entity> Entities;//same shee
 
         private GeneratorData Data;
 
-        private Rectangle Dimension;
-        private System.Drawing.Point Offset;
+        private RectangleF Dimension;
+        private PointF Offset;
+        private Scale Scalefact;
 
 
 
-        public ProdFileGenerator(ref BindingList<Stud> Studs, Rectangle Dimension, System.Drawing.Point Offset, GeneratorData Data)//should work but C# and ref being themselves 
+        public ProdFileGenerator(ref BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)//should work but C# and ref being themselves 
         {
             this.Studs = Studs;
+            this.Entities = Entities;
             this.Dimension = Dimension;
             this.Offset = Offset;
             this.Data = Data;
+            this.Scalefact = Scalefact;
+
         }
 
-        /*_____________________________________EXPORT_____________________________________*/
 
+        /*_____________________________________UTIL_____________________________________*/
+
+        private string FormatValue(double value)
+        {
+            double delta = Math.Min(value - (int)value, value - (int)(value - 1) );
+            if (delta >= 0.12)
+            {
+                return (Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4).ToString("0");//x.0
+            }
+            if (delta >= 0.37)
+            {
+                return (Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4).ToString("0.00");//x.25 ou x.75
+            }
+
+            return (Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4).ToString("0.0");//x.5
+        }
+
+        private string FormatValueForFirst(double value)
+        {
+            double delta = Math.Min(value - (int)value, value - (int)(value - 1));
+            if (delta >= 0.12)
+            {
+                return ((Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4) - 0.2).ToString("0.0");//x.0
+            }
+            if (delta >= 0.37)
+            {
+                return ((Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4) - 0.2).ToString("0.00");//x.25 ou x.75
+            }
+
+            return ((Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4) - 0.2).ToString("0.0");//x.5
+        }
 
         private void WriteEmptyLine(StreamWriter sw, int numlines)
         {
             for (int i = 0; i < numlines; i++)
             {
-                sw.WriteLine(Environment.NewLine);
+                sw.WriteLine();
             }
         }
 
@@ -65,7 +101,7 @@ namespace MA400_export
         {
             for (int i = 0; i < numlines; i++)
             {
-                sw.WriteLine("0"+ Environment.NewLine);
+                sw.WriteLine("0");
             }
         }
 
@@ -73,9 +109,23 @@ namespace MA400_export
         {
             for (int i = 0; i < numlines; i++)
             {
-                sw.WriteLine("*" + Environment.NewLine);
+                sw.WriteLine("*" );
             }
         }
+
+        private System.Drawing.PointF GetSpacialPosition(CSMath.XYZ position)
+        {
+            
+            double posx = (position.X - Offset.X) * Scalefact.Xscale;
+            double posy = (position.Y - Offset.Y) * Scalefact.Yscale;
+
+
+            return new System.Drawing.PointF( (float)posx, (float)posy );
+        }
+
+
+        /*_____________________________________EXPORT_____________________________________*/
+
 
         /**
          * <summary>Generate the files necessary for the machine to work and save them to the \daten and \cnc folder</summary>
@@ -105,6 +155,10 @@ namespace MA400_export
             GenerateCNC(Cnc + fileID);
         }
 
+
+        /*_____________________________________CNC_____________________________________*/
+
+
         private void GenerateCNCHeader(StreamWriter sw)
         {
             /*
@@ -119,7 +173,7 @@ namespace MA400_export
             N9 (Nullpunkt        : X0 Y0 Z0/400/160)
              */
             
-            sw.WriteLine( "N1 (P"+ Data.ProgrammeNumber +")" + Environment.NewLine);
+            sw.WriteLine( "N1 (P"+ Data.ProgramNumber +")" );
             string machineName;
             switch (Data.machine)
             {
@@ -130,15 +184,15 @@ namespace MA400_export
                     machineName = "other";//TODO
                     break;
             }
-            sw.WriteLine( "N2 (Steuerung        : " + machineName + ")" + Environment.NewLine);
-            sw.WriteLine( "N3 (Firma            : " + Data.Company  + ")" + Environment.NewLine);
-            sw.WriteLine( "N4 (Teilebezeichnung : " + Data.PartDesignation + ")" + Environment.NewLine);
-            sw.WriteLine( "N5 (Teilenummer      : " + Data.PartNumber + ")" + Environment.NewLine);
-            sw.WriteLine( "N6 (Zeichnungsnummer : " + Data.DrawingNumber + ")" + Environment.NewLine);
-            sw.WriteLine( "N7 (Erstellt am      : " + Data.DateCreation + ")" + Environment.NewLine);
-            sw.WriteLine( "N8 (Geändert am      : " + Data.DateModification + ")" + Environment.NewLine);
-            string nullpoint = $"X{Dimension.X}  Y{Dimension.Y} Z0/{Dimension.Width}/{Dimension.Height}";
-            sw.WriteLine( "N9 (Nullpunkt        : " + nullpoint + ")" + Environment.NewLine);
+            sw.WriteLine( "N2 (Steuerung        : " + machineName + ")" );
+            sw.WriteLine( "N3 (Firma            : " + Data.Company  + ")" );
+            sw.WriteLine( "N4 (Teilebezeichnung : " + Data.PartDesignation + ")" );
+            sw.WriteLine( "N5 (Teilenummer      : " + Data.PartNumber + ")" );
+            sw.WriteLine( "N6 (Zeichnungsnummer : " + Data.DrawingNumber + ")" );
+            sw.WriteLine( "N7 (Erstellt am      : " + Data.DateCreation + ")" );
+            sw.WriteLine( "N8 (Geändert am      : " + Data.DateModification + ")" );
+            string nullpoint = $"X{Dimension.X} Y{Dimension.Y} Z0/{Dimension.Width}/{Dimension.Height}";
+            sw.WriteLine( "N9 (Nullpunkt        : " + nullpoint + ")" );
             //9 lignes
         }
 
@@ -155,14 +209,14 @@ namespace MA400_export
             N18 (Bolzenschweisszyklus ein)
              */
 
-            sw.WriteLine("N10 M20" + Environment.NewLine);
-            sw.WriteLine("N10 M80" + Environment.NewLine);
-            sw.WriteLine("N11 F100" + Environment.NewLine);
-            sw.WriteLine("N12 (Massespanner zu)" + Environment.NewLine);
-            sw.WriteLine("N13 M08" + Environment.NewLine);
-            sw.WriteLine("N14 T0" + Environment.NewLine);
-            sw.WriteLine("N15 G90" + Environment.NewLine);
-            sw.WriteLine("N18 (Bolzenschweisszyklus ein)" + Environment.NewLine);
+            sw.WriteLine("N10 M20" );
+            sw.WriteLine("N10 M80" );
+            sw.WriteLine("N11 F100" );
+            sw.WriteLine("N12 (Massespanner zu)" );
+            sw.WriteLine("N13 M08" );
+            sw.WriteLine("N14 T0" );
+            sw.WriteLine("N15 G90" );
+            sw.WriteLine("N18 (Bolzenschweisszyklus ein)" );
             //8 lignes
             //mais fini à N18
             //on reprend a partir de N19
@@ -179,14 +233,17 @@ namespace MA400_export
             N51 M30
             %
              */
-
-            sw.WriteLine($"N{N} M20" + Environment.NewLine);
-            sw.WriteLine($"N{++N} G00 X{firstStud.circle.Center.X.ToString("0.0")} Y{firstStud.circle.Center.Y.ToString("0.0")}" + Environment.NewLine);
-            sw.WriteLine($"N{++N}(Massespanner auf)" + Environment.NewLine);
-            sw.WriteLine($"N{++N} M09" + Environment.NewLine);
-            sw.WriteLine($"N{++N}(Werkstueck entnehmen)" + Environment.NewLine);
-            sw.WriteLine($"N{++N} M30" + Environment.NewLine);
-            sw.WriteLine("%" + Environment.NewLine);
+            PointF p = GetSpacialPosition(firstStud.circle.Center);
+            sw.WriteLine($"N{N} M20" );
+            if (first)
+            {
+                sw.WriteLine($"N{++N} G00 X{FormatValueForFirst(p.X)} Y{FormatValue(p.Y)}");
+            }
+            sw.WriteLine($"N{++N}(Massespanner auf)" );
+            sw.WriteLine($"N{++N} M09" );
+            sw.WriteLine($"N{++N}(Werkstueck entnehmen)" );
+            sw.WriteLine($"N{++N} M30" );
+            sw.WriteLine("%" );
 
             //on va de 1 en 1 
         }
@@ -197,8 +254,9 @@ namespace MA400_export
             N19 G00 X39 Y30
             N19 M81
              */
-            sw.WriteLine($"N{N} G00 X{stud.circle.Center.X.ToString("0.0")} Y{stud.circle.Center.Y.ToString("0.0")}" + Environment.NewLine);
-            sw.WriteLine($"N{N} M81" + Environment.NewLine);
+            PointF p = GetSpacialPosition(stud.circle.Center);
+            sw.WriteLine($"N{N} G00 X{FormatValue(p.X)} Y{FormatValue(p.Y)}" );
+            sw.WriteLine($"N{N} M81" );
 
 
         }
@@ -234,6 +292,10 @@ namespace MA400_export
             }
         }
 
+
+        /*_____________________________________AN4_____________________________________*/
+
+
         private void GenerateAN4(string path)
         {
             int numlines = 6;//TODO, un moyen de savoir combien il y en a de manière auto
@@ -246,58 +308,141 @@ namespace MA400_export
             }
         }
 
+
+        /*_____________________________________BOL_____________________________________*/
+
+
         private void GenerateBOL(string path)
         {
-            using (StreamWriter sw = File.CreateText(path + ".AN4"))
+            using (StreamWriter sw = File.CreateText(path + ".BOL"))
             {
                 WriteLine0(sw, 1);
-                sw.WriteLine(" " + reoccuring_number + Environment.NewLine);//nombre qui apparait partout
+                sw.WriteLine(" " + reoccuring_number );//nombre qui apparait partout
                 sw.WriteLine(Studs.Count.ToString());//le nombre de goujons 
             }
         }
 
+
+        /*_____________________________________BST_____________________________________*/
+
+
         private void GenerateBST(string path)
         {
-            using (StreamWriter sw = File.CreateText(path + Environment.NewLine))
+            using (StreamWriter sw = File.CreateText(path + ".BST"))
             {
                 WriteLine0(sw, 5);
-                sw.WriteLine(" " + reoccuring_number + Environment.NewLine);
+                sw.WriteLine(" " + reoccuring_number );
 
-                WriteEmptyLine(sw, 5);//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
+                int skippedlines = 5;//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
+                WriteEmptyLine(sw, skippedlines);
 
                 int magicnumber = 2;
-                sw.WriteLine(magicnumber + Environment.NewLine);
+                sw.WriteLine(magicnumber );
 
-                WriteEmptyLine(sw, 5);//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
+                WriteEmptyLine(sw, skippedlines);
 
-                WriteLine0(sw, 5);
+                WriteLine0(sw, 6);
 
             }
         }
+
+
+        /*_____________________________________DAT_____________________________________*/
+
 
         private void GenerateDAT(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".DAT"))
             {
-                sw.WriteLine(Data.Company + Environment.NewLine);
-                sw.WriteLine(Data.PartDesignation + Environment.NewLine);
-                sw.WriteLine(Data.PartNumber + Environment.NewLine);
-                sw.WriteLine(Data.DrawingNumber + Environment.NewLine);
-                sw.WriteLine(Data.Notes + Environment.NewLine);
-                sw.WriteLine(Data.DateCreation + Environment.NewLine);
-                sw.WriteLine(Data.DateModification + Environment.NewLine);
+                sw.WriteLine(Data.Company );
+                sw.WriteLine(Data.PartDesignation );
+                sw.WriteLine(Data.PartNumber );
+                sw.WriteLine(Data.DrawingNumber );
+                sw.WriteLine(Data.Notes );
+                sw.WriteLine(Data.DateCreation );
+                sw.WriteLine(Data.DateModification );
 
             }
         }
+
+
+        /*_____________________________________DUP_____________________________________*/
+
 
         private void GenerateDUP(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".DUP"))
             {
                 WriteLine0(sw, 1);
-                sw.WriteLine("1" + Environment.NewLine);
+                sw.WriteLine("1" );
                 WriteLine0(sw, 4);
 
+            }
+        }
+
+
+        /*_____________________________________GHP_____________________________________*/
+
+
+        /**
+         * <summary>Write a command for a line entity in the GHP file</summary>
+         * <param name="sw">The StreamWriter linkde to the GHP file</param>
+         * <param name="line">The line to turn into a command</param>
+         */
+        public void WriteGHP_LINE(StreamWriter sw, Line line)
+        {
+            PointF start = GetSpacialPosition(line.StartPoint);
+            PointF end = GetSpacialPosition(line.EndPoint);
+
+            sw.WriteLine(Constants.LINE_CMD );
+            sw.WriteLine( FormatValue(start.X) );
+            sw.WriteLine( FormatValue(start.Y));
+            sw.WriteLine( FormatValue(end.X));
+            sw.WriteLine( FormatValue(end.Y));
+            WriteLine0(sw, 6);
+        }
+
+        /**
+         * <summary>Write a command for a line entity in the GHP file</summary>
+         * <param name="sw">The StreamWriter linkde to the GHP file</param>
+         * <param name="circle">The line to turn into a command</param>
+         */
+        public void WriteGHP_CIRCLE(StreamWriter sw, Circle circle)
+        {
+            PointF center = GetSpacialPosition(circle.Center);
+
+            sw.WriteLine(Constants.CIRCLE_CMD );
+            sw.WriteLine( FormatValue(center.X) );
+            sw.WriteLine( FormatValue(center.Y) );
+            WriteLine0(sw, 1);
+            sw.WriteLine( FormatValue(circle.Radius));
+            WriteLine0(sw, 6);
+        }
+
+
+        /**
+         * <summary>Write a GHP command representing an entity</summary>
+         * <param name="sw">The StreamWriter linkde to the GHP file</param>
+         * <param name="entity">The Entity being turned into a command</param>
+         */
+        private void GenerateGHP_CMD(StreamWriter sw, Entity entity)
+        {
+            //all command are on 11 lines
+            switch (entity.ObjectType)
+            {
+                case ObjectType.LINE:
+                    {
+                        Line line = (Line)entity;
+                        WriteGHP_LINE(sw, line);
+                        break;
+                    }
+                case ObjectType.CIRCLE:
+                    {
+                        Circle circle = (Circle)entity;
+                        WriteGHP_CIRCLE(sw, circle);
+
+                        break;
+                    }
             }
         }
 
@@ -305,25 +450,38 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".GHP"))
             {
-                //TODO graphic par, commandes sur 11 lignes
-
+                //TODO graphic par, commandes sur 11 lignes, c'est quoi ce 1er nombre
+                int magicnumber = 6;
+                sw.WriteLine(magicnumber );
+                foreach (var entity in Entities)
+                {
+                    GenerateGHP_CMD(sw, entity);
+                }
             }
         }
+
+
+        /*_____________________________________LAY_____________________________________*/
+
 
         private void GenerateLAY(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".LAY"))
             {
-                sw.WriteLine(Dimension.Left + Environment.NewLine);
-                sw.WriteLine(Dimension.Top + Environment.NewLine);
-                sw.WriteLine(Dimension.Right + Environment.NewLine);
-                sw.WriteLine(Dimension.Bottom + Environment.NewLine);
-
+                sw.WriteLine(Dimension.Left );
+                sw.WriteLine(Dimension.Top );
+                sw.WriteLine(Dimension.Right );
+                sw.WriteLine(Dimension.Bottom );
+                WriteLine0(sw, 4);
 
                 //TODO c'est quoi le reste ?, implem
 
             }
         }
+
+
+        /*_____________________________________MIN_____________________________________*/
+
 
         private void GenerateMIN(string path)
         {
@@ -335,29 +493,29 @@ namespace MA400_export
             }
         }
 
-        private System.Drawing.Point GetSpacialPosition(CSMath.XYZ position)
-        {
-            return new System.Drawing.Point((int)(position.X - Offset.X), (int)(position.Y - Offset.Y) );
-        }
+        
+
+        /*_____________________________________NC_____________________________________*/
+
 
         private void WriteNcCommand(StreamWriter sw, Stud stud)
         {
-            sw.WriteLine("PUNKT" + Environment.NewLine);
-            System.Drawing.Point RealPosition = GetSpacialPosition(stud.circle.Center);
-            sw.WriteLine( RealPosition.X + Environment.NewLine);
-            sw.WriteLine( RealPosition.Y + Environment.NewLine);
+            sw.WriteLine("PUNKT" );
+            PointF RealPosition = GetSpacialPosition(stud.circle.Center);
+            sw.WriteLine( FormatValue(RealPosition.X) );
+            sw.WriteLine( FormatValue(RealPosition.Y) );
 
             //param incertains
-            sw.WriteLine("0" + Environment.NewLine);
-            sw.WriteLine("2" + Environment.NewLine);
-            sw.WriteLine("A" + Environment.NewLine);
+            sw.WriteLine("0" );
+            sw.WriteLine("2" );
+            sw.WriteLine("A" );
 
             //fill la commande avec des *
             WriteLineStar(sw, 13);
 
             //fin de la cmd
-            sw.WriteLine(" " + reoccuring_number +"/1" + Environment.NewLine);
-            sw.WriteLine("1" + Environment.NewLine);
+            sw.WriteLine(" " + reoccuring_number +"/1" );
+            sw.WriteLine("1" );
 
         }
 
@@ -383,24 +541,32 @@ namespace MA400_export
             }
         }
 
+
+        /*_____________________________________ST_____________________________________*/
+
+
         private void GenerateST(string path)
         {
-            using (StreamWriter sw = File.CreateText(path + ".NC"))
+            using (StreamWriter sw = File.CreateText(path + ".ST"))
             {
                 int magicnumber = 0;//TODO, comprendre c'est quoi
-                sw.WriteLine(magicnumber + Environment.NewLine);
+                sw.WriteLine(magicnumber );
             }
         }
 
+
+        /*_____________________________________VER_____________________________________*/
+
+
         private void GenerateVER(string path)
         {
-            using (StreamWriter sw = File.CreateText(path + ".NC"))
+            using (StreamWriter sw = File.CreateText(path + ".VER"))
             {
                 int magicnumber = 0;//TODO, comprendre c'est quoi, 4 nombre potentiellement différent, souvent des 0
-                sw.WriteLine(magicnumber + Environment.NewLine);
-                sw.WriteLine(magicnumber + Environment.NewLine);
-                sw.WriteLine(magicnumber + Environment.NewLine);
-                sw.WriteLine(magicnumber + Environment.NewLine);
+                sw.WriteLine(magicnumber );
+                sw.WriteLine(magicnumber );
+                sw.WriteLine(magicnumber );
+                sw.WriteLine(magicnumber );
 
             }
         }

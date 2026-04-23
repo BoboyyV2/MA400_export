@@ -38,6 +38,10 @@ namespace MA400_export
         public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
         public static String outputpath { get; private set; } = ""+AppDomain.CurrentDomain.BaseDirectory;//.exe loc
 
+        //GHP command id
+        public const int LINE_CMD = 4;
+        public const int CIRCLE_CMD = 1;
+
     }
 
     public enum EditMode
@@ -51,6 +55,24 @@ namespace MA400_export
     {
         MA400S,
         Other
+    }
+
+    public class Scale
+    {
+        public double Xscale { get; set; }
+        public double Yscale { get; set; }
+
+        public Scale()
+        {
+            Xscale = 1;
+            Yscale = 1;
+        }
+
+        public Scale(double Xscale, double Yscale)
+        {
+            this.Xscale = Xscale;
+            this.Yscale = Yscale;
+        }
     }
 
     public class FileSystem
@@ -226,9 +248,10 @@ namespace MA400_export
 
         /*_____________________________________PRODUCTION_FILES_____________________________________*/
 
-        public void GenerateProdFiles(ref BindingList<Stud> Studs, Rectangle Dimension, System.Drawing.Point Offset, GeneratorData Data) 
+        public void GenerateProdFiles(ref BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact) 
         {
-            Gen = new ProdFileGenerator(ref Studs, Dimension, Offset, Data);
+            Gen = new ProdFileGenerator(ref Studs, Doc.Entities,Dimension, Offset, Data, Scalefact);
+            Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 
         /*______________________________________________*/
