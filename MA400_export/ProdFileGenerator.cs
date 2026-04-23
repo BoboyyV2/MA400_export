@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MA400_export
 {
@@ -61,33 +63,26 @@ namespace MA400_export
 
         private string FormatValue(double value)
         {
-            double delta = Math.Min(value - (int)value, value - (int)(value - 1) );
-            if (delta >= 0.12)
+            CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
+            
+            double deci = (value % 1);
+            if (deci > 0.97)
             {
-                return (Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4).ToString("0");//x.0
-            }
-            if (delta >= 0.37)
-            {
-                return (Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4).ToString("0.00");//x.25 ou x.75
+                deci = 1; //arrondi pour écarter l'imprécision des float
             }
 
-            return (Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4).ToString("0.0");//x.5
+            if ( ( (deci * 100) % 10 ) >= 1)
+            {
+                return value.ToString("0.00", culture);
+            }
+            if (((deci * 10) % 10) >= 1)
+            {
+                return value.ToString("0.0", culture);
+            }
+
+            return value.ToString("0", culture) ;
         }
 
-        private string FormatValueForFirst(double value)
-        {
-            double delta = Math.Min(value - (int)value, value - (int)(value - 1));
-            if (delta >= 0.12)
-            {
-                return ((Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4) - 0.2).ToString("0.0");//x.0
-            }
-            if (delta >= 0.37)
-            {
-                return ((Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4) - 0.2).ToString("0.00");//x.25 ou x.75
-            }
-
-            return ((Math.Round(value * 4, MidpointRounding.AwayFromZero) / 4) - 0.2).ToString("0.0");//x.5
-        }
 
         private void WriteEmptyLine(StreamWriter sw, int numlines)
         {
@@ -116,11 +111,26 @@ namespace MA400_export
         private System.Drawing.PointF GetSpacialPosition(CSMath.XYZ position)
         {
             
-            double posx = (position.X - Offset.X) * Scalefact.Xscale;
-            double posy = (position.Y - Offset.Y) * Scalefact.Yscale;
+            float posx;
+            float posy;
+            if(Scalefact.Xscale > 0)
+            {
+                posx = (float)((position.X - Offset.X) * Scalefact.Xscale);
+            }else
+            {
+                posx = (float)(Dimension.Height + ( (position.X - Offset.X) * Scalefact.Xscale ) );
+            }
 
+            if (Scalefact.Yscale > 0)
+            {
+                posy = (float)((position.Y - Offset.Y) * Scalefact.Yscale);
+            }
+            else
+            {
+                posy = (float)(Dimension.Height + ((position.Y - Offset.Y) * Scalefact.Yscale));
+            }
 
-            return new System.Drawing.PointF( (float)posx, (float)posy );
+            return new System.Drawing.PointF( posx, posy );
         }
 
 
@@ -234,14 +244,14 @@ namespace MA400_export
             %
              */
             PointF p = GetSpacialPosition(firstStud.circle.Center);
-            sw.WriteLine($"N{N} M20" );
+            sw.WriteLine($"N{++N} M20" );
             if (first)
             {
-                sw.WriteLine($"N{++N} G00 X{FormatValueForFirst(p.X)} Y{FormatValue(p.Y)}");
+                sw.WriteLine($"N{++N} G00 X{FormatValue(p.X - 0.2f)} Y{FormatValue(p.Y)}");
             }
-            sw.WriteLine($"N{++N}(Massespanner auf)" );
+            sw.WriteLine($"N{++N} (Massespanner auf)" );
             sw.WriteLine($"N{++N} M09" );
-            sw.WriteLine($"N{++N}(Werkstueck entnehmen)" );
+            sw.WriteLine($"N{++N} (Werkstueck entnehmen)" );
             sw.WriteLine($"N{++N} M30" );
             sw.WriteLine("%" );
 
@@ -255,6 +265,7 @@ namespace MA400_export
             N19 M81
              */
             PointF p = GetSpacialPosition(stud.circle.Center);
+
             sw.WriteLine($"N{N} G00 X{FormatValue(p.X)} Y{FormatValue(p.Y)}" );
             sw.WriteLine($"N{N} M81" );
 
@@ -393,7 +404,6 @@ namespace MA400_export
         {
             PointF start = GetSpacialPosition(line.StartPoint);
             PointF end = GetSpacialPosition(line.EndPoint);
-
             sw.WriteLine(Constants.LINE_CMD );
             sw.WriteLine( FormatValue(start.X) );
             sw.WriteLine( FormatValue(start.Y));
