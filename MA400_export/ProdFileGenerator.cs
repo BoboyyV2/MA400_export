@@ -66,7 +66,7 @@ namespace MA400_export
             CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
             
             double deci = (value % 1);
-            if (deci > 0.97)
+            if (deci > 0.951)
             {
                 deci = 1; //arrondi pour écarter l'imprécision des float
             }
@@ -466,6 +466,11 @@ namespace MA400_export
                 foreach (var entity in Entities)
                 {
                     GenerateGHP_CMD(sw, entity);
+                }
+
+                foreach (Stud entity in Studs)
+                {
+                    GenerateGHP_CMD(sw, entity.circle);
                 }
             }
         }
