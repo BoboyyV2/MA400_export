@@ -135,14 +135,6 @@ namespace MA400_export
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.quitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.annulerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rétablirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.couperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.collerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.sélectionnertoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.outilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.personnaliserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -175,6 +167,7 @@ namespace MA400_export
             this.fileSystemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonGenerer = new System.Windows.Forms.Button();
             this.saveFileDialogSave = new System.Windows.Forms.SaveFileDialog();
+            this.générerLesFichiersDeSortieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -297,78 +290,15 @@ namespace MA400_export
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
             this.quitterToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.quitterToolStripMenuItem.Text = "&Quitter";
+            this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
             // editionToolStripMenuItem
             // 
             this.editionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.annulerToolStripMenuItem,
-            this.rétablirToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.couperToolStripMenuItem,
-            this.copierToolStripMenuItem,
-            this.collerToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.sélectionnertoutToolStripMenuItem});
+            this.générerLesFichiersDeSortieToolStripMenuItem});
             this.editionToolStripMenuItem.Name = "editionToolStripMenuItem";
-            this.editionToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
-            this.editionToolStripMenuItem.Text = "&Edition";
-            // 
-            // annulerToolStripMenuItem
-            // 
-            this.annulerToolStripMenuItem.Name = "annulerToolStripMenuItem";
-            this.annulerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.annulerToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.annulerToolStripMenuItem.Text = "&Annuler";
-            // 
-            // rétablirToolStripMenuItem
-            // 
-            this.rétablirToolStripMenuItem.Name = "rétablirToolStripMenuItem";
-            this.rétablirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-            this.rétablirToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.rétablirToolStripMenuItem.Text = "&Rétablir";
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(161, 6);
-            // 
-            // couperToolStripMenuItem
-            // 
-            this.couperToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("couperToolStripMenuItem.Image")));
-            this.couperToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.couperToolStripMenuItem.Name = "couperToolStripMenuItem";
-            this.couperToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.couperToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.couperToolStripMenuItem.Text = "&Couper";
-            // 
-            // copierToolStripMenuItem
-            // 
-            this.copierToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copierToolStripMenuItem.Image")));
-            this.copierToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.copierToolStripMenuItem.Name = "copierToolStripMenuItem";
-            this.copierToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copierToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.copierToolStripMenuItem.Text = "Co&pier";
-            // 
-            // collerToolStripMenuItem
-            // 
-            this.collerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("collerToolStripMenuItem.Image")));
-            this.collerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.collerToolStripMenuItem.Name = "collerToolStripMenuItem";
-            this.collerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.collerToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.collerToolStripMenuItem.Text = "Co&ller";
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(161, 6);
-            // 
-            // sélectionnertoutToolStripMenuItem
-            // 
-            this.sélectionnertoutToolStripMenuItem.Name = "sélectionnertoutToolStripMenuItem";
-            this.sélectionnertoutToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.sélectionnertoutToolStripMenuItem.Text = "Sélectio&nner tout";
+            this.editionToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
+            this.editionToolStripMenuItem.Text = "&Générer";
             // 
             // outilsToolStripMenuItem
             // 
@@ -654,6 +584,13 @@ namespace MA400_export
             // 
             this.saveFileDialogSave.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialogSave_FileOk);
             // 
+            // générerLesFichiersDeSortieToolStripMenuItem
+            // 
+            this.générerLesFichiersDeSortieToolStripMenuItem.Name = "générerLesFichiersDeSortieToolStripMenuItem";
+            this.générerLesFichiersDeSortieToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.générerLesFichiersDeSortieToolStripMenuItem.Text = "&Générer les fichiers de sortie";
+            this.générerLesFichiersDeSortieToolStripMenuItem.Click += new System.EventHandler(this.générerLesFichiersDeSortieToolStripMenuItem_Click);
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -708,14 +645,6 @@ namespace MA400_export
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem quitterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem annulerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rétablirToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem couperToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copierToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem collerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem sélectionnertoutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem outilsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem personnaliserToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
@@ -749,6 +678,7 @@ namespace MA400_export
         private System.Windows.Forms.BindingSource fileSystemBindingSource;
         private Button buttonGenerer;
         private SaveFileDialog saveFileDialogSave;
+        private ToolStripMenuItem générerLesFichiersDeSortieToolStripMenuItem;
     }
 }
 

@@ -65,11 +65,11 @@
             // PartDesignation
             // 
             this.PartDesignation.AutoSize = true;
-            this.PartDesignation.Location = new System.Drawing.Point(426, 77);
+            this.PartDesignation.Location = new System.Drawing.Point(433, 77);
             this.PartDesignation.Name = "PartDesignation";
-            this.PartDesignation.Size = new System.Drawing.Size(91, 13);
+            this.PartDesignation.Size = new System.Drawing.Size(84, 13);
             this.PartDesignation.TabIndex = 2;
-            this.PartDesignation.Text = "Part - Designation";
+            this.PartDesignation.Text = "Nom de la pièce";
             // 
             // DrawingNumber
             // 
@@ -78,25 +78,25 @@
             this.DrawingNumber.Name = "DrawingNumber";
             this.DrawingNumber.Size = new System.Drawing.Size(92, 13);
             this.DrawingNumber.TabIndex = 3;
-            this.DrawingNumber.Text = "Drawing - Number";
+            this.DrawingNumber.Text = "Numéro du dessin";
             // 
             // PartNumber
             // 
             this.PartNumber.AutoSize = true;
-            this.PartNumber.Location = new System.Drawing.Point(78, 118);
+            this.PartNumber.Location = new System.Drawing.Point(51, 118);
             this.PartNumber.Name = "PartNumber";
-            this.PartNumber.Size = new System.Drawing.Size(72, 13);
+            this.PartNumber.Size = new System.Drawing.Size(99, 13);
             this.PartNumber.TabIndex = 7;
-            this.PartNumber.Text = "Part - Number";
+            this.PartNumber.Text = "Numéro de la pièce";
             // 
             // Company
             // 
             this.Company.AutoSize = true;
-            this.Company.Location = new System.Drawing.Point(99, 77);
+            this.Company.Location = new System.Drawing.Point(95, 77);
             this.Company.Name = "Company";
-            this.Company.Size = new System.Drawing.Size(51, 13);
+            this.Company.Size = new System.Drawing.Size(54, 13);
             this.Company.TabIndex = 6;
-            this.Company.Text = "Company";
+            this.Company.Text = "Entreprise";
             // 
             // PartNumberText
             // 
@@ -141,20 +141,20 @@
             // DateCreate
             // 
             this.DateCreate.AutoSize = true;
-            this.DateCreate.Location = new System.Drawing.Point(246, 41);
+            this.DateCreate.Location = new System.Drawing.Point(238, 41);
             this.DateCreate.Name = "DateCreate";
-            this.DateCreate.Size = new System.Drawing.Size(44, 13);
+            this.DateCreate.Size = new System.Drawing.Size(52, 13);
             this.DateCreate.TabIndex = 11;
-            this.DateCreate.Text = "Created";
+            this.DateCreate.Text = "Créée le :";
             // 
             // DateModified
             // 
             this.DateModified.AutoSize = true;
-            this.DateModified.Location = new System.Drawing.Point(425, 41);
+            this.DateModified.Location = new System.Drawing.Point(405, 41);
             this.DateModified.Name = "DateModified";
-            this.DateModified.Size = new System.Drawing.Size(38, 13);
+            this.DateModified.Size = new System.Drawing.Size(112, 13);
             this.DateModified.TabIndex = 12;
-            this.DateModified.Text = "Modify";
+            this.DateModified.Text = "Dernière modification :";
             // 
             // ProgramNumberText
             // 
@@ -172,7 +172,7 @@
             // 
             // DateModifiedText
             // 
-            this.DateModifiedText.Location = new System.Drawing.Point(469, 38);
+            this.DateModifiedText.Location = new System.Drawing.Point(523, 38);
             this.DateModifiedText.Name = "DateModifiedText";
             this.DateModifiedText.Size = new System.Drawing.Size(96, 20);
             this.DateModifiedText.TabIndex = 15;
@@ -183,7 +183,7 @@
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(101, 27);
             this.buttonOK.TabIndex = 16;
-            this.buttonOK.Text = "OK";
+            this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
@@ -193,8 +193,9 @@
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(101, 27);
             this.buttonCancel.TabIndex = 17;
-            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.Text = "&Annuler";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // FormGenerateInfo
             // 

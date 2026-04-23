@@ -197,16 +197,23 @@ namespace MA400_export
         {
             if (StudList_Display.Items.Count > 0)
             {
-                if (StudList_Display.SelectedIndex > 0)
+                int index = StudList_Display.SelectedIndex;
+
+                if ((StudList_Display.SelectedItems.Count == 1) && (index > 0))
                 {
-                    StudList_Display.SelectedIndex = StudList_Display.SelectedIndex - 1;
+                    StudList_Display.SelectedItems.Clear();
+                    StudList_Display.SelectedIndex = index - 1;
                 }
                 else
                 {
+                    StudList_Display.SelectedItems.Clear();
                     StudList_Display.SelectedIndex = StudList_Display.Items.Count - 1;
                 }
+
             }
+
             StudList_Display.Focus();
+
         }
 
         /**
@@ -214,18 +221,23 @@ namespace MA400_export
          */
         private void buttonNextStud_Click(object sender, EventArgs e)
         {
-            if (StudList_Display.Items.Count > 0) 
-            { 
-                if (StudList_Display.SelectedIndex < StudList_Display.Items.Count - 1)
+            if (StudList_Display.Items.Count > 0)
+            {
+                int index = StudList_Display.SelectedIndex;
+
+                if ( ( StudList_Display.SelectedItems.Count == 1 ) && ( index < StudList_Display.Items.Count - 1 ) )
                 {
-                    StudList_Display.SelectedIndex = StudList_Display.SelectedIndex + 1;
+                    StudList_Display.SelectedItems.Clear();
+                    StudList_Display.SelectedIndex = index + 1;
                 }
                 else
                 {
+                    StudList_Display.SelectedItems.Clear();
                     StudList_Display.SelectedIndex = 0;
                 }
 
             }
+            
             StudList_Display.Focus();
         }
 
@@ -440,7 +452,7 @@ namespace MA400_export
 
             foreach (Stud selected in selectedList)
             {
-                //Studs.Remove(selected);
+                Studs.Remove(selected);
             }
 
 
@@ -627,7 +639,7 @@ namespace MA400_export
         /**
          * <summary>Attempt to generate the files for the MA400 driver to function.</summary>
          */
-        private void buttonGenerer_Click(object sender, EventArgs e)
+        private void GenerateOutput()
         {
             if (!fs.open)
             {
@@ -638,8 +650,17 @@ namespace MA400_export
             GetFormData();
             RectangleF dim = getFileDimensions();
             PointF offset = getFileOffset();
-            Scale scale= new Scale(1, -1);
+            Scale scale = new Scale(1, -1);
             fs.GenerateProdFiles(ref Studs, dim, offset, data, scale); // en dernier, une fois que tout est bien rempli
+        }
+        private void buttonGenerer_Click(object sender, EventArgs e)
+        {
+            GenerateOutput();
+        }
+
+        private void générerLesFichiersDeSortieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GenerateOutput();
         }
 
         private void enregistrerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -663,7 +684,12 @@ namespace MA400_export
             fs.SaveToFile(Studs, savepath);
         }
 
-        
+
+
+        private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
 
 
         /*___________________________________________|___________________________________________*/

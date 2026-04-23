@@ -404,6 +404,10 @@ namespace MA400_export
         {
             PointF start = GetSpacialPosition(line.StartPoint);
             PointF end = GetSpacialPosition(line.EndPoint);
+            if(start.X < 0 || start.Y < 0 || end.X < 0 || end.Y < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             sw.WriteLine(Constants.LINE_CMD );
             sw.WriteLine( FormatValue(start.X) );
             sw.WriteLine( FormatValue(start.Y));
@@ -420,7 +424,10 @@ namespace MA400_export
         public void WriteGHP_CIRCLE(StreamWriter sw, Circle circle)
         {
             PointF center = GetSpacialPosition(circle.Center);
-
+            if ( center.X < 0 || center.Y < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             sw.WriteLine(Constants.CIRCLE_CMD );
             sw.WriteLine( FormatValue(center.X) );
             sw.WriteLine( FormatValue(center.Y) );
