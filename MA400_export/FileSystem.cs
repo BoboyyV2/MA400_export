@@ -36,7 +36,7 @@ namespace MA400_export
         public static PointF Origin_Coord { get; private set; } = new PointF(50.0f, 50.0f);
 
         public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
-        public static String outputpath { get; private set; } = ""+AppDomain.CurrentDomain.BaseDirectory;//.exe loc
+        public static String outputpath { get; private set; } = AppDomain.CurrentDomain.BaseDirectory + @"output\";//.exe\output loc
 
         //GHP command id
         public const int LINE_CMD = 4;
@@ -86,6 +86,7 @@ namespace MA400_export
         private ProdFileGenerator Gen;
 
 
+
         /**
          * <summary>create the file systeme with a new document</summary>
          */
@@ -102,6 +103,11 @@ namespace MA400_export
             Doc = new CadDocument();
             Studs = new List<Circle>();
         }
+
+
+        /*_____________________________________DXF_____________________________________*/
+
+
         /**
         * <summary>Scan the document's entities and attempt to get Stud candidates as well as the dimentions of the document <br></br>
         * any stud candidate will be removed from the document, they would be added if we were to save the document to a file.</summary>
@@ -205,9 +211,96 @@ namespace MA400_export
         }
 
 
+        /*_____________________________________PRODFILE_____________________________________*/
+
+        private Entity ParseEntities(string[] file, ref int num_line)
+        {
+            int EntitieType = int.Parse(file[num_line]);
+            switch (EntitieType)
+            {
+                //cercle
+                case 1:
+                    {
+                        Circle c = new Circle();
+                        double centerX = Double.Parse(file[++num_line]);
+                        double centerY = Double.Parse(file[++num_line]);
+                        c.Center = new CSMath.XYZ(centerX, centerY, 0);
+
+                        ++num_line;
+                        double radius = Double.Parse(file[++num_line]);
+                        c.Radius = radius;
+                        num_line += 6;
+
+                        return c;
+                    }
+
+                //ligne
+                case 4:
+                    {
+                        Line l = new Line();
+                        double startX = Double.Parse(file[++num_line]);
+                        double startY = Double.Parse(file[++num_line]);
+                        l.StartPoint = new CSMath.XYZ(startX, startY, 0);
+                        double endX = Double.Parse(file[++num_line]);
+                        double endY = Double.Parse(file[++num_line]);
+                        l.EndPoint = new CSMath.XYZ(endX, endY, 0);
+                        num_line += 6;
+
+                        return l;
+                    }
+                default:
+                    {
+                        num_line += 10;
+                        return null;
+                    }
+
+            }
+
+        }
+
+        public bool OpenProdFile(int ProgramNumber) 
+        {
+            string CNCPath = Constants.outputpath + @"Cnc\" + ProgramNumber + ".CNC";
+            string GPHPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".GPH";
+
+            if (!File.Exists(CNCPath))
+            {
+                //le prog n'existe pas 
+                throw new FileNotFoundException("Fichier CNC introuvable",  ProgramNumber + ".CNC");
+            }
+            if (!File.Exists(GPHPath))
+            {
+                //le prog n'existe pas 
+                throw new FileNotFoundException("Fichier GPH introuvable", ProgramNumber + ".GPH");
+            }
+
+            /*___________________________________*/
+
+            //si on a les fichiers =>
+            reset();
+
+            string[] file = File.ReadAllLines(GPHPath);
+            int num_entities = Int32.Parse(file[0]);
+
+            for (int num_line = 1; num_line < num_entities; num_line++)
+            {
+                Entity e = ParseEntities(file,  ref num_line);
+                Doc.Entities.Add(e);
+            }
+
+            ScanEntities();
+
+
+            WriteToSVG(Constants.outputpath + @"tmp\");//local tmp file
+
+            open = true;
+            return true;
+        }
+
+
         /*_____________________________________SAVE_____________________________________*/
 
-        
+
         public void SaveToFile(BindingList<Stud> Studs, string path)
         {
 

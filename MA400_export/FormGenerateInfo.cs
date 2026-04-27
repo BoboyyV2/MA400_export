@@ -14,7 +14,7 @@ namespace MA400_export
     {
 
         public GeneratorData Data;
-        int ProgramNumberValue;
+        int ProgramNumberValue = 1112;
         DateTime Today ;
         DateTime Modified; 
         public FormGenerateInfo()
@@ -35,7 +35,7 @@ namespace MA400_export
 
         private void GetProgramNumber()
         {
-            ProgramNumberValue = 1;
+            ProgramNumberValue = 1112;
             //TODO fichier de config ?
         }
 

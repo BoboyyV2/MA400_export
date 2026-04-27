@@ -126,15 +126,14 @@ namespace MA400_export
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ouvrirprogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.enregistrerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enregistrersousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.imprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aperçuavantimpressionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.quitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.générerLesFichiersDeSortieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.outilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.personnaliserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -167,7 +166,6 @@ namespace MA400_export
             this.fileSystemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonGenerer = new System.Windows.Forms.Button();
             this.saveFileDialogSave = new System.Windows.Forms.SaveFileDialog();
-            this.générerLesFichiersDeSortieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -205,13 +203,11 @@ namespace MA400_export
             this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.nouveauToolStripMenuItem,
             this.ouvrirToolStripMenuItem,
+            this.ouvrirprogramToolStripMenuItem,
             this.toolStripSeparator,
             this.enregistrerToolStripMenuItem,
             this.enregistrersousToolStripMenuItem,
             this.toolStripSeparator1,
-            this.imprimerToolStripMenuItem,
-            this.aperçuavantimpressionToolStripMenuItem,
-            this.toolStripSeparator2,
             this.quitterToolStripMenuItem});
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
             this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
@@ -223,7 +219,7 @@ namespace MA400_export
             this.nouveauToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.nouveauToolStripMenuItem.Name = "nouveauToolStripMenuItem";
             this.nouveauToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.nouveauToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.nouveauToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nouveauToolStripMenuItem.Text = "&Nouveau";
             // 
             // ouvrirToolStripMenuItem
@@ -232,14 +228,21 @@ namespace MA400_export
             this.ouvrirToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ouvrirToolStripMenuItem.Name = "ouvrirToolStripMenuItem";
             this.ouvrirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.ouvrirToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.ouvrirToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.ouvrirToolStripMenuItem.Text = "&Ouvrir";
             this.ouvrirToolStripMenuItem.Click += new System.EventHandler(this.ouvrirToolStripMenuItem_Click);
+            // 
+            // ouvrirprogramToolStripMenuItem
+            // 
+            this.ouvrirprogramToolStripMenuItem.Name = "ouvrirprogramToolStripMenuItem";
+            this.ouvrirprogramToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ouvrirprogramToolStripMenuItem.Text = "&Ouvrir &program";
+            this.ouvrirprogramToolStripMenuItem.Click += new System.EventHandler(this.ouvrirprogramToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(202, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(177, 6);
             // 
             // enregistrerToolStripMenuItem
             // 
@@ -247,48 +250,26 @@ namespace MA400_export
             this.enregistrerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.enregistrerToolStripMenuItem.Name = "enregistrerToolStripMenuItem";
             this.enregistrerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.enregistrerToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.enregistrerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.enregistrerToolStripMenuItem.Text = "&Enregistrer";
             this.enregistrerToolStripMenuItem.Click += new System.EventHandler(this.enregistrerToolStripMenuItem_Click);
             // 
             // enregistrersousToolStripMenuItem
             // 
             this.enregistrersousToolStripMenuItem.Name = "enregistrersousToolStripMenuItem";
-            this.enregistrersousToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.enregistrersousToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.enregistrersousToolStripMenuItem.Text = "Enregistrer &sous";
             this.enregistrersousToolStripMenuItem.Click += new System.EventHandler(this.enregistrersousToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(202, 6);
-            // 
-            // imprimerToolStripMenuItem
-            // 
-            this.imprimerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("imprimerToolStripMenuItem.Image")));
-            this.imprimerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.imprimerToolStripMenuItem.Name = "imprimerToolStripMenuItem";
-            this.imprimerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.imprimerToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.imprimerToolStripMenuItem.Text = "&Imprimer";
-            // 
-            // aperçuavantimpressionToolStripMenuItem
-            // 
-            this.aperçuavantimpressionToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("aperçuavantimpressionToolStripMenuItem.Image")));
-            this.aperçuavantimpressionToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.aperçuavantimpressionToolStripMenuItem.Name = "aperçuavantimpressionToolStripMenuItem";
-            this.aperçuavantimpressionToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
-            this.aperçuavantimpressionToolStripMenuItem.Text = "Aperçu a&vant impression";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(202, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // quitterToolStripMenuItem
             // 
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.quitterToolStripMenuItem.Text = "&Quitter";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
@@ -299,6 +280,13 @@ namespace MA400_export
             this.editionToolStripMenuItem.Name = "editionToolStripMenuItem";
             this.editionToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.editionToolStripMenuItem.Text = "&Générer";
+            // 
+            // générerLesFichiersDeSortieToolStripMenuItem
+            // 
+            this.générerLesFichiersDeSortieToolStripMenuItem.Name = "générerLesFichiersDeSortieToolStripMenuItem";
+            this.générerLesFichiersDeSortieToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.générerLesFichiersDeSortieToolStripMenuItem.Text = "&Générer les fichiers de sortie";
+            this.générerLesFichiersDeSortieToolStripMenuItem.Click += new System.EventHandler(this.générerLesFichiersDeSortieToolStripMenuItem_Click);
             // 
             // outilsToolStripMenuItem
             // 
@@ -584,13 +572,6 @@ namespace MA400_export
             // 
             this.saveFileDialogSave.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialogSave_FileOk);
             // 
-            // générerLesFichiersDeSortieToolStripMenuItem
-            // 
-            this.générerLesFichiersDeSortieToolStripMenuItem.Name = "générerLesFichiersDeSortieToolStripMenuItem";
-            this.générerLesFichiersDeSortieToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.générerLesFichiersDeSortieToolStripMenuItem.Text = "&Générer les fichiers de sortie";
-            this.générerLesFichiersDeSortieToolStripMenuItem.Click += new System.EventHandler(this.générerLesFichiersDeSortieToolStripMenuItem_Click);
-            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -640,9 +621,6 @@ namespace MA400_export
         private System.Windows.Forms.ToolStripMenuItem enregistrerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enregistrersousToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem imprimerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aperçuavantimpressionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem quitterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem outilsToolStripMenuItem;
@@ -679,6 +657,7 @@ namespace MA400_export
         private Button buttonGenerer;
         private SaveFileDialog saveFileDialogSave;
         private ToolStripMenuItem générerLesFichiersDeSortieToolStripMenuItem;
+        private ToolStripMenuItem ouvrirprogramToolStripMenuItem;
     }
 }
 
