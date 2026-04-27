@@ -231,8 +231,27 @@ namespace MA400_export
 
         private void Draw_ReferenceCircles()
         {
-            float radius = 5.0f;
-            DrawCircle(Constants.Origin_Coord.X + radius + 5, Constants.Origin_Coord.Y - radius, radius);
+            float radius = 6.5f;//6.5mm
+
+            //ligne du haut en Y
+            DrawCircle(Constants.Origin_Coord.X - radius + 20, Constants.Origin_Coord.Y - radius, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 50, Constants.Origin_Coord.Y - radius, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 150, Constants.Origin_Coord.Y - radius, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 300, Constants.Origin_Coord.Y - radius, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 500, Constants.Origin_Coord.Y - radius, radius);
+
+            //ligne du bas en Y
+            DrawCircle(Constants.Origin_Coord.X - radius + 20, Constants.Origin_Coord.Y - radius + 430, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 50, Constants.Origin_Coord.Y - radius + 430, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 150, Constants.Origin_Coord.Y - radius + 430, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 300, Constants.Origin_Coord.Y - radius + 430, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 500, Constants.Origin_Coord.Y - radius + 430, radius);
+
+            //à gauche
+            DrawCircle(Constants.Origin_Coord.X - radius, Constants.Origin_Coord.Y - radius + 20, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius, Constants.Origin_Coord.Y - radius + 150, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius, Constants.Origin_Coord.Y - radius + 450, radius);
+
         }
 
         public void Paint(BindingList<Stud> Studs)
