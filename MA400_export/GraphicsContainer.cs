@@ -31,7 +31,7 @@ namespace MA400_export
         /**
          * <summary>the static path to the exported svg, beware of remnant</summary>
          */
-        private String path = AppDomain.CurrentDomain.BaseDirectory + @"tmp\display.svg";//.exe loc
+        private String path = Constants.outputpath+ @"tmp\display.svg";//.exe loc
         //private String path = AppDomain.CurrentDomain.BaseDirectory + @"tmp\truite.jpg";//used for debug
 
 
@@ -204,7 +204,7 @@ namespace MA400_export
             int renderWidth = (int)dims.Width;
             int renderHeight = (int)dims.Height;
 
-            string bmpPath = AppDomain.CurrentDomain.BaseDirectory + @"\tmp\bmp.BMP";
+            string bmpPath = Constants.outputpath + @"\tmp\bmp.BMP";
             var bmp = svg.Draw();
             bmp.Save(bmpPath, ImageFormat.Bmp);
             using (Bitmap svgBitmap = svg.Draw(renderWidth, renderHeight))

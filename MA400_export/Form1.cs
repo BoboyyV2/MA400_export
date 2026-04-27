@@ -595,11 +595,13 @@ namespace MA400_export
 
         private RectangleF getFileDimensions()
         {
+            //TODO
             return new RectangleF(0 , 0, 210, 110);
         }
          
         private PointF getFileOffset()
         {
+            //TODO
             return new PointF(708.35f, 71.70f);
         }
 
