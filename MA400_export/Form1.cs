@@ -168,7 +168,7 @@ namespace MA400_export
                 float offsetY_min = -Constants.Origin_Coord.X ;
 
 
-                //depends on the zoom (can't see further away than 50 ou of the worspace)
+                //depends on the zoom (can't see further away than 50 out of the worspace)
                 float offsetX_max = Constants.WorkZoneLimits_Coord.X + Constants.Origin_Coord.X - (WorkZone.Width / new_Zoom) + 141.6f;
                 float offsetY_max = Constants.WorkZoneLimits_Coord.Y + Constants.Origin_Coord.Y - (WorkZone.Height / new_Zoom);
                 
@@ -300,11 +300,11 @@ namespace MA400_export
 
             //Bounds
             //TODO remplacer la zone de travail par la pièce en elle même, aussi mettre une sécu si il n'y a pas de pièce
-            if (X > Constants.WorkZoneLimits_Coord.X || X < 0)
+            if (X > ( Constants.WorkZoneLimits_Coord.X - Constants.Origin_Coord.X ) || X < 0)
             {
                 error += "La coordonée X saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
             }
-            if (Y > Constants.WorkZoneLimits_Coord.X || Y < 0)
+            if (Y > (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y ) || Y < 0)
             {
                 error += "La coordonée Y saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
             }
@@ -357,11 +357,11 @@ namespace MA400_export
             //Bounds
             //TODO remplacer la zone de travail par la pièce en elle même, aussi mettre une sécu si il n'y a pas de pièce
 
-            if (X > Constants.WorkZoneLimits_Coord.X || X < 0)
+            if (X > (Constants.WorkZoneLimits_Coord.X - Constants.Origin_Coord.X) || X < 0)
             {
                 error += "La coordonée X n'est pas un emplacement valide pour poser un goujon.\r\n";
             }
-            if (Y > Constants.WorkZoneLimits_Coord.X || Y < 0)
+            if (Y > (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y) || Y < 0)
             {
                 error += "La coordonée Y saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
             }
@@ -695,7 +695,15 @@ namespace MA400_export
 
         private void ouvrirprogramToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            using (ProgramNumberOpen programNumber = new ProgramNumberOpen())
+            {
+                if (programNumber.ShowDialog() == DialogResult.OK)
+                {
+                    data.ProgramNumber = programNumber.ProgramNumber;
+                    
+                }
 
+            }
         }
 
 

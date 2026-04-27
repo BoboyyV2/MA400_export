@@ -222,7 +222,7 @@
             this.Controls.Add(this.PartDesignationText);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FormGenerateInfo";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Program - Data";
             this.ResumeLayout(false);
             this.PerformLayout();

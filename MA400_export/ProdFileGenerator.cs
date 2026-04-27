@@ -154,7 +154,7 @@ namespace MA400_export
             GenerateBST(Daten + fileID);
             GenerateDAT(Daten + fileID);
             GenerateDUP(Daten + fileID);
-            GenerateGHP(Daten + fileID);
+            GenerateGPH(Daten + fileID);
             GenerateLAY(Daten + fileID);
             GenerateMIN(Daten + fileID);
             GenerateNC(Daten + fileID);
@@ -392,15 +392,15 @@ namespace MA400_export
         }
 
 
-        /*_____________________________________GHP_____________________________________*/
+        /*_____________________________________GPH_____________________________________*/
 
 
         /**
-         * <summary>Write a command for a line entity in the GHP file</summary>
-         * <param name="sw">The StreamWriter linkde to the GHP file</param>
+         * <summary>Write a command for a line entity in the GPH file</summary>
+         * <param name="sw">The StreamWriter linkde to the GPH file</param>
          * <param name="line">The line to turn into a command</param>
          */
-        public void WriteGHP_LINE(StreamWriter sw, Line line)
+        public void WriteGPH_LINE(StreamWriter sw, Line line)
         {
             PointF start = GetSpacialPosition(line.StartPoint);
             PointF end = GetSpacialPosition(line.EndPoint);
@@ -417,11 +417,11 @@ namespace MA400_export
         }
 
         /**
-         * <summary>Write a command for a line entity in the GHP file</summary>
-         * <param name="sw">The StreamWriter linkde to the GHP file</param>
+         * <summary>Write a command for a line entity in the GPH file</summary>
+         * <param name="sw">The StreamWriter linkde to the GPH file</param>
          * <param name="circle">The line to turn into a command</param>
          */
-        public void WriteGHP_CIRCLE(StreamWriter sw, Circle circle)
+        public void WriteGPH_CIRCLE(StreamWriter sw, Circle circle)
         {
             PointF center = GetSpacialPosition(circle.Center);
             if ( center.X < 0 || center.Y < 0)
@@ -438,11 +438,11 @@ namespace MA400_export
 
 
         /**
-         * <summary>Write a GHP command representing an entity</summary>
-         * <param name="sw">The StreamWriter linkde to the GHP file</param>
+         * <summary>Write a GPH command representing an entity</summary>
+         * <param name="sw">The StreamWriter linkde to the GPH file</param>
          * <param name="entity">The Entity being turned into a command</param>
          */
-        private void GenerateGHP_CMD(StreamWriter sw, Entity entity)
+        private void GenerateGPH_CMD(StreamWriter sw, Entity entity)
         {
             //all command are on 11 lines
             switch (entity.ObjectType)
@@ -450,34 +450,34 @@ namespace MA400_export
                 case ObjectType.LINE:
                     {
                         Line line = (Line)entity;
-                        WriteGHP_LINE(sw, line);
+                        WriteGPH_LINE(sw, line);
                         break;
                     }
                 case ObjectType.CIRCLE:
                     {
                         Circle circle = (Circle)entity;
-                        WriteGHP_CIRCLE(sw, circle);
+                        WriteGPH_CIRCLE(sw, circle);
 
                         break;
                     }
             }
         }
 
-        private void GenerateGHP(string path)
+        private void GenerateGPH(string path)
         {
-            using (StreamWriter sw = File.CreateText(path + ".GHP"))
+            using (StreamWriter sw = File.CreateText(path + ".GPH"))
             {
                 //TODO graphic par, commandes sur 11 lignes, c'est quoi ce 1er nombre
                 int magicnumber = 6;
                 sw.WriteLine(magicnumber );
                 foreach (var entity in Entities)
                 {
-                    GenerateGHP_CMD(sw, entity);
+                    GenerateGPH_CMD(sw, entity);
                 }
 
                 foreach (Stud entity in Studs)
                 {
-                    GenerateGHP_CMD(sw, entity.circle);
+                    GenerateGPH_CMD(sw, entity.circle);
                 }
             }
         }

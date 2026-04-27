@@ -35,7 +35,8 @@ namespace MA400_export
 
         public static PointF Origin_Coord { get; private set; } = new PointF(50.0f, 50.0f);
 
-        public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(750.0f, 750.0f);
+
+        public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
         public static String outputpath { get; private set; } = AppDomain.CurrentDomain.BaseDirectory + @"output\";//.exe\output loc
 
         //GHP command id
@@ -262,17 +263,6 @@ namespace MA400_export
         {
             string CNCPath = Constants.outputpath + @"Cnc\" + ProgramNumber + ".CNC";
             string GPHPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".GPH";
-
-            if (!File.Exists(CNCPath))
-            {
-                //le prog n'existe pas 
-                throw new FileNotFoundException("Fichier CNC introuvable",  ProgramNumber + ".CNC");
-            }
-            if (!File.Exists(GPHPath))
-            {
-                //le prog n'existe pas 
-                throw new FileNotFoundException("Fichier GPH introuvable", ProgramNumber + ".GPH");
-            }
 
             /*___________________________________*/
 
