@@ -577,17 +577,7 @@ namespace MA400_export
             }
         }
 
-        private RectangleF getFileDimensions()
-        {
-            //TODO
-            return new RectangleF(0 , 0, 210, 110);
-        }
-         
-        private PointF getFileOffset()
-        {
-            //TODO
-            return new PointF(708.35f, 71.70f);
-        }
+       
 
         /**
          * <summary>Open the Form to generate the driver's files and get the data.</summary>
@@ -634,10 +624,9 @@ namespace MA400_export
             }
 
             GetFormData();
-            RectangleF dim = getFileDimensions();
-            PointF offset = getFileOffset();
-            Scale scale = new Scale(1, -1);
-            fs.GenerateProdFiles(ref Studs, dim, offset, data, scale); // en dernier, une fois que tout est bien rempli
+            
+            
+            fs.GenerateProdFiles(ref Studs, fs.dimension, fs.offset, data, fs.scale); // en dernier, une fois que tout est bien rempli
         }
 
 

@@ -87,6 +87,12 @@ namespace MA400_export
 
         private ProdFileGenerator Gen;
 
+        //inner data
+        //test data
+        public PointF offset { get; set; } = new PointF(708.35f, 71.70f);
+        public RectangleF dimension { get; set; } = new RectangleF(0, 0, 210, 110);
+        public Scale scale { get; set; } = new Scale(1, -1);
+
 
 
         /**
@@ -99,14 +105,25 @@ namespace MA400_export
             Studs = new List<Circle>();
         }
 
+        /*_____________________________________UTIL_____________________________________*/
         public void reset()
         {
             open = false;
             Doc = new CadDocument();
             Studs = new List<Circle>();
+
+            //test data
+            //TODO remove 
+            PointF offset = new PointF(708.35f, 71.70f);
+            RectangleF dimension = new RectangleF(0, 0, 210, 110);
+            Scale scale = new Scale(1, -1);
         }
 
+       
 
+        
+
+       
         /*_____________________________________DXF_____________________________________*/
 
 
@@ -224,8 +241,8 @@ namespace MA400_export
                 case 1:
                     {
                         Circle c = new Circle();
-                        double centerX = Double.Parse(file[++num_line]);
-                        double centerY = Double.Parse(file[++num_line]);
+                        double centerX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        double centerY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         c.Center = new CSMath.XYZ(centerX, centerY, 0);
 
                         ++num_line;
@@ -240,11 +257,11 @@ namespace MA400_export
                 case 4:
                     {
                         Line l = new Line();
-                        double startX = Double.Parse(file[++num_line]);
-                        double startY = Double.Parse(file[++num_line]);
+                        double startX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        double startY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         l.StartPoint = new CSMath.XYZ(startX, startY, 0);
-                        double endX = Double.Parse(file[++num_line]);
-                        double endY = Double.Parse(file[++num_line]);
+                        double endX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        double endY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         l.EndPoint = new CSMath.XYZ(endX, endY, 0);
                         num_line += 6;
 
@@ -293,6 +310,30 @@ namespace MA400_export
 
         }
 
+        public void ReadLAY(int ProgramNumber)
+        {
+            string LAYPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".LAY";
+
+            string[] file = File.ReadAllLines(LAYPath);
+
+
+            offset = new PointF(float.Parse(file[0], CultureInfo.InvariantCulture),
+                                float.Parse(file[1], CultureInfo.InvariantCulture));
+
+
+            //TODO, verif si les deux dernier param sont les limites ou la hauteur / largeur
+            //==> 0,0,210,110 =? 100,100,310,210 ou 100,100,210,110
+            //probablement le second car je n'ai pas vu d'offset nul part
+            //pour l'instant, marche impec si on est à l'origine
+            dimension = new RectangleF( float.Parse(file[0], CultureInfo.InvariantCulture), 
+                                        float.Parse(file[1], CultureInfo.InvariantCulture),
+                                        float.Parse(file[3], CultureInfo.InvariantCulture),
+                                        float.Parse(file[4], CultureInfo.InvariantCulture));
+
+            scale = new Scale(1, 1);//toujours ça normalement
+        }
+
+
         public GeneratorData OpenProdFile(int ProgramNumber) 
         {
             GeneratorData data = new GeneratorData();
@@ -304,6 +345,11 @@ namespace MA400_export
 
             ReadGPH(ProgramNumber);
             ReadDAT(ProgramNumber, ref data);
+            //get offset, scale & dimsension
+            //scale always 1;1 ?
+            //offset et dimension dans .LAY donc : 
+            // ==>>
+            ReadLAY(ProgramNumber);
 
             ScanEntities();
 
