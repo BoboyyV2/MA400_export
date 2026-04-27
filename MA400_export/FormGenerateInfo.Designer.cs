@@ -52,14 +52,14 @@
             // 
             this.PartDesignationText.Location = new System.Drawing.Point(523, 74);
             this.PartDesignationText.Name = "PartDesignationText";
-            this.PartDesignationText.Size = new System.Drawing.Size(216, 20);
+            this.PartDesignationText.Size = new System.Drawing.Size(224, 20);
             this.PartDesignationText.TabIndex = 0;
             // 
             // DrawingNumberText
             // 
             this.DrawingNumberText.Location = new System.Drawing.Point(523, 115);
             this.DrawingNumberText.Name = "DrawingNumberText";
-            this.DrawingNumberText.Size = new System.Drawing.Size(216, 20);
+            this.DrawingNumberText.Size = new System.Drawing.Size(224, 20);
             this.DrawingNumberText.TabIndex = 1;
             // 
             // PartDesignation
@@ -102,14 +102,14 @@
             // 
             this.PartNumberText.Location = new System.Drawing.Point(155, 115);
             this.PartNumberText.Name = "PartNumberText";
-            this.PartNumberText.Size = new System.Drawing.Size(216, 20);
+            this.PartNumberText.Size = new System.Drawing.Size(227, 20);
             this.PartNumberText.TabIndex = 5;
             // 
             // CompanyText
             // 
             this.CompanyText.Location = new System.Drawing.Point(155, 74);
             this.CompanyText.Name = "CompanyText";
-            this.CompanyText.Size = new System.Drawing.Size(216, 20);
+            this.CompanyText.Size = new System.Drawing.Size(227, 20);
             this.CompanyText.TabIndex = 4;
             // 
             // Notes
@@ -158,6 +158,8 @@
             // 
             // ProgramNumberText
             // 
+            this.ProgramNumberText.Enabled = false;
+            this.ProgramNumberText.ForeColor = System.Drawing.SystemColors.WindowFrame;
             this.ProgramNumberText.Location = new System.Drawing.Point(156, 38);
             this.ProgramNumberText.Name = "ProgramNumberText";
             this.ProgramNumberText.Size = new System.Drawing.Size(73, 20);
@@ -165,13 +167,17 @@
             // 
             // DateCreatedText
             // 
+            this.DateCreatedText.Enabled = false;
+            this.DateCreatedText.ForeColor = System.Drawing.SystemColors.WindowFrame;
             this.DateCreatedText.Location = new System.Drawing.Point(296, 38);
             this.DateCreatedText.Name = "DateCreatedText";
-            this.DateCreatedText.Size = new System.Drawing.Size(96, 20);
+            this.DateCreatedText.Size = new System.Drawing.Size(86, 20);
             this.DateCreatedText.TabIndex = 14;
             // 
             // DateModifiedText
             // 
+            this.DateModifiedText.Enabled = false;
+            this.DateModifiedText.ForeColor = System.Drawing.SystemColors.WindowFrame;
             this.DateModifiedText.Location = new System.Drawing.Point(523, 38);
             this.DateModifiedText.Name = "DateModifiedText";
             this.DateModifiedText.Size = new System.Drawing.Size(96, 20);

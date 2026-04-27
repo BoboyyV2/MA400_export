@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -98,7 +99,7 @@ namespace MA400_export
             Studs = new List<Circle>();
         }
 
-        private void reset()
+        public void reset()
         {
             open = false;
             Doc = new CadDocument();
@@ -228,7 +229,7 @@ namespace MA400_export
                         c.Center = new CSMath.XYZ(centerX, centerY, 0);
 
                         ++num_line;
-                        double radius = Double.Parse(file[++num_line]);
+                        double radius = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         c.Radius = radius;
                         num_line += 6;
 
@@ -259,32 +260,57 @@ namespace MA400_export
 
         }
 
-        public bool OpenProdFile(int ProgramNumber) 
+        public void ReadGPH(int ProgramNumber)
         {
-            string CNCPath = Constants.outputpath + @"Cnc\" + ProgramNumber + ".CNC";
             string GPHPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".GPH";
 
+            string[] file = File.ReadAllLines(GPHPath);
+            int cmd_line_number = 11;
+
+            for (int num_line = 1; num_line <= (file.Length - cmd_line_number); num_line++)
+            {
+                Entity e = ParseEntities(file, ref num_line);
+                Doc.Entities.Add(e);
+            }
+        }
+
+        public void ReadDAT(int ProgramNumber, ref GeneratorData data)
+        {
+            string DATPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".DAT";
+
+            string[] file = File.ReadAllLines(DATPath);
+
+            //fill the data struct
+            data.ProgramNumber = ProgramNumber;
+            data.machine = Machine.MA400S;
+            data.Company = file[0];
+            data.PartDesignation = file[1];
+            data.PartNumber = file[2];
+            data.DrawingNumber = file[3];
+            data.Notes = file[4];
+            data.DateCreation = file[5];
+            data.DateModification = file[6];
+
+        }
+
+        public GeneratorData OpenProdFile(int ProgramNumber) 
+        {
+            GeneratorData data = new GeneratorData();
+            data.ProgramNumber = ProgramNumber;
             /*___________________________________*/
 
             //si on a les fichiers =>
             reset();
 
-            string[] file = File.ReadAllLines(GPHPath);
-            int num_entities = Int32.Parse(file[0]);
-
-            for (int num_line = 1; num_line < num_entities; num_line++)
-            {
-                Entity e = ParseEntities(file,  ref num_line);
-                Doc.Entities.Add(e);
-            }
+            ReadGPH(ProgramNumber);
+            ReadDAT(ProgramNumber, ref data);
 
             ScanEntities();
-
 
             WriteToSVG(Constants.outputpath + @"tmp\");//local tmp file
 
             open = true;
-            return true;
+            return data;
         }
 
 

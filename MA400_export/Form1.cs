@@ -46,8 +46,8 @@ namespace MA400_export
        
         //Edit variables
         public EditMode editMode = EditMode.Cursor;
-        public DateTime LastModified = default(DateTime);
         GeneratorData data = new GeneratorData();
+        public bool IsNew = true;
 
 
         public MA400_export()
@@ -57,7 +57,12 @@ namespace MA400_export
 
         }
 
-        
+        private void reset()
+        {
+            data = new GeneratorData();
+            IsNew = true;
+            fs.reset();
+        }
 
         private void WorkZone_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
@@ -473,6 +478,7 @@ namespace MA400_export
 
         private void openFileDialogOpen_FileOk(object sender, CancelEventArgs e)
         {
+            reset();
             bool open = false;
             try
             {
@@ -484,29 +490,7 @@ namespace MA400_export
                 $"Details:\n\n{ex.StackTrace}");
             }
 
-            if (open)
-            {
-                gc.OpenSVG();
-            }
-            else
-            {
-                gc.CloseSVG();
-            }
-
-            List<Circle> ToAdd = this.fs.Studs;
-            EmptyStuds();
-            foreach (var circle in ToAdd)
-            {
-                AddStud(circle);
-            }
-
-            this.WorkZone.Invalidate();
-
-            //TODO
-            //s'assurer des dimentions
-            //on va ouvrir le ficheir ici
-            //donc on aura note FileSystem qui va l'ouvrir et faire des bétises avec
-            //puis ce sera le display qui va ensuite l'afficher, en plus de ce que le Filesystem va détecter comme goujon et donc qu'il va falloir highlight
+            DisplayWhenOpen(open);
         }
 
         public void setEditMode(EditMode mode)
@@ -612,7 +596,7 @@ namespace MA400_export
         private bool GetFormData()
         {
             //depending on whether we already created the program
-            if (LastModified != default(DateTime))
+            if (IsNew)
             {
                 using (FormGenerateInfo formInfo = new FormGenerateInfo())
                 {
@@ -626,7 +610,7 @@ namespace MA400_export
             }
             else
             {
-                using (FormGenerateInfo formInfo = new FormGenerateInfo())
+                using (FormGenerateInfo formInfo = new FormGenerateInfo(data))
                 {
                     if (formInfo.ShowDialog() == DialogResult.OK)
                     {
@@ -645,7 +629,7 @@ namespace MA400_export
         {
             if (!fs.open)
             {
-                MessageBox.Show("impossible de générer les fichiers de production :\r\nAucun fichier dxf n'est ouvert.");
+                MessageBox.Show("impossible de générer les fichiers de production :\r\nAucun fichier dxf ou programme n'est ouvert.");
                 return;
             }
 
@@ -655,6 +639,8 @@ namespace MA400_export
             Scale scale = new Scale(1, -1);
             fs.GenerateProdFiles(ref Studs, dim, offset, data, scale); // en dernier, une fois que tout est bien rempli
         }
+
+
         private void buttonGenerer_Click(object sender, EventArgs e)
         {
             GenerateOutput();
@@ -695,17 +681,47 @@ namespace MA400_export
 
         private void ouvrirprogramToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (ProgramNumberOpen programNumber = new ProgramNumberOpen())
+            using (ProgramNumberOpen programNumberWindow = new ProgramNumberOpen())
             {
-                if (programNumber.ShowDialog() == DialogResult.OK)
+                if (programNumberWindow.ShowDialog() == DialogResult.OK)
                 {
-                    data.ProgramNumber = programNumber.ProgramNumber;
-                    
+                    int ProgramNumber = programNumberWindow.ProgramNumber;
+                    reset();
+                    data = fs.OpenProdFile(ProgramNumber);
+                    IsNew = false;
+                    DisplayWhenOpen(true);
                 }
 
             }
+
         }
 
+        private void DisplayWhenOpen(bool open)
+        {
+            if (open)
+            {
+                gc.OpenSVG();
+            }
+            else
+            {
+                gc.CloseSVG();
+            }
+
+            List<Circle> ToAdd = this.fs.Studs;
+            EmptyStuds();
+            foreach (var circle in ToAdd)
+            {
+                AddStud(circle);
+            }
+
+            this.WorkZone.Invalidate();
+
+            //TODO
+            //s'assurer des dimentions
+            //on va ouvrir le ficheir ici
+            //donc on aura note FileSystem qui va l'ouvrir et faire des bétises avec
+            //puis ce sera le display qui va ensuite l'afficher, en plus de ce que le Filesystem va détecter comme goujon et donc qu'il va falloir highlight
+        }
 
         /*___________________________________________|___________________________________________*/
     }
