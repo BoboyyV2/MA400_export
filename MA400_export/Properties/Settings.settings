@@ -3,7 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="NewProgramNumber" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1113</Value>
+      <Value Profile="(Default)">1112</Value>
+    </Setting>
+    <Setting Name="OutputPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

@@ -79,9 +79,9 @@ namespace MA400_export
 
             //test data
             //TODO remove 
-            PointF offset = new PointF(708.35f, 71.70f);
-            RectangleF dimension = new RectangleF(0, 0, 210, 110);
-            Scale scale = new Scale(1, -1);
+            offset = new PointF(708.35f, 71.70f);
+            dimension = new RectangleF(0, 0, 210, 110);
+            scale = new Scale(1, -1);
         }
 
        
@@ -155,7 +155,7 @@ namespace MA400_export
             ScanEntities();
 
 
-            WriteToSVG(Constants.outputpath + @"tmp\");//local tmp file
+            WriteToSVG(Properties.Settings.Default.OutputPath + @"tmp\");//local tmp file
 
             open = true;
             return true;
@@ -187,7 +187,7 @@ namespace MA400_export
             ScanEntities();
 
 
-            WriteToSVG(Constants.outputpath + @"tmp\");//local tmp file
+            WriteToSVG(Properties.Settings.Default.OutputPath + @"tmp\");//local tmp file
 
             open = true;
             return true;
@@ -196,6 +196,35 @@ namespace MA400_export
 
 
         /*_____________________________________PRODFILE_____________________________________*/
+
+
+        /**
+        * <summary>attempt to open a program's file via it's program number and to import it into the application</summary>
+        */
+        public GeneratorData OpenProdFile(int ProgramNumber)
+        {
+            GeneratorData data = new GeneratorData();
+            data.ProgramNumber = ProgramNumber;
+            /*___________________________________*/
+
+            //si on a les fichiers =>
+            reset();
+
+            ReadGPH(ProgramNumber);
+            ReadDAT(ProgramNumber, ref data);
+            //get offset, scale & dimsension
+            //scale always 1;1 ?
+            //offset et dimension dans .LAY donc : 
+            // ==>>
+            ReadLAY(ProgramNumber);
+
+            ScanEntities();
+
+            WriteToSVG(Properties.Settings.Default.OutputPath + @"tmp\");//local tmp file
+
+            open = true;
+            return data;
+        }
 
         /**
          * <summary>parse the GPH file from num_line to num_line + nb_line_per_cmd in order to retrieve an entity and add it to the collection</summary>
@@ -251,7 +280,7 @@ namespace MA400_export
          */
         public void ReadGPH(int ProgramNumber)
         {
-            string GPHPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".GPH";
+            string GPHPath = Properties.Settings.Default.OutputPath + @"Daten\" + ProgramNumber + ".GPH";
 
             string[] file = File.ReadAllLines(GPHPath);
             int cmd_line_number = 11;
@@ -269,7 +298,7 @@ namespace MA400_export
          */
         public void ReadDAT(int ProgramNumber, ref GeneratorData data)
         {
-            string DATPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".DAT";
+            string DATPath = Properties.Settings.Default.OutputPath + @"Daten\" + ProgramNumber + ".DAT";
 
             string[] file = File.ReadAllLines(DATPath);
 
@@ -292,7 +321,7 @@ namespace MA400_export
          */
         public void ReadLAY(int ProgramNumber)
         {
-            string LAYPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".LAY";
+            string LAYPath = Properties.Settings.Default.OutputPath + @"Daten\" + ProgramNumber + ".LAY";
 
             string[] file = File.ReadAllLines(LAYPath);
 
@@ -314,33 +343,7 @@ namespace MA400_export
         }
 
 
-        /**
-         * <summary>attempt to open a program's file via it's program number and to import it into the application</summary>
-         */
-        public GeneratorData OpenProdFile(int ProgramNumber) 
-        {
-            GeneratorData data = new GeneratorData();
-            data.ProgramNumber = ProgramNumber;
-            /*___________________________________*/
-
-            //si on a les fichiers =>
-            reset();
-
-            ReadGPH(ProgramNumber);
-            ReadDAT(ProgramNumber, ref data);
-            //get offset, scale & dimsension
-            //scale always 1;1 ?
-            //offset et dimension dans .LAY donc : 
-            // ==>>
-            ReadLAY(ProgramNumber);
-
-            ScanEntities();
-
-            WriteToSVG(Constants.outputpath + @"tmp\");//local tmp file
-
-            open = true;
-            return data;
-        }
+       
 
 
         /*_____________________________________SAVE_____________________________________*/

@@ -39,9 +39,9 @@
             this.ProgramNumberLabel.AutoSize = true;
             this.ProgramNumberLabel.Location = new System.Drawing.Point(61, 53);
             this.ProgramNumberLabel.Name = "ProgramNumberLabel";
-            this.ProgramNumberLabel.Size = new System.Drawing.Size(114, 13);
+            this.ProgramNumberLabel.Size = new System.Drawing.Size(120, 13);
             this.ProgramNumberLabel.TabIndex = 0;
-            this.ProgramNumberLabel.Text = "Numéro de programme";
+            this.ProgramNumberLabel.Text = "Numéro de programme :";
             // 
             // ProgramNumberText
             // 
@@ -72,6 +72,7 @@
             // 
             // ProgramNumberOpen
             // 
+            this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 136);

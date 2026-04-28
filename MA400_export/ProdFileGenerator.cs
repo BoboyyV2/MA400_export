@@ -142,8 +142,8 @@ namespace MA400_export
          */
         public void GenerateProductionFiles(int fileID)
         {
-            string Daten = Constants.outputpath + @"Daten\";
-            string Cnc = Constants.outputpath + @"Cnc\";
+            string Daten = Properties.Settings.Default.OutputPath + @"Daten\";
+            string Cnc = Properties.Settings.Default.OutputPath + @"Cnc\";
 
             Directory.CreateDirectory(Daten);
             Directory.CreateDirectory(Cnc);

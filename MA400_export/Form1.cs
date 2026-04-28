@@ -75,7 +75,7 @@ namespace MA400_export
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.Paint(Studs, getSelectedStuds() );
+            gc.Paint(Studs, getSelectedStuds(), fs.offset );
 
         }
 
@@ -202,7 +202,12 @@ namespace MA400_export
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            if(Properties.Settings.Default.OutputPath.Length < 1)
+            {
+                Properties.Settings.Default.OutputPath = Constants.outputpath;
+                Properties.Settings.Default.Save();
 
+            }
         }
 
 
@@ -808,7 +813,17 @@ namespace MA400_export
             WorkZone.Invalidate();
         }
 
-        
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //ouvre les options
+            using ( UserSettings settingsWindow = new UserSettings())
+            {
+                settingsWindow.ShowDialog();
+                //c'est tout
+            }
+        }
+
+
 
         /*___________________________________________|___________________________________________*/
     }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,9 +32,8 @@ namespace MA400_export
         /**
          * <summary>the static path to the exported svg, beware of remnant</summary>
          */
-        private String path = Constants.outputpath+ @"tmp\display.svg";//.exe loc
+        private String path = Properties.Settings.Default.OutputPath + @"tmp\display.svg";//.exe loc
         //private String path = AppDomain.CurrentDomain.BaseDirectory + @"tmp\truite.jpg";//used for debug
-
 
         private SvgDocument svg = null;
         private bool open { get; set; }
@@ -72,12 +72,12 @@ namespace MA400_export
         /**
          * <summary>Draw a stud into the graphics</summary>
          */
-        public void Draw_Stud(Circle stud)
+        public void Draw_Stud(Circle stud, PointF offset)
         {
             float StudRadius = (float)stud.Radius;
             RectangleF shape = new RectangleF();
-            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
-            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
+            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X - offset.X;
+            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y - offset.Y;
             shape.Width = 2 * StudRadius;
             shape.Height = 2 * StudRadius;
 
@@ -89,11 +89,11 @@ namespace MA400_export
         /**
          * <summary>Draw all the studs into the graphics</summary>
          */
-        public void Draw_Studs(IEnumerable<Stud> Studs)
+        public void Draw_Studs(IEnumerable<Stud> Studs, PointF offset)
         {
             foreach (var item in Studs)
             {
-                Draw_Stud(item.circle);
+                Draw_Stud(item.circle, offset);
             }
 
         }
@@ -101,12 +101,12 @@ namespace MA400_export
         /**
          * <summary>Draw a stud into the graphics</summary>
          */
-        public void Draw_Selected_Stud(Circle stud)
+        public void Draw_Selected_Stud(Circle stud, PointF offset)
         {
             float StudRadius = (float)stud.Radius;
             RectangleF shape = new RectangleF();
-            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
-            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
+            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X - offset.X;
+            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y - offset.Y;
             shape.Width = 2 * StudRadius + 0.1f;
             shape.Height = 2 * StudRadius + 0.1f;
 
@@ -118,11 +118,11 @@ namespace MA400_export
         /**
          * <summary>Draw all the studs into the graphics</summary>
          */
-        public void Draw_Selected_Studs(IEnumerable<Stud> SelectedStuds)
+        public void Draw_Selected_Studs(IEnumerable<Stud> SelectedStuds, PointF offset)
         {
             foreach (var item in SelectedStuds)
             {
-                Draw_Selected_Stud(item.circle);
+                Draw_Selected_Stud(item.circle, offset);
             }
 
         }
@@ -219,6 +219,7 @@ namespace MA400_export
         public void OpenSVG()
         {
             open = true;
+            
             svg = SvgDocument.Open(path);
         }
 
@@ -239,7 +240,7 @@ namespace MA400_export
             int renderWidth = (int)dims.Width;
             int renderHeight = (int)dims.Height;
 
-            string bmpPath = Constants.outputpath + @"\tmp\bmp.BMP";
+            string bmpPath = Properties.Settings.Default.OutputPath + @"\tmp\bmp.BMP";
             var bmp = svg.Draw();
             bmp.Save(bmpPath, ImageFormat.Bmp);
             using (Bitmap svgBitmap = svg.Draw(renderWidth, renderHeight))
@@ -291,7 +292,7 @@ namespace MA400_export
 
         
 
-        public void Paint(IEnumerable<Stud> Studs, IEnumerable<Stud>SelectedStuds)
+        public void Paint(IEnumerable<Stud> Studs, IEnumerable<Stud>SelectedStuds, PointF offset)
         {
             //draw the basic from of the workzone
             //including but not restricted to :
@@ -308,8 +309,8 @@ namespace MA400_export
             {
                 DrawSVG();
             }
-            Draw_Studs(Studs);
-            Draw_Selected_Studs(SelectedStuds);
+            Draw_Studs(Studs, offset);
+            Draw_Selected_Studs(SelectedStuds, offset);
 
         }
 

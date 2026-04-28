@@ -17,6 +17,7 @@
             //
         }
         
+       
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
             // Ajouter du code pour gérer l'événement SettingChangingEvent ici.
         }
