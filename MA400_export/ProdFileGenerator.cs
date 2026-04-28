@@ -139,7 +139,7 @@ namespace MA400_export
          * <returns>A PointF corresponding to the position given in argument once put to the correct scale (orientation).</returns>
          * <param name="position">The raw position in the document.</param>
          */
-        private System.Drawing.PointF GetSpacialPosition(CSMath.XYZ position)
+        public static System.Drawing.PointF GetSpacialPosition(CSMath.XYZ position, PointF Offset, RectangleF Dimension, Scale Scalefact)
         {
             
             float posx;
@@ -149,7 +149,7 @@ namespace MA400_export
                 posx = (float)((position.X - Offset.X) * Scalefact.Xscale);
             }else
             {
-                posx = (float)(Dimension.Height + ( (position.X - Offset.X) * Scalefact.Xscale ) );
+                posx = (float)(Dimension.Width + ( (position.X - Offset.X) * Scalefact.Xscale ) );
             }
 
             if (Scalefact.Yscale > 0)
@@ -291,11 +291,12 @@ namespace MA400_export
             N51 M30
             %
              */
-            PointF p = GetSpacialPosition(firstStud.circle.Center);
+            //PointF p = GetSpacialPosition(firstStud.circle.Center, Offset, Dimension, Scalefact);
+
             sw.WriteLine($"N{++N} M20" );
             if (first)
             {
-                sw.WriteLine($"N{++N} G00 X{FormatValue(p.X - 0.2f)} Y{FormatValue(p.Y)}");
+                sw.WriteLine($"N{++N} G00 X{FormatValue(firstStud.circle.Center.X - 0.2f)} Y{FormatValue(firstStud.circle.Center.Y)}");
             }
             sw.WriteLine($"N{++N} (Massespanner auf)" );
             sw.WriteLine($"N{++N} M09" );
@@ -318,9 +319,9 @@ namespace MA400_export
             N19 G00 X39 Y30
             N19 M81
              */
-            PointF p = GetSpacialPosition(stud.circle.Center);
+            //PointF p = GetSpacialPosition(stud.circle.Center, Offset, Dimension, Scalefact);
 
-            sw.WriteLine($"N{N} G00 X{FormatValue(p.X)} Y{FormatValue(p.Y)}" );
+            sw.WriteLine($"N{N} G00 X{FormatValue(stud.circle.Center.X)} Y{FormatValue(stud.circle.Center.Y)}" );
             sw.WriteLine($"N{N} M81" );
 
 
@@ -481,8 +482,8 @@ namespace MA400_export
          */
         public void WriteGPH_LINE(StreamWriter sw, Line line)
         {
-            PointF start = GetSpacialPosition(line.StartPoint);
-            PointF end = GetSpacialPosition(line.EndPoint);
+            PointF start = GetSpacialPosition(line.StartPoint, Offset, Dimension, Scalefact);
+            PointF end = GetSpacialPosition(line.EndPoint, Offset, Dimension, Scalefact);
             if(start.X < 0 || start.Y < 0 || end.X < 0 || end.Y < 0)
             {
                 //throw new ArgumentOutOfRangeException();
@@ -502,7 +503,7 @@ namespace MA400_export
          */
         public void WriteGPH_CIRCLE(StreamWriter sw, Circle circle)
         {
-            PointF center = GetSpacialPosition(circle.Center);
+            PointF center = GetSpacialPosition(circle.Center, Offset, Dimension, Scalefact);
             if ( center.X < 0 || center.Y < 0)
             {
                 throw new ArgumentOutOfRangeException();
@@ -558,10 +559,7 @@ namespace MA400_export
                     GenerateGPH_CMD(sw, entity);
                 }
 
-                foreach (Stud entity in Studs)
-                {
-                    GenerateGPH_CMD(sw, entity.circle);
-                }
+                
             }
         }
 
@@ -619,9 +617,9 @@ namespace MA400_export
         private void WriteNcCommand(StreamWriter sw, Stud stud)
         {
             sw.WriteLine("PUNKT" );
-            PointF RealPosition = GetSpacialPosition(stud.circle.Center);
-            sw.WriteLine( FormatValue(RealPosition.X) );
-            sw.WriteLine( FormatValue(RealPosition.Y) );
+            //PointF RealPosition = GetSpacialPosition(stud.circle.Center, Offset, Dimension, Scalefact);
+            sw.WriteLine( FormatValue(stud.circle.Center.X) );
+            sw.WriteLine( FormatValue(stud.circle.Center.Y) );
 
             //param incertains
             sw.WriteLine("0" );

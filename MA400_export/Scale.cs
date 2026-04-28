@@ -8,7 +8,7 @@ namespace MA400_export
 {
     /**
      * <summary>
-     * The <c>Scale</c> Class is used to store the orientation and scale of the current part 
+     * The <c>Scale</c> Class is used to store the orientation and scale of the current part.
      * </summary>
      */
     public class Scale

@@ -88,13 +88,45 @@ namespace MA400_export
             scale = new Scale(1, -1);
         }
 
-       
 
-        
+        /**
+         * <summary>Apply the necessary transformation to a Circle to bring it to the origin and in the right orientation and scale.</summary>
+         */
+        public Circle ApplyTransform(Circle stud, PointF offset, RectangleF dimension, Scale scale)
+        {
+            Circle transformed = (Circle)stud.Clone();
+            PointF pos = ProdFileGenerator.GetSpacialPosition(stud.Center, offset, dimension, scale);
+            transformed.Center = new CSMath.XYZ(pos.X, pos.Y, 0);
+            return transformed;
+        }
 
-       
-        /*_____________________________________DXF_____________________________________*/
 
+        /**
+         * <summary>Revert the transformation made by ApplyTransform method.</summary>
+         */
+        public Circle RevertTransform(Circle stud, PointF offset, RectangleF dimension, Scale scale)
+        {
+
+            double X = stud.Center.X;
+            //inverted X axis
+            if (scale.Xscale < 0)
+            {
+                X = dimension.Width - X;
+            }
+            X = (X + offset.X) / scale.Xscale;
+
+            double Y = stud.Center.Y;
+            //inverted Y axis
+            if (scale.Yscale < 0)
+            {
+                Y = dimension.Height - Y;
+            }
+            Y = (Y + offset.Y) / scale.Xscale;
+
+            Circle transformed = (Circle)stud.Clone();
+            transformed.Center = new CSMath.XYZ(X, Y, 0);
+            return transformed;
+        }
 
         /**
         * <summary>Scan the document's entities and attempt to get Stud candidates as well as the dimentions of the document <br></br>
@@ -107,35 +139,39 @@ namespace MA400_export
             {
                 return false;
             }
-            foreach(var item in Doc.Entities)
+            foreach (var item in Doc.Entities)
             {
                 switch (item.ObjectType)
                 {
-                    case ObjectType.CIRCLE :
-                    {
-                        Circle candidate = (Circle)item;
-
-                        if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
+                    case ObjectType.CIRCLE:
                         {
-                            Circle stud = candidate;
-                            Studs.Add(stud);
+                            Circle candidate = (Circle)item;
+
+                            if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
+                            {
+                                Circle stud = ApplyTransform(candidate, offset, dimension, scale);
+                                Studs.Add(stud);
+                            }
+                            break;
                         }
-                        break;
-                    }
                     default:
                         break;
-                
+
                 }
             }
-            foreach(Circle candidate in Studs) {
-                Doc.Entities.Remove(candidate);
-            }
+            
             return true;
 
         }
 
-       
-       
+
+        /*_____________________________________DXF_____________________________________*/
+
+
+
+
+
+
 
         /**
          * <summary>Open a file at the location specified by path and load it if it exist. </summary>
@@ -355,24 +391,11 @@ namespace MA400_export
 
         public void SaveToFile(BindingList<Stud> Studs, string path)
         {
-
-            //retour des goujons sur le document à sauvegarder
-            foreach (Stud stud in Studs)
-            {
-                stud.circle.Color = ACadSharp.Color.Green;//bien visible, bien en vert
-                Doc.Entities.Add(stud.circle);
-            }
             using (DxfWriter writer = new DxfWriter(path, Doc))
             {
                 writer.OnNotification += NotificationHelper.LogConsoleNotification;
                 writer.Write();
                 
-            }
-
-            //pour des question de logique et de propriété des Circle il FAUT les retirer de la collection
-            foreach (Stud stud in Studs)
-            {
-                Doc.Entities.Remove(stud.circle);
             }
         }
 
