@@ -257,8 +257,10 @@ namespace MA400_export
             //offset et dimension dans .LAY donc : 
             // ==>>
             ReadLAY(ProgramNumber);
+            ReadNC(ProgramNumber);
 
-            ScanEntities();
+            //plus de scan car on split entre GPH pour les entités et NC pour les goujons
+            //ScanEntities();
 
             WriteToSVG(Properties.Settings.Default.OutputPath + Constants.tmpPath );//local tmp file
 
@@ -266,11 +268,16 @@ namespace MA400_export
             return data;
         }
 
+
+        /*_____________________________________GPH_____________________________________*/
+
         /**
          * <summary>parse the GPH file from num_line to num_line + nb_line_per_cmd in order to retrieve an entity and add it to the collection</summary>
          * <returns>the entitiy created or null if unable to create </returns>
+         * <param name="file">the transcript of the file curently read</param>
+         * <param name="num_line">the index of the current line in the file</param>
          */
-        private Entity ParseEntities(string[] file, ref int num_line)
+        private Entity ParseGPHEntities(string[] file, ref int num_line)
         {
             int EntitieType = int.Parse(file[num_line]);
             switch (EntitieType)
@@ -327,11 +334,13 @@ namespace MA400_export
 
             for (int num_line = 1; num_line <= (file.Length - cmd_line_number); num_line++)
             {
-                Entity e = ParseEntities(file, ref num_line);
+                Entity e = ParseGPHEntities(file, ref num_line);
                 Doc.Entities.Add(e);
             }
         }
 
+
+        /*_____________________________________DAT_____________________________________*/
 
         /**
          * <summary>read the DAT file of an already created program to retrieve all the header informations</summary>
@@ -355,6 +364,8 @@ namespace MA400_export
 
         }
 
+
+        /*_____________________________________LAY_____________________________________*/
 
         /**
          * <summary>read the DAT file of an already created program to retrieve all the layout informations</summary>
@@ -383,8 +394,52 @@ namespace MA400_export
         }
 
 
-       
+        /*_____________________________________NC_____________________________________*/
 
+
+        /**
+         * <summary>parse the NC file from num_line to num_line + nb_line_per_cmd in order to retrieve an entity and add it to the collection</summary>
+         * <returns>the entitiy created or null if unable to create </returns>
+         * <param name="file">the transcript of the file curently read</param>
+         * <param name="num_line">the index of the current line in the file</param>
+         */
+        private void ReadNcCommand(string[] file, ref int num_line)
+        {
+            if (file[num_line] == "PUNKT")
+            {
+                double X = float.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                double Y = float.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                num_line += (Constants.line_per_NC_cmd - 2);
+
+                //create the stud
+                Circle stud = new Circle();
+                stud.Center = new CSMath.XYZ(X, Y, 0);
+
+                Studs.Add(stud);
+            }
+            else
+            {
+                num_line += Constants.line_per_NC_cmd;
+            }
+        }
+
+        /**
+         * <summary>read the NC file of an already created program to retrieve all the Studs informations</summary>
+         */
+        public void ReadNC(int ProgramNumber)
+        {
+            string NCPath = Properties.Settings.Default.OutputPath + Constants.DatenPath + ProgramNumber + ".NC";
+
+            string[] file = File.ReadAllLines(NCPath);
+
+            int numline = 0;
+            int nb_studs = int.Parse(file[numline++]);
+
+            for (int i = 0; i < nb_studs; i++)
+            {
+                ReadNcCommand(file, ref numline);
+            }
+        }
 
         /*_____________________________________SAVE_____________________________________*/
 

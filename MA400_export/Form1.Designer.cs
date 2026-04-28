@@ -179,7 +179,8 @@ namespace MA400_export
             this.WorkZone.Name = "WorkZone";
             this.WorkZone.Size = new System.Drawing.Size(800, 600);
             this.WorkZone.TabIndex = 10;
-            this.WorkZone.Click += new System.EventHandler(this.WorkZone_Click);
+            //this.WorkZone.Click += new System.EventHandler(this.WorkZone_Click);
+            this.WorkZone.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Click);
             this.WorkZone.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkZone_Paint);
             this.WorkZone.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorkZone_MouseMove);
             this.WorkZone.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Zoom);

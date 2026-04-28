@@ -645,29 +645,32 @@ namespace MA400_export
         /**
          * <summary>Handle the behavior when clicking somwhere on the WorkZone depending on the mode</summary>
          */
-        private void WorkZone_Click(object sender, EventArgs e)
+        private void WorkZone_Click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            switch (editMode)
+            if (e.Button == MouseButtons.Left)
             {
-                
-                //select
-                case EditMode.SelectStud:
-                    WorkZone_Click_SelectStud();
-                    break;
+                switch (editMode)
+                {
 
-                //add
-                case EditMode.AddStud:
-                    WorkZone_Click_AddStud();
-                    break;
+                    //select
+                    case EditMode.SelectStud:
+                        WorkZone_Click_SelectStud();
+                        break;
 
-                //remove
-                case EditMode.RemoveStud:
-                    WorkZone_Click_RemoveStud();
-                    break;
+                    //add
+                    case EditMode.AddStud:
+                        WorkZone_Click_AddStud();
+                        break;
 
-                default:
-                    //cursor
-                    break;
+                    //remove
+                    case EditMode.RemoveStud:
+                        WorkZone_Click_RemoveStud();
+                        break;
+
+                    default:
+                        //cursor
+                        break;
+                }
             }
         }
 
