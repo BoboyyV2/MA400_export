@@ -682,6 +682,7 @@ namespace MA400_export
                     if (formInfo.ShowDialog() == DialogResult.OK)
                     {
                         data = formInfo.Data;
+                        IsNew = false;
                         return true;
                     }
                     

@@ -62,6 +62,7 @@ namespace MA400_export
             Doc = new CadDocument();
             open = false;
             Studs = new List<Circle>();
+            
         }
 
         /*_____________________________________UTIL_____________________________________*/
