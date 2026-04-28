@@ -27,7 +27,12 @@ namespace MA400_export
 
 
         public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
-        public static String outputpath { get; private set; } = AppDomain.CurrentDomain.BaseDirectory + @"output\";//.exe\output loc
+        public static string Outputpath { get; private set; } = AppDomain.CurrentDomain.BaseDirectory + @"output\";//.exe\output loc
+        public static string DatenPath { get; private set; } = @"\Daten\2\";
+        public static string CncPath { get; private set; } = @"\Cnc\2\";
+        public static string tmpPath { get; private set; } = @"\tmp\2\";
+
+
 
         //GHP command id
         public const int LINE_CMD = 4;

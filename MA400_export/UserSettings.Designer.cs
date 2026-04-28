@@ -36,6 +36,7 @@
             this.ProgramNumberLabel = new System.Windows.Forms.Label();
             this.textBoxProgramNumber = new System.Windows.Forms.TextBox();
             this.buttonApply = new System.Windows.Forms.Button();
+            this.folderBrowserDialogOutputPath = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // OutputPathLabel
@@ -55,6 +56,7 @@
             this.buttonCancel.TabIndex = 19;
             this.buttonCancel.Text = "&Annuler";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonOK
             // 
@@ -64,6 +66,7 @@
             this.buttonOK.TabIndex = 18;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // textBoxOutputPath
             // 
@@ -80,6 +83,7 @@
             this.buttonChoseOutputPath.TabIndex = 21;
             this.buttonChoseOutputPath.Text = "Choisir un dossier";
             this.buttonChoseOutputPath.UseVisualStyleBackColor = true;
+            this.buttonChoseOutputPath.Click += new System.EventHandler(this.buttonChoseOutputPath_Click);
             // 
             // ProgramNumberLabel
             // 
@@ -105,6 +109,7 @@
             this.buttonApply.TabIndex = 24;
             this.buttonApply.Text = "&Appliquer";
             this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
             // UserSettings
             // 
@@ -138,5 +143,6 @@
         private System.Windows.Forms.Label ProgramNumberLabel;
         private System.Windows.Forms.TextBox textBoxProgramNumber;
         private System.Windows.Forms.Button buttonApply;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogOutputPath;
     }
 }

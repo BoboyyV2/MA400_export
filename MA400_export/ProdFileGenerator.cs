@@ -32,6 +32,11 @@ namespace MA400_export
 
     }
 
+    /**
+      * <summary>
+      * The <c>ProdFileGenerator</c> Class is an extention of the <c>FileSystem</c> class used to generate de production files
+      * </summary>
+      */
     internal class ProdFileGenerator
     {
 
@@ -61,6 +66,11 @@ namespace MA400_export
 
         /*_____________________________________UTIL_____________________________________*/
 
+
+        /**
+         * <summary>Turn a double value into a string correctly formated for output files, it take care of rounding and significant number display.</summary>
+         * <returns>the formated string corresponding to value.</returns>
+         */
         private string FormatValue(double value)
         {
             CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
@@ -84,6 +94,11 @@ namespace MA400_export
         }
 
 
+        /**
+         * <summary>Write numlines empty line into the stream connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file.</param>
+         * <param name="numlines">The number of empty lines to write</param>
+         */
         private void WriteEmptyLine(StreamWriter sw, int numlines)
         {
             for (int i = 0; i < numlines; i++)
@@ -92,6 +107,12 @@ namespace MA400_export
             }
         }
 
+
+        /**
+         * <summary>Write numlines line containing "0" into the stream connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file.</param>
+         * <param name="numlines">The number of lines to write</param>
+         */
         private void WriteLine0(StreamWriter sw, int numlines)
         {
             for (int i = 0; i < numlines; i++)
@@ -100,6 +121,11 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Write numlines line containing "*" into the stream connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file.</param>
+         * <param name="numlines">The number of lines to write</param>
+         */
         private void WriteLineStar(StreamWriter sw, int numlines)
         {
             for (int i = 0; i < numlines; i++)
@@ -108,6 +134,11 @@ namespace MA400_export
             }
         }
 
+
+        /**
+         * <returns>A PointF corresponding to the position given in argument once put to the correct scale (orientation).</returns>
+         * <param name="position">The raw position in the document.</param>
+         */
         private System.Drawing.PointF GetSpacialPosition(CSMath.XYZ position)
         {
             
@@ -139,11 +170,12 @@ namespace MA400_export
 
         /**
          * <summary>Generate the files necessary for the machine to work and save them to the \daten and \cnc folder</summary>
+         * <param name="fileID">The ProgramNumber of the files to write.</param>
          */
         public void GenerateProductionFiles(int fileID)
         {
-            string Daten = Properties.Settings.Default.OutputPath + @"Daten\";
-            string Cnc = Properties.Settings.Default.OutputPath + @"Cnc\";
+            string Daten = Properties.Settings.Default.OutputPath + Constants.DatenPath;
+            string Cnc = Properties.Settings.Default.OutputPath + Constants.CncPath;
 
             Directory.CreateDirectory(Daten);
             Directory.CreateDirectory(Cnc);
@@ -169,6 +201,10 @@ namespace MA400_export
         /*_____________________________________CNC_____________________________________*/
 
 
+        /**
+         * <summary>write the header of the CNC file into the file connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file.</param>
+         */
         private void GenerateCNCHeader(StreamWriter sw)
         {
             /*
@@ -206,6 +242,10 @@ namespace MA400_export
             //9 lignes
         }
 
+        /**
+         * <summary>write the initialization of the CNC file into the file connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file.</param>
+         */
         private void GenerateCNCInit(StreamWriter sw)
         {
             /*
@@ -232,6 +272,14 @@ namespace MA400_export
             //on reprend a partir de N19
         }
 
+
+        /**
+         * <summary>write the end of the CNC file into the file connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file</param>
+         * <param name="N">The Current line number</param>
+         * <param name="first">if there is at least one Stud that have been placed</param>
+         * <param name="firstStud">The first Stud to be placed or null if there is none</param>
+         */
         private void GenerateCNCEnd(StreamWriter sw, int N, bool first, Stud firstStud)
         {
             /*
@@ -258,6 +306,12 @@ namespace MA400_export
             //on va de 1 en 1 
         }
 
+        /**
+         * <summary>write a CNC command into the CNC file connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file.</param>
+         * <param name="N">The Current line number</param>
+         * <param name="stud">The Stud to place</param>
+         */
         private void GenerateCNCCommand(StreamWriter sw , int N, Stud stud)
         {
             /*
@@ -272,6 +326,11 @@ namespace MA400_export
 
         }
 
+
+        /**
+         * <summary>write the CNC file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateCNC(string path)
         {
             //TODO, besoin du formulaire
@@ -307,6 +366,10 @@ namespace MA400_export
         /*_____________________________________AN4_____________________________________*/
 
 
+        /**
+         * <summary>write the AN4 file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateAN4(string path)
         {
             int numlines = 6;//TODO, un moyen de savoir combien il y en a de manière auto
@@ -323,6 +386,10 @@ namespace MA400_export
         /*_____________________________________BOL_____________________________________*/
 
 
+        /**
+         * <summary>write the BOL file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateBOL(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".BOL"))
@@ -337,6 +404,10 @@ namespace MA400_export
         /*_____________________________________BST_____________________________________*/
 
 
+        /**
+         * <summary>write the BST file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateBST(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".BST"))
@@ -361,6 +432,10 @@ namespace MA400_export
         /*_____________________________________DAT_____________________________________*/
 
 
+        /**
+         * <summary>write the DAT file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateDAT(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".DAT"))
@@ -380,6 +455,10 @@ namespace MA400_export
         /*_____________________________________DUP_____________________________________*/
 
 
+        /**
+         * <summary>write the DUP file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateDUP(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".DUP"))
@@ -463,6 +542,10 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>write the GPH file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateGPH(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".GPH"))
@@ -486,6 +569,10 @@ namespace MA400_export
         /*_____________________________________LAY_____________________________________*/
 
 
+        /**
+         * <summary>write the LAY file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateLAY(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".LAY"))
@@ -505,6 +592,10 @@ namespace MA400_export
         /*_____________________________________MIN_____________________________________*/
 
 
+        /**
+         * <summary>write the MIN file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateMIN(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".MIN"))
@@ -515,11 +606,16 @@ namespace MA400_export
             }
         }
 
-        
+
 
         /*_____________________________________NC_____________________________________*/
 
 
+        /**
+         * <summary>write a command in the NC file connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file.</param>
+         * <param name="stud">The stud to place</param>
+         */
         private void WriteNcCommand(StreamWriter sw, Stud stud)
         {
             sw.WriteLine("PUNKT" );
@@ -541,6 +637,10 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>write the last command(empty) in the NC file connected to sw.</summary>
+         * <param name="sw">The StreamWriter connected to the outputf file.</param>
+         */
         private void WriteNcEmptyCommand(StreamWriter sw)
         {
             
@@ -549,6 +649,10 @@ namespace MA400_export
         }
 
 
+        /**
+         * <summary>write the NC file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateNC(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".NC"))
@@ -567,6 +671,10 @@ namespace MA400_export
         /*_____________________________________ST_____________________________________*/
 
 
+        /**
+         * <summary>write the ST file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateST(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".ST"))
@@ -580,6 +688,10 @@ namespace MA400_export
         /*_____________________________________VER_____________________________________*/
 
 
+        /**
+         * <summary>write the VER file at the path specified by path</summary>
+         * <param name="path">The path where to write the file.</param>
+         */
         private void GenerateVER(string path)
         {
             using (StreamWriter sw = File.CreateText(path + ".VER"))

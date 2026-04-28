@@ -32,8 +32,8 @@ namespace MA400_export
         /**
          * <summary>the static path to the exported svg, beware of remnant</summary>
          */
-        private String path = Properties.Settings.Default.OutputPath + @"tmp\display.svg";//.exe loc
-        //private String path = AppDomain.CurrentDomain.BaseDirectory + @"tmp\truite.jpg";//used for debug
+        private String path = Properties.Settings.Default.OutputPath + @"\tmp\display.svg";//.exe loc
+        //private String path = AppDomain.CurrentDomain.BaseDirectory + @"\tmp\truite.jpg";//used for debug
 
         private SvgDocument svg = null;
         private bool open { get; set; }
@@ -241,6 +241,7 @@ namespace MA400_export
             int renderHeight = (int)dims.Height;
 
             string bmpPath = Properties.Settings.Default.OutputPath + @"\tmp\bmp.BMP";
+            Directory.CreateDirectory(Properties.Settings.Default.OutputPath + @"\tmp");
             var bmp = svg.Draw();
             bmp.Save(bmpPath, ImageFormat.Bmp);
             using (Bitmap svgBitmap = svg.Draw(renderWidth, renderHeight))

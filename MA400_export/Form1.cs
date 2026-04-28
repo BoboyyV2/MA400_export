@@ -204,7 +204,7 @@ namespace MA400_export
         {
             if(Properties.Settings.Default.OutputPath.Length < 1)
             {
-                Properties.Settings.Default.OutputPath = Constants.outputpath;
+                Properties.Settings.Default.OutputPath = Constants.Outputpath;
                 Properties.Settings.Default.Save();
 
             }

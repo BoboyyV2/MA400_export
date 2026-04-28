@@ -35,29 +35,33 @@ namespace MA400_export
         Other
     }
 
-   
-    public class FileSystem
-    {
+    /**
+      * <summary>
+      * The <c>FileSystem</c> Class is used to handle the files inputs and outputs 
+      * </summary>
+      */
+     public class FileSystem
+     {
 
 
-        public CadDocument Doc;
-        public bool open {  get; private set; }
-        public List<Circle> Studs {  get; private set; }
+         public CadDocument Doc;
+         public bool open {  get; private set; }
+         public List<Circle> Studs {  get; private set; }
 
-        private ProdFileGenerator Gen;
+         private ProdFileGenerator Gen;
 
-        //inner data
-        //test data
-        public PointF offset { get; set; } = new PointF(708.35f, 71.70f);
-        public RectangleF dimension { get; set; } = new RectangleF(0, 0, 210, 110);
-        public Scale scale { get; set; } = new Scale(1, -1);
+         //inner data
+         //test data
+         public PointF offset { get; set; } = new PointF(708.35f, 71.70f);
+         public RectangleF dimension { get; set; } = new RectangleF(0, 0, 210, 110);
+         public Scale scale { get; set; } = new Scale(1, -1);
 
 
 
-        /**
-         * <summary>create the file systeme with a new document</summary>
-         */
-        public FileSystem()
+         /**
+          * <summary>create the file systeme with a new document</summary>
+          */
+    public FileSystem()
         {
             Doc = new CadDocument();
             open = false;
@@ -155,7 +159,7 @@ namespace MA400_export
             ScanEntities();
 
 
-            WriteToSVG(Properties.Settings.Default.OutputPath + @"tmp\");//local tmp file
+            WriteToSVG(Properties.Settings.Default.OutputPath + Constants.tmpPath) ;//local tmp file
 
             open = true;
             return true;
@@ -187,7 +191,7 @@ namespace MA400_export
             ScanEntities();
 
 
-            WriteToSVG(Properties.Settings.Default.OutputPath + @"tmp\");//local tmp file
+            WriteToSVG(Properties.Settings.Default.OutputPath + Constants.tmpPath);//local tmp file
 
             open = true;
             return true;
@@ -220,7 +224,7 @@ namespace MA400_export
 
             ScanEntities();
 
-            WriteToSVG(Properties.Settings.Default.OutputPath + @"tmp\");//local tmp file
+            WriteToSVG(Properties.Settings.Default.OutputPath + Constants.tmpPath );//local tmp file
 
             open = true;
             return data;
@@ -280,7 +284,7 @@ namespace MA400_export
          */
         public void ReadGPH(int ProgramNumber)
         {
-            string GPHPath = Properties.Settings.Default.OutputPath + @"Daten\" + ProgramNumber + ".GPH";
+            string GPHPath = Properties.Settings.Default.OutputPath + Constants.DatenPath + ProgramNumber + ".GPH";
 
             string[] file = File.ReadAllLines(GPHPath);
             int cmd_line_number = 11;
@@ -298,7 +302,7 @@ namespace MA400_export
          */
         public void ReadDAT(int ProgramNumber, ref GeneratorData data)
         {
-            string DATPath = Properties.Settings.Default.OutputPath + @"Daten\" + ProgramNumber + ".DAT";
+            string DATPath = Properties.Settings.Default.OutputPath + Constants.DatenPath + ProgramNumber + ".DAT";
 
             string[] file = File.ReadAllLines(DATPath);
 
@@ -321,7 +325,7 @@ namespace MA400_export
          */
         public void ReadLAY(int ProgramNumber)
         {
-            string LAYPath = Properties.Settings.Default.OutputPath + @"Daten\" + ProgramNumber + ".LAY";
+            string LAYPath = Properties.Settings.Default.OutputPath + Constants.DatenPath + ProgramNumber + ".LAY";
 
             string[] file = File.ReadAllLines(LAYPath);
 
