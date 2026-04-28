@@ -68,6 +68,10 @@ namespace MA400_export
 
         }
 
+
+        /**
+         * <summary>Draw a stud into the graphics</summary>
+         */
         public void Draw_Stud(Circle stud)
         {
             float StudRadius = (float)stud.Radius;
@@ -81,7 +85,11 @@ namespace MA400_export
             graphics.FillEllipse(drawBrush, shape);
 
         }
-        public void Draw_Studs(BindingList<Stud> Studs)
+
+        /**
+         * <summary>Draw all the studs into the graphics</summary>
+         */
+        public void Draw_Studs(IEnumerable<Stud> Studs)
         {
             foreach (var item in Studs)
             {
@@ -90,7 +98,34 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Draw a stud into the graphics</summary>
+         */
+        public void Draw_Selected_Stud(Circle stud)
+        {
+            float StudRadius = (float)stud.Radius;
+            RectangleF shape = new RectangleF();
+            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
+            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
+            shape.Width = 2 * StudRadius;
+            shape.Height = 2 * StudRadius;
 
+            SolidBrush drawBrush = new SolidBrush(Color.Cyan);
+            graphics.FillEllipse(drawBrush, shape);
+
+        }
+
+        /**
+         * <summary>Draw all the studs into the graphics</summary>
+         */
+        public void Draw_Selected_Studs(IEnumerable<Stud> SelectedStuds)
+        {
+            foreach (var item in SelectedStuds)
+            {
+                Draw_Selected_Stud(item.circle);
+            }
+
+        }
 
 
         private void Draw_CoordSystem()
@@ -254,7 +289,9 @@ namespace MA400_export
 
         }
 
-        public void Paint(BindingList<Stud> Studs)
+        
+
+        public void Paint(IEnumerable<Stud> Studs, IEnumerable<Stud>SelectedStuds)
         {
             //draw the basic from of the workzone
             //including but not restricted to :
@@ -272,6 +309,7 @@ namespace MA400_export
                 DrawSVG();
             }
             Draw_Studs(Studs);
+            Draw_Selected_Studs(SelectedStuds);
 
         }
 

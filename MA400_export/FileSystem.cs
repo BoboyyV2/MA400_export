@@ -19,36 +19,12 @@ using System.Windows.Forms;
 namespace MA400_export
 {
 
-    /**
-    * <summary>
-    * The <c>Constant</c> Class is used to store constants throughout the project
-    * </summary>
-     */
-    public static class Constants
-    {
-        public const bool Debug = true;//TODO changer avant de partir en deploy
-
-        public const double StudRadius3 = 1.5;
-        public const double StudRadius4 = 2.0;
-
-        public const float Max_Zoom = 5.0f;
-        public const float Min_Zoom = 0.7f;
-
-        public static PointF Origin_Coord { get; private set; } = new PointF(50.0f, 50.0f);
-
-
-        public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
-        public static String outputpath { get; private set; } = AppDomain.CurrentDomain.BaseDirectory + @"output\";//.exe\output loc
-
-        //GHP command id
-        public const int LINE_CMD = 4;
-        public const int CIRCLE_CMD = 1;
-
-    }
+   
 
     public enum EditMode
     {
         Cursor,
+        SelectStud,
         AddStud,
         RemoveStud
     }
@@ -59,24 +35,7 @@ namespace MA400_export
         Other
     }
 
-    public class Scale
-    {
-        public double Xscale { get; set; }
-        public double Yscale { get; set; }
-
-        public Scale()
-        {
-            Xscale = 1;
-            Yscale = 1;
-        }
-
-        public Scale(double Xscale, double Yscale)
-        {
-            this.Xscale = Xscale;
-            this.Yscale = Yscale;
-        }
-    }
-
+   
     public class FileSystem
     {
 
@@ -106,6 +65,11 @@ namespace MA400_export
         }
 
         /*_____________________________________UTIL_____________________________________*/
+        
+        
+        /**
+         * <summary>restore the FileSystem to a base state.</summary>
+         */
         public void reset()
         {
             open = false;
@@ -232,6 +196,10 @@ namespace MA400_export
 
         /*_____________________________________PRODFILE_____________________________________*/
 
+        /**
+         * <summary>parse the GPH file from num_line to num_line + nb_line_per_cmd in order to retrieve an entity and add it to the collection</summary>
+         * <returns>the entitiy created or null if unable to create </returns>
+         */
         private Entity ParseEntities(string[] file, ref int num_line)
         {
             int EntitieType = int.Parse(file[num_line]);
@@ -277,6 +245,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>read the GPH file of an already created program to retrieve all the entities informations</summary>
+         */
         public void ReadGPH(int ProgramNumber)
         {
             string GPHPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".GPH";
@@ -291,6 +262,10 @@ namespace MA400_export
             }
         }
 
+
+        /**
+         * <summary>read the DAT file of an already created program to retrieve all the header informations</summary>
+         */
         public void ReadDAT(int ProgramNumber, ref GeneratorData data)
         {
             string DATPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".DAT";
@@ -310,6 +285,10 @@ namespace MA400_export
 
         }
 
+
+        /**
+         * <summary>read the DAT file of an already created program to retrieve all the layout informations</summary>
+         */
         public void ReadLAY(int ProgramNumber)
         {
             string LAYPath = Constants.outputpath + @"Daten\" + ProgramNumber + ".LAY";
@@ -334,6 +313,9 @@ namespace MA400_export
         }
 
 
+        /**
+         * <summary>attempt to open a program's file via it's program number and to import it into the application</summary>
+         */
         public GeneratorData OpenProdFile(int ProgramNumber) 
         {
             GeneratorData data = new GeneratorData();
@@ -386,6 +368,7 @@ namespace MA400_export
             }
         }
 
+
         private void WriteToSVG(string path)
         {
 
@@ -398,11 +381,14 @@ namespace MA400_export
                 writer.OnNotification += NotificationHelper.LogConsoleNotification;
                 writer.Write();
             }
-            //FixSVGTransform(svgPath);
         }
 
         /*_____________________________________PRODUCTION_FILES_____________________________________*/
 
+
+        /**
+         * <summary>Generates the productoin files necessary to the driver to function</summary>
+         */
         public void GenerateProdFiles(ref BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact) 
         {
             Gen = new ProdFileGenerator(ref Studs, Doc.Entities,Dimension, Offset, Data, Scalefact);

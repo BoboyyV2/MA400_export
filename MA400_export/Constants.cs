@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MA400_export
+{
+    
+    /**
+     * <summary>
+     * The <c>Constant</c> Class is used to store constants throughout the project
+     * </summary>
+     */
+    public static class Constants
+    {
+        public const bool Debug = true;//TODO changer avant de partir en deploy
+
+        public const double StudRadius3 = 1.5;
+        public const double StudRadius4 = 2.0;
+
+        public const float Max_Zoom = 5.0f;
+        public const float Min_Zoom = 0.7f;
+
+        public static PointF Origin_Coord { get; private set; } = new PointF(50.0f, 50.0f);
+
+
+        public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
+        public static String outputpath { get; private set; } = AppDomain.CurrentDomain.BaseDirectory + @"output\";//.exe\output loc
+
+        //GHP command id
+        public const int LINE_CMD = 4;
+        public const int CIRCLE_CMD = 1;
+
+    }
+    
+}

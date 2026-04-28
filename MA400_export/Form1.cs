@@ -75,8 +75,20 @@ namespace MA400_export
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.Paint(Studs);
+            gc.Paint(Studs, getSelectedStuds() );
 
+        }
+
+        public List<Stud> getSelectedStuds()
+        {
+            
+            //start by getting the data
+            List<Stud> selectedList = new List<Stud>();
+            foreach (Stud selectedStud in StudList_Display.SelectedItems)
+            {
+                selectedList.Add(selectedStud);
+            }
+            return selectedList;
         }
 
         /**
@@ -219,6 +231,8 @@ namespace MA400_export
 
             StudList_Display.Focus();
 
+            //refresh the graphics
+            WorkZone.Invalidate();
         }
 
         /**
@@ -244,6 +258,9 @@ namespace MA400_export
             }
             
             StudList_Display.Focus();
+
+            //refresh the graphics
+            WorkZone.Invalidate();
         }
 
 
@@ -325,6 +342,7 @@ namespace MA400_export
                 MessageBox.Show(error);
                 return false;
             }
+
 
             return true;
         }
@@ -436,7 +454,8 @@ namespace MA400_export
             // Allow the ListBox to repaint and display the new items.
             StudList_Display.EndUpdate();
 
-            WorkZone.Refresh();
+            //refresh the graphics
+            WorkZone.Invalidate();
 
         }
 
@@ -449,11 +468,7 @@ namespace MA400_export
 
             
             //start by getting the data
-            List<Stud> selectedList = new List<Stud>();
-            foreach( Stud selected in StudList_Display.SelectedItems)
-            {
-                selectedList.Add(selected);
-            }
+            List<Stud> selectedList = getSelectedStuds();
 
             foreach (Stud selected in selectedList)
             {
@@ -465,8 +480,8 @@ namespace MA400_export
 
             StudList_Display.EndUpdate();
 
-            //refresh l'affichage
-            WorkZone.Refresh();
+            //refresh the graphics
+            WorkZone.Invalidate();
 
         }
 
@@ -495,23 +510,17 @@ namespace MA400_export
 
         public void setEditMode(EditMode mode)
         {
-            switch (mode)
-            {
-                case (EditMode.Cursor):
-                    editMode = EditMode.Cursor;
-                    break;
-                case (EditMode.AddStud):
-                    editMode = EditMode.AddStud;
-                    break;
-                case (EditMode.RemoveStud):
-                    editMode = EditMode.RemoveStud;
-                    break;
-            }
+            editMode = mode;
         }
 
         private void ButtonCursorMode_Click(object sender, EventArgs e)
         {
             setEditMode(EditMode.Cursor);
+        }
+
+        private void ButtonSelectStudMode_Click(object sender, EventArgs e)
+        {
+            setEditMode(EditMode.SelectStud);
         }
 
         private void ButtonAddStudMode_Click(object sender, EventArgs e)
@@ -524,55 +533,135 @@ namespace MA400_export
             setEditMode(EditMode.RemoveStud);
         }
 
+
+        /**
+         * <summary>Set the given stud selection value to the given value in the listbox bound to the BindingList</summary>
+         */
+        private void setStudSelected(Stud stud, bool selectionValue)
+        {
+            int index = 0;
+            foreach (Stud candidate in StudList_Display.Items)
+            {
+                if (candidate == stud)
+                {
+                    StudList_Display.SetSelected(index, selectionValue);
+                    return;
+                }
+                index++;
+            }
+        }
+
+        /**
+         * <summary>
+         * Handle the behavior when clicking somwhere on the WorkZone using the cursor mode.<br></br>
+         * Select the Stud at the clicked coordinates if there is one, show an error otherwise.
+         * </summary>
+         */
+        private void WorkZone_Click_SelectStud()
+        {
+            System.Drawing.Point p = getCoords();
+            PointF offseted_p = GetOffsetedCoords(p);
+            List<Stud> selected = getSelectedStuds();
+
+            foreach (Stud stud in Studs)
+            {
+                if (getStudDistance(offseted_p, stud.circle) < stud.circle.Radius)
+                {
+                    bool newSelectionValue = true;
+                    if (selected.Contains(stud))
+                    {
+                        newSelectionValue = false;
+                    }
+                    setStudSelected(stud, newSelectionValue);
+                    
+                }
+            }
+
+        }
+
+
+        /**
+         * <summary>
+         * Handle the behavior when clicking somwhere on the WorkZone using the add mode.<br></br>
+         * Add a stud at the clicked coordinates if possible, show an error if not.
+         * </summary>
+         */
+        private void WorkZone_Click_AddStud()
+        {
+            System.Drawing.Point p = getCoords();
+            string diam_String = this.comboBoxDiam.Text;
+            PointF offseted_p = GetOffsetedCoords(p);
+            if (!AddStudButtonOnClick_CheckInput((double)offseted_p.X, (double)offseted_p.Y, diam_String))
+            {
+                return;
+            }
+            double radius = (Double.Parse(diam_String)) / 2;
+            Circle circle = createStud((double)offseted_p.X, (double)offseted_p.Y, radius);
+            if (!IsPossibleToAddStud(circle))
+            {
+                return;
+            }
+
+            AddStud(circle);
+            this.WorkZone.Refresh();
+        }
+
+
+        /**
+         * <summary>
+         * Handle the behavior when clicking somwhere on the WorkZone using the remove mode.<br></br>
+         * Remove the clicked stud if there is one, show a message if no stud were found.
+         * </summary>
+         */
+        private void WorkZone_Click_RemoveStud()
+        {
+            PointF p_rm = getCoords();
+            p_rm = GetOffsetedCoords(p_rm);
+
+            bool removed = false;
+            foreach (Stud stud in Studs)
+            {
+                if (getStudDistance(p_rm, stud.circle) < (stud.circle.Radius))
+                {
+                    Studs.Remove(stud);
+                    removed = true;
+                    break;
+                }
+
+            }
+            if (!removed)
+            {
+                MessageBox.Show("aucun goujon trouvé à cette position.");
+            }
+            this.WorkZone.Refresh();
+        }
+
+
+        /**
+         * <summary>Handle the behavior when clicking somwhere on the WorkZone depending on the mode</summary>
+         */
         private void WorkZone_Click(object sender, EventArgs e)
         {
             switch (editMode)
             {
                 
-                case EditMode.Cursor:
-                    //nothing
+                //select
+                case EditMode.SelectStud:
+                    WorkZone_Click_SelectStud();
                     break;
 
+                //add
                 case EditMode.AddStud:
-                    
-                    System.Drawing.Point p = getCoords();
-                    string diam_String = this.comboBoxDiam.Text;
-                    PointF offseted_p = GetOffsetedCoords(p);
-                    if (!AddStudButtonOnClick_CheckInput((double)offseted_p.X, (double)offseted_p.Y, diam_String))
-                    {
-                        return;
-                    }
-                    double radius = (Double.Parse(diam_String))/2;
-                    Circle circle = createStud((double)offseted_p.X, (double)offseted_p.Y, radius);
-                    if (!IsPossibleToAddStud(circle) )
-                    {
-                        return;
-                    }
-
-                    AddStud(circle);
-                    this.WorkZone.Refresh();
+                    WorkZone_Click_AddStud();
                     break;
 
+                //remove
                 case EditMode.RemoveStud:
-                    PointF p_rm = getCoords();
-                    p_rm = GetOffsetedCoords(p_rm);
+                    WorkZone_Click_RemoveStud();
+                    break;
 
-                    bool removed = false;
-                    foreach (Stud stud in Studs)
-                    {
-                        if (getStudDistance(p_rm, stud.circle) < (stud.circle.Radius))
-                        {
-                            Studs.Remove(stud);
-                            removed = true;
-                            break;
-                        }
-
-                    }
-                    if (!removed)
-                    {
-                        MessageBox.Show("aucun goujon trouvé à cette position.");
-                    }
-                    this.WorkZone.Refresh();
+                default:
+                    //cursor
                     break;
             }
         }
@@ -711,6 +800,14 @@ namespace MA400_export
             //donc on aura note FileSystem qui va l'ouvrir et faire des bétises avec
             //puis ce sera le display qui va ensuite l'afficher, en plus de ce que le Filesystem va détecter comme goujon et donc qu'il va falloir highlight
         }
+
+        private void StudList_Display_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //refresh the graphics
+            WorkZone.Invalidate();
+        }
+
+        
 
         /*___________________________________________|___________________________________________*/
     }
