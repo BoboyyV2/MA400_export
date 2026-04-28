@@ -52,8 +52,8 @@ namespace MA400_export
          */
         private bool IsValidProgNumber(int number)
         {
-            string CNCPath = Properties.Settings.Default.OutputPath + @"\Cnc\" + ProgramNumber + ".CNC";
-            string GPHPath = Properties.Settings.Default.OutputPath + @"\Daten\" + ProgramNumber + ".GPH";
+            string CNCPath = Properties.Settings.Default.OutputPath + Constants.CncPath + ProgramNumber + ".CNC";
+            string GPHPath = Properties.Settings.Default.OutputPath + Constants.DatenPath + ProgramNumber + ".GPH";
 
             if (!File.Exists(CNCPath))
             {

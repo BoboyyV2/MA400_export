@@ -32,8 +32,8 @@ namespace MA400_export
         /**
          * <summary>the static path to the exported svg, beware of remnant</summary>
          */
-        private String path = Properties.Settings.Default.OutputPath + @"\tmp\display.svg";//.exe loc
-        //private String path = AppDomain.CurrentDomain.BaseDirectory + @"\tmp\truite.jpg";//used for debug
+        private String path = Properties.Settings.Default.OutputPath + Constants.tmpPath + "display.svg";//.exe loc
+        //private String path = AppDomain.CurrentDomain.BaseDirectory + Constants.tmpPath + "truite.jpg";//used for debug
 
         private SvgDocument svg = null;
         private bool open { get; set; }
@@ -72,12 +72,12 @@ namespace MA400_export
         /**
          * <summary>Draw a stud into the graphics</summary>
          */
-        public void Draw_Stud(Circle stud, PointF offset)
+        public void Draw_Stud(Circle stud)
         {
             float StudRadius = (float)stud.Radius;
             RectangleF shape = new RectangleF();
-            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X - offset.X;
-            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y - offset.Y;
+            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
+            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
             shape.Width = 2 * StudRadius;
             shape.Height = 2 * StudRadius;
 
@@ -89,11 +89,11 @@ namespace MA400_export
         /**
          * <summary>Draw all the studs into the graphics</summary>
          */
-        public void Draw_Studs(IEnumerable<Stud> Studs, PointF offset)
+        public void Draw_Studs(IEnumerable<Stud> Studs)
         {
             foreach (var item in Studs)
             {
-                Draw_Stud(item.circle, offset);
+                Draw_Stud(item.circle);
             }
 
         }
@@ -101,12 +101,12 @@ namespace MA400_export
         /**
          * <summary>Draw a stud into the graphics</summary>
          */
-        public void Draw_Selected_Stud(Circle stud, PointF offset)
+        public void Draw_Selected_Stud(Circle stud)
         {
             float StudRadius = (float)stud.Radius;
             RectangleF shape = new RectangleF();
-            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X - offset.X;
-            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y - offset.Y;
+            shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
+            shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
             shape.Width = 2 * StudRadius + 0.1f;
             shape.Height = 2 * StudRadius + 0.1f;
 
@@ -118,11 +118,11 @@ namespace MA400_export
         /**
          * <summary>Draw all the studs into the graphics</summary>
          */
-        public void Draw_Selected_Studs(IEnumerable<Stud> SelectedStuds, PointF offset)
+        public void Draw_Selected_Studs(IEnumerable<Stud> SelectedStuds)
         {
             foreach (var item in SelectedStuds)
             {
-                Draw_Selected_Stud(item.circle, offset);
+                Draw_Selected_Stud(item.circle);
             }
 
         }
@@ -240,8 +240,8 @@ namespace MA400_export
             int renderWidth = (int)dims.Width;
             int renderHeight = (int)dims.Height;
 
-            string bmpPath = Properties.Settings.Default.OutputPath + @"\tmp\bmp.BMP";
-            Directory.CreateDirectory(Properties.Settings.Default.OutputPath + @"\tmp");
+            string bmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath + @"bmp.BMP";
+            Directory.CreateDirectory(Properties.Settings.Default.OutputPath + Constants.tmpPath);
             var bmp = svg.Draw();
             bmp.Save(bmpPath, ImageFormat.Bmp);
             using (Bitmap svgBitmap = svg.Draw(renderWidth, renderHeight))
@@ -310,8 +310,8 @@ namespace MA400_export
             {
                 DrawSVG();
             }
-            Draw_Studs(Studs, offset);
-            Draw_Selected_Studs(SelectedStuds, offset);
+            Draw_Studs(Studs);
+            Draw_Selected_Studs(SelectedStuds);
 
         }
 

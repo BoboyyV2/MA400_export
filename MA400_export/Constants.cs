@@ -30,7 +30,7 @@ namespace MA400_export
         public static string Outputpath { get; private set; } = AppDomain.CurrentDomain.BaseDirectory + @"output\";//.exe\output loc
         public static string DatenPath { get; private set; } = @"\Daten\2\";
         public static string CncPath { get; private set; } = @"\Cnc\2\";
-        public static string tmpPath { get; private set; } = @"\tmp\2\";
+        public static string tmpPath { get; private set; } = @"\tmp\";
 
 
 
