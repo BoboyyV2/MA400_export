@@ -107,8 +107,8 @@ namespace MA400_export
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
-            shape.Width = 2 * StudRadius;
-            shape.Height = 2 * StudRadius;
+            shape.Width = 2 * StudRadius + 0.1f;
+            shape.Height = 2 * StudRadius + 0.1f;
 
             SolidBrush drawBrush = new SolidBrush(Color.Cyan);
             graphics.FillEllipse(drawBrush, shape);
