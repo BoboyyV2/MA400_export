@@ -38,6 +38,8 @@ namespace MA400_export
         private SvgDocument svg = null;
         private bool open { get; set; }
 
+        private float line_thickness = 0.4f;
+
         public GraphicsContainer(Graphics graphics)
         {
             this.graphics = graphics;
@@ -74,7 +76,7 @@ namespace MA400_export
          */
         public void Draw_Stud(Circle stud)
         {
-            float StudRadius = (float)stud.Radius;
+            float StudRadius = (float)stud.Radius + 0.25f;
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
@@ -103,12 +105,12 @@ namespace MA400_export
          */
         public void Draw_Selected_Stud(Circle stud)
         {
-            float StudRadius = (float)stud.Radius;
+            float StudRadius = (float)stud.Radius + 0.4f;
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
-            shape.Width = 2 * StudRadius + 0.1f;
-            shape.Height = 2 * StudRadius + 0.1f;
+            shape.Width = 2 * StudRadius;
+            shape.Height = 2 * StudRadius;
 
             SolidBrush drawBrush = new SolidBrush(Color.Cyan);
             graphics.FillEllipse(drawBrush, shape);
@@ -248,8 +250,8 @@ namespace MA400_export
             {
                 graphics.DrawImage(
                     svgBitmap,
-                    Constants.Origin_Coord.X,
-                    Constants.Origin_Coord.Y
+                    Constants.Origin_Coord.X + line_thickness,
+                    Constants.Origin_Coord.Y + line_thickness
                 );
 
             }

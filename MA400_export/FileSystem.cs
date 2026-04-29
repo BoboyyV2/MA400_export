@@ -449,7 +449,11 @@ namespace MA400_export
         public void SaveToFile(BindingList<Stud> Studs, string path)
         {
             //ajout des goujons dans le doc
-            CadDocument save = Doc;
+            CadDocument save = new CadDocument();
+            foreach (Entity entity in Doc.Entities)
+            {
+                save.Entities.Add((Entity)entity.Clone());
+            }
             foreach (Stud stud in Studs)
             {
                 save.Entities.Add(stud.circle);
