@@ -23,6 +23,8 @@ namespace MA400_export
         public RectangleF dimension { get; set; }
         public Scale scale { get; set; }
 
+        private bool fromDxf;
+
         public SVGcontroller()
         {
             svg = new SvgDocument();
@@ -31,9 +33,11 @@ namespace MA400_export
             scale = new Scale(1, 1);
         }
 
-        public void OpenSVG(string path, string filename)
+        public void OpenSVG(string path, string filename, bool fromDxf = true)
         {
             svg = SvgDocument.Open(path + filename);
+            this.fromDxf = fromDxf;
+
             BuildSVG();
         }
 
@@ -56,23 +60,45 @@ namespace MA400_export
 
             float scaleX = 1;
             float scaleY = 1;
-            //get the scale
+            //get the scale & offset
+            SvgTransform translate_to_remove = null;
+            SvgTransform scale_to_remove = null;
             foreach (SvgTransform transform in svg.Transforms)
             {
-                if(transform.GetType() == typeof(SvgScale) ) 
+                //change la scale si besoin
+                
+                if (transform.GetType() == typeof(SvgScale))
                 {
-                    SvgScale scale = ((SvgScale)transform);
-                    float[]Elem = scale.Matrix.Elements;
-                    //X,?,?,Y,?,?
-                     scaleX = Elem[0];
-                     scaleY = Elem[3];
-                    this.scale = new Scale(scaleX, scaleY);
+                    if (fromDxf)
+                    {
+                        float[] Elem = ((SvgScale)transform).Matrix.Elements;
+                        //X,?,?,Y,?,?
+                        scaleX = Elem[0];
+                        scaleY = Elem[3];
+                        this.scale = new Scale(scaleX, scaleY);
 
+                    }
+                    else
+                    {
+                        this.scale = new Scale(scaleX, scaleY);
 
+                    }
+                    translate_to_remove = transform;
 
                 }
+
+                //change l'offset
+                if (transform.GetType() == typeof(SvgTranslate))
+                {
+                    SvgTranslate translate = ((SvgTranslate)transform);
+                    offset = new PointF(offset.X + translate.X, offset.Y + translate.Y);
+                    translate_to_remove = transform;
+                }
+
             }
-            
+            svg.Transforms.Remove(translate_to_remove);
+            //svg.Transforms.Remove(scale_to_remove);
+
             SvgScale();
             svg.Write(Constants.Outputpath + Constants.tmpPath + @"\display.svg");
             
@@ -86,15 +112,17 @@ namespace MA400_export
 
             if (scale.Xscale < 0)
             {
-                translateX = -(svg.X.Value - dims.Width * (float)scale.Xscale);
+                translateX = -(svg.X.Value - (dims.Width * (float)scale.Xscale));
             }
 
             if (scale.Yscale < 0)
             {
-                translateY = -(svg.Y.Value - dims.Height * (float)scale.Yscale);
+                translateY = -svg.Y.Value - (dims.Height * (float)scale.Yscale);
+                //translateY = (svg.Y.Value -)
             }
 
             svg.Transforms.Add(new SvgTranslate(translateX, translateY));
+            svg.Transforms.Add(new SvgScale((float)scale.Xscale, (float)scale.Yscale));
         }
 
 

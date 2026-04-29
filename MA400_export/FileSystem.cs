@@ -260,7 +260,9 @@ namespace MA400_export
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
             WriteToSVG(tmpPath, @"\tmp.svg");//local tmp file
-            SvgControl.OpenSVG(tmpPath, @"\tmp.svg");
+
+            //Doc.
+            SvgControl.OpenSVG(tmpPath, @"\tmp.svg", false);
 
 
             open = true;
