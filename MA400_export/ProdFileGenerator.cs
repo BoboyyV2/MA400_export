@@ -149,7 +149,7 @@ namespace MA400_export
                 posx = (float)((position.X - Offset.X) * Scalefact.Xscale);
             }else
             {
-                posx = (float)(Dimension.Width + ( (position.X - Offset.X) * Scalefact.Xscale ) );
+                posx = (float)( (position.X + Offset.X) * Scalefact.Xscale ) ;
             }
 
             if (Scalefact.Yscale > 0)
@@ -158,7 +158,7 @@ namespace MA400_export
             }
             else
             {
-                posy = (float)(Dimension.Height + ((position.Y - Offset.Y) * Scalefact.Yscale));
+                posy = (float)((position.Y + Offset.Y) * Scalefact.Yscale);
             }
 
             return new System.Drawing.PointF( posx, posy );
@@ -494,6 +494,7 @@ namespace MA400_export
             sw.WriteLine( FormatValue(end.X));
             sw.WriteLine( FormatValue(end.Y));
             WriteLine0(sw, 6);
+
         }
 
         /**
@@ -695,7 +696,7 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".VER"))
             {
-                int magicnumber = 0;//TODO, comprendre c'est quoi, 4 nombre potentiellement différent, souvent des 0
+                int magicnumber = 0;//TODO, comprendre c'est quoi, 4 nombres potentiellement différent, souvent des 0
                 sw.WriteLine(magicnumber );
                 sw.WriteLine(magicnumber );
                 sw.WriteLine(magicnumber );

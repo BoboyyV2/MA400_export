@@ -111,6 +111,7 @@
     <Compile Include="Scale.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Stud.cs" />
+    <Compile Include="SVGcontroller.cs" />
     <Compile Include="UserSettings.cs">
       <SubType>Form</SubType>
     </Compile>

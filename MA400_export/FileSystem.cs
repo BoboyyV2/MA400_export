@@ -44,7 +44,9 @@ namespace MA400_export
      {
 
 
-         public CadDocument Doc;
+         public CadDocument Doc = null;
+
+        public SVGcontroller SvgControl; 
          public bool open {  get; private set; }
          public List<Circle> Studs {  get; private set; }
 
@@ -52,9 +54,7 @@ namespace MA400_export
 
          //inner data
          //test data
-         public PointF offset { get; set; } = new PointF(708.35f, 71.70f);
-         public RectangleF dimension { get; set; } = new RectangleF(0, 0, 210, 110);
-         public Scale scale { get; set; } = new Scale(1, -1);
+         
 
 
 
@@ -66,6 +66,7 @@ namespace MA400_export
             Doc = new CadDocument();
             open = false;
             Studs = new List<Circle>();
+            SvgControl = new SVGcontroller();
             
         }
 
@@ -80,12 +81,8 @@ namespace MA400_export
             open = false;
             Doc = new CadDocument();
             Studs = new List<Circle>();
+            SvgControl = new SVGcontroller();
 
-            //test data
-            //TODO remove 
-            offset = new PointF(708.35f, 71.70f);
-            dimension = new RectangleF(0, 0, 210, 110);
-            scale = new Scale(1, -1);
         }
 
 
@@ -149,7 +146,7 @@ namespace MA400_export
 
                             if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
                             {
-                                Circle stud = ApplyTransform(candidate, offset, dimension, scale);
+                                Circle stud = ApplyTransform(candidate, SvgControl.offset, SvgControl.dimension, SvgControl.scale);
                                 Studs.Add(stud);
                             }
                             break;
@@ -166,10 +163,6 @@ namespace MA400_export
 
 
         /*_____________________________________DXF_____________________________________*/
-
-
-
-
 
 
 
@@ -192,10 +185,13 @@ namespace MA400_export
                 reader.OnNotification += NotificationHelper.LogConsoleNotification;
                 Doc = reader.Read();
             }
+            //first write to svg avant de scan pour chopper les paramètres
+            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+            WriteToSVG(tmpPath, @"\tmp.svg");//local tmp file
+            SvgControl.OpenSVG(tmpPath, @"\tmp.svg");
+
             ScanEntities();
 
-
-            WriteToSVG(Properties.Settings.Default.OutputPath + Constants.tmpPath) ;//local tmp file
 
             open = true;
             return true;
@@ -223,11 +219,14 @@ namespace MA400_export
                 reader.OnNotification += NotificationHelper.LogConsoleNotification;
                 Doc = reader.Read();
             }
+            //first write to svg avant de scan pour chopper les paramètres
+            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath ;
+            WriteToSVG(tmpPath, @"\tmp.svg");//local tmp file
+            SvgControl.OpenSVG(tmpPath, @"\tmp.svg");
 
             ScanEntities();
 
 
-            WriteToSVG(Properties.Settings.Default.OutputPath + Constants.tmpPath);//local tmp file
 
             open = true;
             return true;
@@ -259,10 +258,10 @@ namespace MA400_export
             ReadLAY(ProgramNumber);
             ReadNC(ProgramNumber);
 
-            //plus de scan car on split entre GPH pour les entités et NC pour les goujons
-            //ScanEntities();
+            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+            WriteToSVG(tmpPath, @"\tmp.svg");//local tmp file
+            SvgControl.OpenSVG(tmpPath, @"\tmp.svg");
 
-            WriteToSVG(Properties.Settings.Default.OutputPath + Constants.tmpPath );//local tmp file
 
             open = true;
             return data;
@@ -377,7 +376,7 @@ namespace MA400_export
             string[] file = File.ReadAllLines(LAYPath);
 
 
-            offset = new PointF(float.Parse(file[0], CultureInfo.InvariantCulture),
+            SvgControl.offset = new PointF(float.Parse(file[0], CultureInfo.InvariantCulture),
                                 float.Parse(file[1], CultureInfo.InvariantCulture));
 
 
@@ -385,12 +384,12 @@ namespace MA400_export
             //==> 0,0,210,110 =? 100,100,310,210 ou 100,100,210,110
             //probablement le second car je n'ai pas vu d'offset nul part
             //pour l'instant, marche impec si on est à l'origine
-            dimension = new RectangleF( float.Parse(file[0], CultureInfo.InvariantCulture), 
+            SvgControl.dimension = new RectangleF( float.Parse(file[0], CultureInfo.InvariantCulture), 
                                         float.Parse(file[1], CultureInfo.InvariantCulture),
                                         float.Parse(file[3], CultureInfo.InvariantCulture),
                                         float.Parse(file[4], CultureInfo.InvariantCulture));
 
-            scale = new Scale(1, 1);//toujours ça normalement
+            SvgControl.scale = new Scale(1, 1);//toujours ça normalement
         }
 
 
@@ -414,6 +413,7 @@ namespace MA400_export
                 //create the stud
                 Circle stud = new Circle();
                 stud.Center = new CSMath.XYZ(X, Y, 0);
+                //TODO , diamètre à récup
 
                 Studs.Add(stud);
             }
@@ -446,21 +446,36 @@ namespace MA400_export
 
         public void SaveToFile(BindingList<Stud> Studs, string path)
         {
-            using (DxfWriter writer = new DxfWriter(path, Doc))
+            //ajout des goujons dans le doc
+            CadDocument save = Doc;
+            foreach (Stud stud in Studs)
+            {
+                save.Entities.Add(stud.circle);
+            }
+
+            using (DxfWriter writer = new DxfWriter(path, save))
             {
                 writer.OnNotification += NotificationHelper.LogConsoleNotification;
                 writer.Write();
-                
             }
+
+            //suppression des goujons
+            
+            foreach (Stud stud in Studs)
+            {
+                save.Entities.Remove(stud.circle);
+            }
+            
+
         }
 
 
-        private void WriteToSVG(string path)
+        private void WriteToSVG(string path, string filename)
         {
 
             Directory.CreateDirectory(path);
 
-            string svgPath = path + @"\display.svg";
+            string svgPath = path + filename;
 
             using (SvgWriter writer = new SvgWriter(svgPath, Doc))
             {

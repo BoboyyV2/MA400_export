@@ -75,7 +75,7 @@ namespace MA400_export
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.Paint(Studs, getSelectedStuds(), fs.offset );
+            gc.Paint(Studs, getSelectedStuds(), fs.SvgControl.offset );
 
         }
 
@@ -724,7 +724,7 @@ namespace MA400_export
             GetFormData();
             
             
-            fs.GenerateProdFiles(ref Studs, fs.dimension, fs.offset, data, fs.scale); // en dernier, une fois que tout est bien rempli
+            fs.GenerateProdFiles(ref Studs, fs.SvgControl.dimension, fs.SvgControl.offset, data, fs.SvgControl.scale); // en dernier, une fois que tout est bien rempli
         }
 
 

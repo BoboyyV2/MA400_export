@@ -208,12 +208,12 @@ namespace UnitTestProject
         public void Reset_RestoresDefaultScale()
         {
             FileSystem fs = new FileSystem();
-            fs.scale = new Scale(5.0, 5.0);
+            fs.SvgControl.scale = new Scale(5.0, 5.0);
 
             fs.reset();
 
-            Assert.AreEqual(1.0, fs.scale.Xscale);
-            Assert.AreEqual(-1.0, fs.scale.Yscale);
+            Assert.AreEqual(1.0, fs.SvgControl.scale.Xscale);
+            Assert.AreEqual(-1.0, fs.SvgControl.scale.Yscale);
         }
 
         [TestMethod]
