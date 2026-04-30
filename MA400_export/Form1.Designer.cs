@@ -45,8 +45,11 @@ namespace MA400_export
             this.WorkZone = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirprogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.enregistrerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enregistrersousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +75,10 @@ namespace MA400_export
             this.YCoord_Display = new System.Windows.Forms.Label();
             this.XCoord_Display = new System.Windows.Forms.Label();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.ButtonCursorMode = new System.Windows.Forms.ToolStripButton();
+            this.ButtonSelectStudMode = new System.Windows.Forms.ToolStripButton();
+            this.ButtonAddStudMode = new System.Windows.Forms.ToolStripButton();
+            this.ButtonremoveStudMode = new System.Windows.Forms.ToolStripButton();
             this.textBox_StudCoord_X = new System.Windows.Forms.TextBox();
             this.textBox_StudCoord_Y = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -80,13 +87,6 @@ namespace MA400_export
             this.comboBoxDiam = new System.Windows.Forms.ComboBox();
             this.buttonGenerer = new System.Windows.Forms.Button();
             this.saveFileDialogSave = new System.Windows.Forms.SaveFileDialog();
-            this.ButtonCursorMode = new System.Windows.Forms.ToolStripButton();
-            this.ButtonSelectStudMode = new System.Windows.Forms.ToolStripButton();
-            this.ButtonAddStudMode = new System.Windows.Forms.ToolStripButton();
-            this.ButtonremoveStudMode = new System.Windows.Forms.ToolStripButton();
-            this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.enregistrerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileSystemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -100,9 +100,8 @@ namespace MA400_export
             this.WorkZone.Name = "WorkZone";
             this.WorkZone.Size = new System.Drawing.Size(800, 600);
             this.WorkZone.TabIndex = 10;
-            //this.WorkZone.Click += new System.EventHandler(this.WorkZone_Click);
-            this.WorkZone.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Click);
             this.WorkZone.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkZone_Paint);
+            this.WorkZone.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Click);
             this.WorkZone.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorkZone_MouseMove);
             this.WorkZone.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Zoom);
             // 
@@ -136,34 +135,65 @@ namespace MA400_export
             this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.fichierToolStripMenuItem.Text = "&Fichier";
             // 
+            // nouveauToolStripMenuItem
+            // 
+            this.nouveauToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("nouveauToolStripMenuItem.Image")));
+            this.nouveauToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.nouveauToolStripMenuItem.Name = "nouveauToolStripMenuItem";
+            this.nouveauToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.nouveauToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.nouveauToolStripMenuItem.Text = "&Nouveau";
+            // 
+            // ouvrirToolStripMenuItem
+            // 
+            this.ouvrirToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("ouvrirToolStripMenuItem.Image")));
+            this.ouvrirToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ouvrirToolStripMenuItem.Name = "ouvrirToolStripMenuItem";
+            this.ouvrirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.ouvrirToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.ouvrirToolStripMenuItem.Text = "&Ouvrir";
+            this.ouvrirToolStripMenuItem.Click += new System.EventHandler(this.ouvrirToolStripMenuItem_Click);
+            // 
             // ouvrirprogramToolStripMenuItem
             // 
             this.ouvrirprogramToolStripMenuItem.Name = "ouvrirprogramToolStripMenuItem";
-            this.ouvrirprogramToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.ouvrirprogramToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.ouvrirprogramToolStripMenuItem.Text = "&Ouvrir &program";
             this.ouvrirprogramToolStripMenuItem.Click += new System.EventHandler(this.ouvrirprogramToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(167, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(222, 6);
+            // 
+            // enregistrerToolStripMenuItem
+            // 
+            this.enregistrerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("enregistrerToolStripMenuItem.Image")));
+            this.enregistrerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.enregistrerToolStripMenuItem.Name = "enregistrerToolStripMenuItem";
+            this.enregistrerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.enregistrerToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.enregistrerToolStripMenuItem.Text = "&Enregistrer";
+            this.enregistrerToolStripMenuItem.Click += new System.EventHandler(this.enregistrerToolStripMenuItem_Click);
             // 
             // enregistrersousToolStripMenuItem
             // 
             this.enregistrersousToolStripMenuItem.Name = "enregistrersousToolStripMenuItem";
-            this.enregistrersousToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.enregistrersousToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.enregistrersousToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.enregistrersousToolStripMenuItem.Text = "Enregistrer &sous";
             this.enregistrersousToolStripMenuItem.Click += new System.EventHandler(this.enregistrersousToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(167, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(222, 6);
             // 
             // quitterToolStripMenuItem
             // 
             this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
-            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.quitterToolStripMenuItem.Text = "&Quitter";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
@@ -194,13 +224,13 @@ namespace MA400_export
             // personnaliserToolStripMenuItem
             // 
             this.personnaliserToolStripMenuItem.Name = "personnaliserToolStripMenuItem";
-            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.personnaliserToolStripMenuItem.Text = "&Personnaliser";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
@@ -359,6 +389,46 @@ namespace MA400_export
             this.toolStrip2.TabIndex = 13;
             this.toolStrip2.Text = "toolStrip2";
             // 
+            // ButtonCursorMode
+            // 
+            this.ButtonCursorMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonCursorMode.Image = ((System.Drawing.Image)(resources.GetObject("ButtonCursorMode.Image")));
+            this.ButtonCursorMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonCursorMode.Name = "ButtonCursorMode";
+            this.ButtonCursorMode.Size = new System.Drawing.Size(23, 22);
+            this.ButtonCursorMode.Text = "Curseur";
+            this.ButtonCursorMode.Click += new System.EventHandler(this.ButtonCursorMode_Click);
+            // 
+            // ButtonSelectStudMode
+            // 
+            this.ButtonSelectStudMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonSelectStudMode.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSelectStudMode.Image")));
+            this.ButtonSelectStudMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonSelectStudMode.Name = "ButtonSelectStudMode";
+            this.ButtonSelectStudMode.Size = new System.Drawing.Size(23, 22);
+            this.ButtonSelectStudMode.Text = "Sélectionner un goujon";
+            this.ButtonSelectStudMode.Click += new System.EventHandler(this.ButtonSelectStudMode_Click);
+            // 
+            // ButtonAddStudMode
+            // 
+            this.ButtonAddStudMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonAddStudMode.Image = ((System.Drawing.Image)(resources.GetObject("ButtonAddStudMode.Image")));
+            this.ButtonAddStudMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonAddStudMode.Name = "ButtonAddStudMode";
+            this.ButtonAddStudMode.Size = new System.Drawing.Size(23, 22);
+            this.ButtonAddStudMode.Text = "Ajouter un goujon";
+            this.ButtonAddStudMode.Click += new System.EventHandler(this.ButtonAddStudMode_Click);
+            // 
+            // ButtonremoveStudMode
+            // 
+            this.ButtonremoveStudMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ButtonremoveStudMode.Image = ((System.Drawing.Image)(resources.GetObject("ButtonremoveStudMode.Image")));
+            this.ButtonremoveStudMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ButtonremoveStudMode.Name = "ButtonremoveStudMode";
+            this.ButtonremoveStudMode.Size = new System.Drawing.Size(23, 22);
+            this.ButtonremoveStudMode.Text = "Supprimer un goujon";
+            this.ButtonremoveStudMode.Click += new System.EventHandler(this.ButtonremoveStudMode_Click);
+            // 
             // textBox_StudCoord_X
             // 
             this.textBox_StudCoord_X.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -437,76 +507,8 @@ namespace MA400_export
             // 
             // saveFileDialogSave
             // 
+            this.saveFileDialogSave.DefaultExt = "dxf";
             this.saveFileDialogSave.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialogSave_FileOk);
-            // 
-            // ButtonCursorMode
-            // 
-            this.ButtonCursorMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ButtonCursorMode.Image = ((System.Drawing.Image)(resources.GetObject("ButtonCursorMode.Image")));
-            this.ButtonCursorMode.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ButtonCursorMode.Name = "ButtonCursorMode";
-            this.ButtonCursorMode.Size = new System.Drawing.Size(23, 22);
-            this.ButtonCursorMode.Text = "Curseur";
-            this.ButtonCursorMode.Click += new System.EventHandler(this.ButtonCursorMode_Click);
-            // 
-            // ButtonSelectStudMode
-            // 
-            this.ButtonSelectStudMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ButtonSelectStudMode.Image = ((System.Drawing.Image)(resources.GetObject("ButtonSelectStudMode.Image")));
-            this.ButtonSelectStudMode.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ButtonSelectStudMode.Name = "ButtonSelectStudMode";
-            this.ButtonSelectStudMode.Size = new System.Drawing.Size(23, 22);
-            this.ButtonSelectStudMode.Text = "Sélectionner un goujon";
-            this.ButtonSelectStudMode.Click += new System.EventHandler(this.ButtonSelectStudMode_Click);
-            // 
-            // ButtonAddStudMode
-            // 
-            this.ButtonAddStudMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ButtonAddStudMode.Image = ((System.Drawing.Image)(resources.GetObject("ButtonAddStudMode.Image")));
-            this.ButtonAddStudMode.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ButtonAddStudMode.Name = "ButtonAddStudMode";
-            this.ButtonAddStudMode.Size = new System.Drawing.Size(23, 22);
-            this.ButtonAddStudMode.Text = "Ajouter un goujon";
-            this.ButtonAddStudMode.Click += new System.EventHandler(this.ButtonAddStudMode_Click);
-            // 
-            // ButtonremoveStudMode
-            // 
-            this.ButtonremoveStudMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ButtonremoveStudMode.Image = ((System.Drawing.Image)(resources.GetObject("ButtonremoveStudMode.Image")));
-            this.ButtonremoveStudMode.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ButtonremoveStudMode.Name = "ButtonremoveStudMode";
-            this.ButtonremoveStudMode.Size = new System.Drawing.Size(23, 22);
-            this.ButtonremoveStudMode.Text = "Supprimer un goujon";
-            this.ButtonremoveStudMode.Click += new System.EventHandler(this.ButtonremoveStudMode_Click);
-            // 
-            // nouveauToolStripMenuItem
-            // 
-            this.nouveauToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("nouveauToolStripMenuItem.Image")));
-            this.nouveauToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.nouveauToolStripMenuItem.Name = "nouveauToolStripMenuItem";
-            this.nouveauToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.nouveauToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.nouveauToolStripMenuItem.Text = "&Nouveau";
-            // 
-            // ouvrirToolStripMenuItem
-            // 
-            this.ouvrirToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("ouvrirToolStripMenuItem.Image")));
-            this.ouvrirToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ouvrirToolStripMenuItem.Name = "ouvrirToolStripMenuItem";
-            this.ouvrirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.ouvrirToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.ouvrirToolStripMenuItem.Text = "&Ouvrir";
-            this.ouvrirToolStripMenuItem.Click += new System.EventHandler(this.ouvrirToolStripMenuItem_Click);
-            // 
-            // enregistrerToolStripMenuItem
-            // 
-            this.enregistrerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("enregistrerToolStripMenuItem.Image")));
-            this.enregistrerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.enregistrerToolStripMenuItem.Name = "enregistrerToolStripMenuItem";
-            this.enregistrerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.enregistrerToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.enregistrerToolStripMenuItem.Text = "&Enregistrer";
-            this.enregistrerToolStripMenuItem.Click += new System.EventHandler(this.enregistrerToolStripMenuItem_Click);
             // 
             // MA400_export
             // 
