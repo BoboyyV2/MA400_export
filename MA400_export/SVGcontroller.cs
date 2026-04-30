@@ -40,20 +40,53 @@ namespace MA400_export
 
         
 
+        private void offsetCorrection()
+        {
+            //get the dimensions
+            SizeF dims = svg.GetDimensions();
+            if (dims.Width <= 0 || dims.Height <= 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            dimension = new RectangleF(0, 0, dims.Width, dims.Height);
+            float newX = offset.X;
+            float newY = offset.Y;
+
+            if (scale.Xscale < 0)
+            {
+                newX -= dims.Width;
+            }
+            if (scale.Yscale < 0)
+            {
+                newY *= -1;
+            }
+            offset = new PointF(newX, newY);
+        }
+
+
+        private void setOffset()
+        {
+            RectangleF bounds = svg.Bounds;
+
+            offset = new PointF(bounds.X, bounds.Y);
+            try
+            {
+                offsetCorrection();
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                MessageBox.Show("invalid file dimension");
+            }
+        }
+
         public void BuildSVG()
         {
 
             if (svg == null) return;
 
-            //get the dimensions
-            SizeF dims = svg.GetDimensions();
-            if (dims.Width <= 0 || dims.Height <= 0) return;
-            dimension = new RectangleF(0, 0, dims.Width, dims.Height);
+            
 
-            //get the offset
-            RectangleF bounds = svg.Bounds;
-            //MessageBox.Show("bounds : " + bounds.X + "; " + bounds.Y + ", dim = " + bounds.Width + "; " + bounds.Height);
-            offset = new PointF(bounds.X, bounds.Y);
+            
 
             float scaleX = 1;
             float scaleY = 1;
@@ -76,7 +109,10 @@ namespace MA400_export
 
                 }
 
+
                 //change l'offset
+                setOffset();
+
                 if (transform.GetType() == typeof(SvgTranslate))
                 {
                     SvgTranslate translate = ((SvgTranslate)transform);
