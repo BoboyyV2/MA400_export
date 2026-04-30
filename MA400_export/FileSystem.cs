@@ -415,7 +415,9 @@ namespace MA400_export
                 //create the stud
                 Circle stud = new Circle();
                 stud.Center = new CSMath.XYZ(X, Y, 0);
+                stud.Radius = Constants.StudRadius3;
                 //TODO , diamètre à récup
+                stud.Color = ACadSharp.Color.Green;
 
                 Studs.Add(stud);
             }

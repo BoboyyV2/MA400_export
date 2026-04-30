@@ -76,14 +76,14 @@ namespace MA400_export
          */
         public void Draw_Stud(Circle stud)
         {
-            float StudRadius = (float)stud.Radius + 0.25f;
+            float StudRadius = (float)stud.Radius + 0.35f;
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
             shape.Width = 2 * StudRadius;
             shape.Height = 2 * StudRadius;
 
-            SolidBrush drawBrush = new SolidBrush(Color.Green);
+            SolidBrush drawBrush = new SolidBrush(Color.LimeGreen);
             graphics.FillEllipse(drawBrush, shape);
 
         }
@@ -105,7 +105,7 @@ namespace MA400_export
          */
         public void Draw_Selected_Stud(Circle stud)
         {
-            float StudRadius = (float)stud.Radius + 0.4f;
+            float StudRadius = (float)stud.Radius + 0.5f;
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
