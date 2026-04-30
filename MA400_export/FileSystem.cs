@@ -262,6 +262,14 @@ namespace MA400_export
          */
         private Entity ParseGPHEntities(string[] file, ref int num_line)
         {
+
+            //debug 
+            /*
+            MessageBox.Show("offset = " + SvgControl.offset.ToString() + Environment.NewLine +
+                            "dim = " + SvgControl.dimension.ToString() + Environment.NewLine +
+                            "scale = " + SvgControl.scale.Xscale + " ; " + SvgControl.scale.Yscale + Environment.NewLine);
+            */
+
             int EntitieType = int.Parse(file[num_line]);
             switch (EntitieType)
             {
@@ -271,12 +279,17 @@ namespace MA400_export
                         Circle c = new Circle();
                         double centerX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double centerY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        c.Center = Util.AdjustPoint(new CSMath.XYZ(centerX, centerY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
+                        c.Center = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
 
                         ++num_line;
                         double radius = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         c.Radius = radius;
                         num_line += 6;
+
+                        //debug
+                        /*
+                        MessageBox.Show("center in : " + c.Center.ToString());
+                        */
 
                         return c;
                     }
@@ -287,11 +300,18 @@ namespace MA400_export
                         Line l = new Line();
                         double startX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double startY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.StartPoint = Util.AdjustPoint(new CSMath.XYZ(startX, startY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false) );
+                        l.StartPoint = Util.AdjustPointGPH(new CSMath.XYZ(startX, startY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false) );
                         double endX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double endY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.EndPoint = Util.AdjustPoint(new CSMath.XYZ(endX, endY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
+                        l.EndPoint = Util.AdjustPointGPH(new CSMath.XYZ(endX, endY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
                         num_line += 6;
+
+                        //debug
+                        /*
+                        MessageBox.Show("start in : " + l.StartPoint.ToString());
+                        MessageBox.Show("end in : " + l.EndPoint.ToString());
+                        */
+
 
                         return l;
                     }
@@ -396,7 +416,6 @@ namespace MA400_export
 
                 //create the stud
                 Circle stud = new Circle();
-                //stud.Center = Util.AdjustPoint(new CSMath.XYZ(X, Y, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
                 stud.Center = new CSMath.XYZ(X, Y, 0);
                 stud.Radius = Constants.StudRadius3;
                 //TODO , diamètre à récup

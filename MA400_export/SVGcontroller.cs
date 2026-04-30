@@ -54,7 +54,7 @@ namespace MA400_export
 
             if (scale.Xscale < 0)
             {
-                newX -= dims.Width;
+                newX *= -1;
             }
             if (scale.Yscale < 0)
             {

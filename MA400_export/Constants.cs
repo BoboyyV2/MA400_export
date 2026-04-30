@@ -32,7 +32,7 @@ namespace MA400_export
         public static string CncPath { get; private set; } = @"\Cnc\2\";
         public static string tmpPath { get; private set; } = @"\tmp\";
 
-
+        public static Scale DefaultDxfScale = new Scale(true, false);
 
         //GHP command id
         public const int LINE_CMD = 4;

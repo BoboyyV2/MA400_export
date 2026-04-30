@@ -35,6 +35,27 @@ namespace MA400_export
         }
 
         /**
+         * <summary>Adjust a point to the new scale, take the GPH properties into account</summary>
+         * <returns>a new point that have been adjusted to the new scale</returns>
+         */
+        public static XYZ AdjustPointGPH(XYZ point, PointF offset, RectangleF dimension, Scale scale)
+        {
+
+            double posx = point.X + offset.X;
+            double posy = point.Y + offset.Y;
+            if (scale.Xscale < 0)
+            {
+                posx = -point.X + offset.X + dimension.Width;
+            }
+            if (scale.Yscale < 0)
+            {
+                posy = -point.Y + offset.Y + dimension.Height;
+            }
+
+            return new XYZ(posx, posy, 0);
+        }
+
+        /**
          * <returns>the absolute distance between the 2 studs on a 2D plan</returns>
          */
         public static double getStudDistance(Circle from, Circle to)
