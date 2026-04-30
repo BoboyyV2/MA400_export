@@ -13,8 +13,8 @@ namespace MA400_export
      */
     public class Scale
     {
-        public double Xscale { get; set; }
-        public double Yscale { get; set; }
+        public double Xscale { get; private set; }
+        public double Yscale { get; private set; }
 
         public Scale()
         {
@@ -22,10 +22,10 @@ namespace MA400_export
             Yscale = 1;
         }
 
-        public Scale(double Xscale, double Yscale)
+        public Scale(bool XscalePositive, bool YscalePositive)
         {
-            this.Xscale = Xscale;
-            this.Yscale = Yscale;
+            this.Xscale = XscalePositive ? 1 : -1;
+            this.Yscale = YscalePositive ? 1 : -1;
         }
     }
 

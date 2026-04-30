@@ -64,6 +64,33 @@ namespace MA400_export
             fs.reset();
         }
 
+        public void EmptyStuds()
+        {
+            Studs.Clear();
+        }
+        /**
+         * <summary>add a stud to the local collection</summary>
+         */
+        public void AddStud(Circle stud)
+        {
+
+            Studs.Add(new Stud(stud, StudCurrentIndex));
+
+            StudCurrentIndex++;
+        }
+
+        /**
+         * <summary>add a stud to the local collection</summary>
+         */
+        public void AddStud(double x, double y, double diam)
+        {
+            Circle circle = new Circle();
+
+            circle.Radius = diam / 2;
+            circle.Center = new CSMath.XYZ(x, y, 0);
+            AddStud(circle);
+        }
+
         private void WorkZone_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             //draw the basic from of the workzone
@@ -440,7 +467,7 @@ namespace MA400_export
 
 
 
-            if (!this.IsPossibleToAddStud(Stud))
+            if (!Util.IsPossibleToAddStud(Stud, Studs))
             {
                 return;
             }
@@ -570,7 +597,7 @@ namespace MA400_export
 
             foreach (Stud stud in Studs)
             {
-                if (getStudDistance(offseted_p, stud.circle) < stud.circle.Radius)
+                if (Util.getStudDistance(offseted_p, stud.circle) < stud.circle.Radius)
                 {
                     bool newSelectionValue = true;
                     if (selected.Contains(stud))
@@ -602,7 +629,7 @@ namespace MA400_export
             }
             double radius = (Double.Parse(diam_String)) / 2;
             Circle circle = createStud((double)offseted_p.X, (double)offseted_p.Y, radius);
-            if (!IsPossibleToAddStud(circle))
+            if (!Util.IsPossibleToAddStud(circle, Studs))
             {
                 return;
             }
@@ -626,7 +653,7 @@ namespace MA400_export
             bool removed = false;
             foreach (Stud stud in Studs)
             {
-                if (getStudDistance(p_rm, stud.circle) < (stud.circle.Radius))
+                if (Util.getStudDistance(p_rm, stud.circle) < (stud.circle.Radius))
                 {
                     Studs.Remove(stud);
                     removed = true;
@@ -744,7 +771,9 @@ namespace MA400_export
             {
                 //pas encore de sauvegarde, on ouvre un menu
                 saveFileDialogSave.ShowDialog();
+                return;
             }
+            fs.SaveToFile(Studs, savepath);
 
         }
 

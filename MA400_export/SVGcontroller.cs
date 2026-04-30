@@ -23,20 +23,17 @@ namespace MA400_export
         public RectangleF dimension { get; set; }
         public Scale scale { get; set; }
 
-        private bool fromDxf;
-
         public SVGcontroller()
         {
             svg = new SvgDocument();
             offset = new PointF(0, 0);
             dimension = new RectangleF(0, 0, 0, 0);
-            scale = new Scale(1, 1);
+            scale = new Scale();
         }
 
-        public void OpenSVG(string path, string filename, bool fromDxf = true)
+        public void OpenSVG(string path, string filename)
         {
             svg = SvgDocument.Open(path + filename);
-            this.fromDxf = fromDxf;
 
             BuildSVG();
         }
@@ -62,27 +59,19 @@ namespace MA400_export
             float scaleY = 1;
             //get the scale & offset
             SvgTransform translate_to_remove = null;
-            SvgTransform scale_to_remove = null;
             foreach (SvgTransform transform in svg.Transforms)
             {
                 //change la scale si besoin
                 
                 if (transform.GetType() == typeof(SvgScale))
                 {
-                    if (fromDxf)
-                    {
-                        float[] Elem = ((SvgScale)transform).Matrix.Elements;
-                        //X,?,?,Y,?,?
-                        scaleX = Elem[0];
-                        scaleY = Elem[3];
-                        this.scale = new Scale(scaleX, scaleY);
+                    
+                    float[] Elem = ((SvgScale)transform).Matrix.Elements;
+                    //X,?,?,Y,?,?
+                    scaleX = Elem[0];
+                    scaleY = Elem[3];
+                    this.scale = new Scale(scaleX > 0, scaleY > 0 );
 
-                    }
-                    else
-                    {
-                        this.scale = new Scale(scaleX, scaleY);
-
-                    }
                     translate_to_remove = transform;
 
                 }
@@ -100,6 +89,7 @@ namespace MA400_export
             //svg.Transforms.Remove(scale_to_remove);
 
             SvgScale();
+            Directory.CreateDirectory(Constants.Outputpath + Constants.tmpPath);
             svg.Write(Constants.Outputpath + Constants.tmpPath + @"\display.svg");
             
 

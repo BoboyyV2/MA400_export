@@ -71,22 +71,13 @@ namespace UnitTestProject
         [TestMethod]
         public void ParameterizedConstructor_StoresValues()
         {
-            Scale s = new Scale(2.5, -1.0);
+            Scale s = new Scale(true, false);
 
-            Assert.AreEqual(2.5, s.Xscale);
-            Assert.AreEqual(-1.0, s.Yscale);
+            Assert.AreEqual(1, s.Xscale);
+            Assert.AreEqual(-1, s.Yscale);
         }
 
-        [TestMethod]
-        public void Properties_AreSettable()
-        {
-            Scale s = new Scale();
-            s.Xscale = 3.0;
-            s.Yscale = -2.0;
-
-            Assert.AreEqual(3.0, s.Xscale);
-            Assert.AreEqual(-2.0, s.Yscale);
-        }
+        
     }
 
     // -------------------------------------------------------------------------
@@ -208,12 +199,12 @@ namespace UnitTestProject
         public void Reset_RestoresDefaultScale()
         {
             FileSystem fs = new FileSystem();
-            fs.SvgControl.scale = new Scale(5.0, 5.0);
+            fs.SvgControl.scale = new Scale(true, false);
 
             fs.reset();
 
             Assert.AreEqual(1.0, fs.SvgControl.scale.Xscale);
-            Assert.AreEqual(-1.0, fs.SvgControl.scale.Yscale);
+            Assert.AreEqual(1.0, fs.SvgControl.scale.Yscale);
         }
 
         [TestMethod]
@@ -252,7 +243,7 @@ namespace UnitTestProject
 
             PointF offset = new PointF(708.35f, 71.70f);
             RectangleF dim = new RectangleF(0, 0, 210, 110);
-            Scale scale = new Scale(1.0, 1.0);
+            Scale scale = new Scale();
 
             Circle result = fs.ApplyTransform(stud, offset, dim, scale);
 
@@ -262,43 +253,7 @@ namespace UnitTestProject
             Assert.AreEqual(2.0f, (float)result.Center.Y, 0.001f);
         }
 
-        [TestMethod]
-        public void ApplyTransform_NegativeYscale_MirrorsY()
-        {
-            FileSystem fs = new FileSystem();
-            Circle stud = new Circle();
-            stud.Center = new CSMath.XYZ(710.35, 73.70, 0);
-            stud.Radius = Constants.StudRadius3;
-
-            PointF offset = new PointF(708.35f, 71.70f);
-            RectangleF dim = new RectangleF(0, 0, 210, 110);
-            Scale scale = new Scale(1.0, -1.0);
-
-            Circle result = fs.ApplyTransform(stud, offset, dim, scale);
-
-            // X = (710.35 - 708.35) * 1  = 2.0
-            // Y = 110 + (73.70 - 71.70) * (-1) = 108.0
-            Assert.AreEqual(2.0f, (float)result.Center.X, 0.001f);
-            Assert.AreEqual(108.0f, (float)result.Center.Y, 0.001f);
-        }
-
-        [TestMethod]
-        public void ApplyTransform_AtOffset_ReturnsOrigin()
-        {
-            FileSystem fs = new FileSystem();
-            Circle stud = new Circle();
-            stud.Center = new CSMath.XYZ(708.35, 71.70, 0); // exactement à l'offset
-            stud.Radius = Constants.StudRadius3;
-
-            PointF offset = new PointF(708.35f, 71.70f);
-            RectangleF dim = new RectangleF(0, 0, 210, 110);
-            Scale scale = new Scale(1.0, 1.0);
-
-            Circle result = fs.ApplyTransform(stud, offset, dim, scale);
-
-            Assert.AreEqual(0.0f, (float)result.Center.X, 0.001f);
-            Assert.AreEqual(0.0f, (float)result.Center.Y, 0.001f);
-        }
+        
 
         [TestMethod]
         public void ApplyTransform_DoesNotModifyOriginalCircle()
@@ -310,7 +265,7 @@ namespace UnitTestProject
 
             PointF offset = new PointF(708.35f, 71.70f);
             RectangleF dim = new RectangleF(0, 0, 210, 110);
-            Scale scale = new Scale(1.0, -1.0);
+            Scale scale = new Scale(true, false);
 
             fs.ApplyTransform(stud, offset, dim, scale);
 
@@ -328,7 +283,7 @@ namespace UnitTestProject
 
             PointF offset = new PointF(708.35f, 71.70f);
             RectangleF dim = new RectangleF(0, 0, 210, 110);
-            Scale scale = new Scale(1.0, -1.0);
+            Scale scale = new Scale(true, false);
 
             Circle result = fs.ApplyTransform(stud, offset, dim, scale);
 

@@ -1,6 +1,7 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
 using ACadSharp.IO;
+using CSMath;
 using Svg;
 using System;
 using System.Collections.Generic;
@@ -98,32 +99,7 @@ namespace MA400_export
         }
 
 
-        /**
-         * <summary>Revert the transformation made by ApplyTransform method.</summary>
-         */
-        public Circle RevertTransform(Circle stud, PointF offset, RectangleF dimension, Scale scale)
-        {
-
-            double X = stud.Center.X;
-            //inverted X axis
-            if (scale.Xscale < 0)
-            {
-                X = dimension.Width - X;
-            }
-            X = (X + offset.X) / scale.Xscale;
-
-            double Y = stud.Center.Y;
-            //inverted Y axis
-            if (scale.Yscale < 0)
-            {
-                Y = dimension.Height - Y;
-            }
-            Y = (Y + offset.Y) / scale.Xscale;
-
-            Circle transformed = (Circle)stud.Clone();
-            transformed.Center = new CSMath.XYZ(X, Y, 0);
-            return transformed;
-        }
+        
 
         /**
         * <summary>Scan the document's entities and attempt to get Stud candidates as well as the dimentions of the document <br></br>
@@ -249,24 +225,30 @@ namespace MA400_export
             //si on a les fichiers =>
             reset();
 
+
+            ReadLAY(ProgramNumber);
+
             ReadGPH(ProgramNumber);
             ReadDAT(ProgramNumber, ref data);
             //get offset, scale & dimsension
             //scale always 1;1 ?
             //offset et dimension dans .LAY donc : 
             // ==>>
-            ReadLAY(ProgramNumber);
             ReadNC(ProgramNumber);
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+
             WriteToSVG(tmpPath, @"\tmp.svg");//local tmp file
 
+
             //Doc.
-            SvgControl.OpenSVG(tmpPath, @"\tmp.svg", false);
+            SvgControl.OpenSVG(tmpPath, @"\tmp.svg");
+
 
 
             open = true;
             return data;
+
         }
 
 
@@ -289,7 +271,7 @@ namespace MA400_export
                         Circle c = new Circle();
                         double centerX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double centerY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        c.Center = new CSMath.XYZ(centerX, centerY, 0);
+                        c.Center = Util.AdjustPoint(new CSMath.XYZ(centerX, centerY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
 
                         ++num_line;
                         double radius = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
@@ -305,10 +287,10 @@ namespace MA400_export
                         Line l = new Line();
                         double startX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double startY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.StartPoint = new CSMath.XYZ(startX, startY, 0);
+                        l.StartPoint = Util.AdjustPoint(new CSMath.XYZ(startX, startY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false) );
                         double endX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double endY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.EndPoint = new CSMath.XYZ(endX, endY, 0);
+                        l.EndPoint = Util.AdjustPoint(new CSMath.XYZ(endX, endY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
                         num_line += 6;
 
                         return l;
@@ -388,10 +370,10 @@ namespace MA400_export
             //pour l'instant, marche impec si on est à l'origine
             SvgControl.dimension = new RectangleF( float.Parse(file[0], CultureInfo.InvariantCulture), 
                                         float.Parse(file[1], CultureInfo.InvariantCulture),
-                                        float.Parse(file[3], CultureInfo.InvariantCulture),
-                                        float.Parse(file[4], CultureInfo.InvariantCulture));
+                                        float.Parse(file[2], CultureInfo.InvariantCulture),
+                                        float.Parse(file[3], CultureInfo.InvariantCulture));
 
-            SvgControl.scale = new Scale(1, 1);//toujours ça normalement
+            SvgControl.scale = new Scale(true, false);//toujours 1;1 normalement et on réajuste en 1, -1
         }
 
 
@@ -414,6 +396,7 @@ namespace MA400_export
 
                 //create the stud
                 Circle stud = new Circle();
+                //stud.Center = Util.AdjustPoint(new CSMath.XYZ(X, Y, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
                 stud.Center = new CSMath.XYZ(X, Y, 0);
                 stud.Radius = Constants.StudRadius3;
                 //TODO , diamètre à récup
@@ -450,15 +433,21 @@ namespace MA400_export
 
         public void SaveToFile(BindingList<Stud> Studs, string path)
         {
-            //ajout des goujons dans le doc
+            //creation d'un nouveua document pour accomoder la sauvegarde
             CadDocument save = new CadDocument();
+
+            //ajout de clones de toutes les entités presentes dans le doc dans la sauvegarde.
             foreach (Entity entity in Doc.Entities)
             {
                 save.Entities.Add((Entity)entity.Clone());
             }
+
+            //ajout de clones des goujons dans la sauvegarde.
             foreach (Stud stud in Studs)
             {
-                save.Entities.Add(stud.circle);
+                Circle clone = (Circle)stud.circle.Clone();
+                clone.Center = Util.AdjustPoint(clone.Center, SvgControl.offset, SvgControl.dimension, SvgControl.scale);
+                save.Entities.Add(clone);
             }
 
             using (DxfWriter writer = new DxfWriter(path, save))
@@ -467,13 +456,9 @@ namespace MA400_export
                 writer.Write();
             }
 
-            //suppression des goujons
             
-            foreach (Stud stud in Studs)
-            {
-                save.Entities.Remove(stud.circle);
-            }
             
+
 
         }
 
