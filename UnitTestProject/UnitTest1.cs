@@ -218,16 +218,7 @@ namespace UnitTestProject
             Assert.IsFalse(fs.open);
         }
 
-        [TestMethod]
-        public void OpenDxfFile_ReturnsFalse_WhenStreamIsNull()
-        {
-            FileSystem fs = new FileSystem();
-
-            bool result = fs.OpenDxfFile((Stream)null);
-
-            Assert.IsFalse(result);
-            Assert.IsFalse(fs.open);
-        }
+       
 
         // -------------------------------------------------------------------------
         // Tests de ApplyTransform

@@ -71,33 +71,6 @@ namespace MA400_export
 
         }
 
-        /*_____________________________________PREVIEW_____________________________________*/
-
-        /*void generatePreview()
-        {
-            if (selectDWGfile.FileName.Length > 0)
-            {
-                string path = selectDWGfile.FileName;
-                try
-                {
-                    DwgPreview preview;
-                    using (DwgReader reader = new DwgReader(path))
-                    {
-                        doc = reader.Read();
-                        preview = reader.ReadPreview();
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, toolName);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Select a file first.", toolName);
-            }
-        }*/
 
         /*_____________________________________UTIL_____________________________________*/
 
@@ -205,46 +178,11 @@ namespace MA400_export
             //MessageBox.Show("origin = " + Doc.ModelSpace.Layout.Origin.X + " ; " + Doc.ModelSpace.Layout.Origin.Y);
             //MessageBox.Show("origin = " + Doc.ModelSpace.Layout. + " ; " + Doc.ModelSpace.Layout.Origin.Y);
 
-
+            Directory.CreateDirectory(tmpPath);
+            SaveToFile(tmpPath + @"\dxftmp.dxf");
             return true;
 
         }
-
-        
-
-        /**
-        * <summary>Open a file using a stream and load it if it possible. </summary>
-        * <returns>true if the file was loaded succesfully, false if an error occured</returns>
-        */
-        public bool OpenDxfFile(Stream stream)
-        {
-            reset();
-
-            if (stream == null)
-            {
-                return false;
-            }
-
-            using (DxfReader reader = new DxfReader(stream))
-            {
-                //Inform about non critical error
-                reader.OnNotification += NotificationHelper.LogConsoleNotification;
-                Doc = reader.Read();
-            }
-            //first write to svg avant de scan pour chopper les paramètres
-            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath ;
-            WriteToSVG(tmpPath, @"\tmp.svg");//local tmp file
-            SvgControl.OpenSVG(tmpPath, @"\tmp.svg");
-
-            ScanEntities();
-
-
-
-            open = true;
-            return true;
-
-        }
-
 
         /*_____________________________________PRODFILE_____________________________________*/
 
@@ -283,6 +221,8 @@ namespace MA400_export
 
 
             open = true;
+            Directory.CreateDirectory(tmpPath);
+            SaveToFile(tmpPath + @"\dxftmp.dxf");
             return data;
 
         }
@@ -486,6 +426,9 @@ namespace MA400_export
         /*_____________________________________SAVE_____________________________________*/
 
 
+        /**
+         * <summary>Save the Document to a dxf file with the StudList and potential modifications</summary>
+         */
         public void SaveToFile(BindingList<Stud> Studs, string path)
         {
             //creation d'un nouveua document pour accomoder la sauvegarde
@@ -511,9 +454,34 @@ namespace MA400_export
                 writer.Write();
             }
 
-            
-            
+        }
 
+        /**
+         * <summary>Save the Document to a dxf file without the StudList and potential modifications</summary>
+         */
+        public void SaveToFile(string path)
+        {
+            //creation d'un nouveua document pour accomoder la sauvegarde
+            CadDocument save = new CadDocument();
+
+            //ajout de clones de toutes les entités presentes dans le doc dans la sauvegarde.
+            foreach (Entity entity in Doc.Entities)
+            {
+                try
+                {
+                    save.Entities.Add((Entity)entity.Clone());
+                }
+                catch(ArgumentException e)
+                {
+                    //MessageBox.Show(entity.ToString());
+                }
+            }
+
+            using (DxfWriter writer = new DxfWriter(path, save))
+            {
+                writer.OnNotification += NotificationHelper.LogConsoleNotification;
+                writer.Write();
+            }
 
         }
 

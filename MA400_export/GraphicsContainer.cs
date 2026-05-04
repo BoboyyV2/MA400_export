@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DXFImporter;
 
 namespace MA400_export
 {
@@ -36,14 +37,22 @@ namespace MA400_export
         //private String path = AppDomain.CurrentDomain.BaseDirectory + Constants.tmpPath + "truite.jpg";//used for debug
 
         private SvgDocument svg = null;
+
+        DXFImporter.Canvas canvas = null;
         private bool open { get; set; }
 
         private float line_thickness = 0.4f;
+
+        //dimensions variables 
+        public Layout_Info layout = new Layout_Info();
+
 
         public GraphicsContainer(Graphics graphics)
         {
             this.graphics = graphics;
             open = false;
+
+
         }
 
         public GraphicsContainer()
@@ -52,6 +61,23 @@ namespace MA400_export
             open = false;
         }
 
+        public void reset()
+        {
+            CloseSVG();
+            CloseCanvas();
+        }
+
+
+        public void GetLayout()
+        {
+            if (open)
+            {
+                layout.offset = new PointF((float)canvas.XMin, (float)canvas.YMin);
+                layout.dimension = new RectangleF((float)canvas.XMin, (float)canvas.YMin, (float)(canvas.XMin - canvas.XMax), (float)(canvas.YMin - canvas.YMax));
+
+                layout.scale = new Scale(true, false);
+            }
+        }
 
         /**
          * <summary>draw a circle whose center is at positionX ; positionY  in the given graphics</summary>
@@ -217,6 +243,16 @@ namespace MA400_export
 
         }
 
+        public void OpenCanvas()
+        {
+            canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.dxf");
+            GetLayout();
+        }
+
+        public void CloseCanvas() 
+        {
+            canvas = new Canvas();
+        }
 
         public void OpenSVG()
         {
@@ -260,6 +296,13 @@ namespace MA400_export
 
         }
 
+        public void DrawDXF()
+        {
+            if (open)
+            {
+                canvas.Draw(graphics);
+            }
+        }
         public void DrawSVG()
         {
             if (open)
@@ -308,10 +351,11 @@ namespace MA400_export
             Draw_CoordSystem();
             Draw_WorkZoneLimits();
             Draw_ReferenceCircles();
-            if (open && svg != null)
-            {
-                DrawSVG();
-            }
+            //affichage du dxf
+            
+            DrawDXF();//check if open
+            //DrawSVG();
+
             Draw_Studs(Studs);
             Draw_Selected_Studs(SelectedStuds);
 

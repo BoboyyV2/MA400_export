@@ -98,6 +98,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Layout_Info.cs" />
     <Compile Include="NotificationHelper.cs" />
     <Compile Include="ProdFileGenerator.cs" />
     <Compile Include="Program.cs" />
@@ -159,6 +160,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\plus.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\source_code_Exemple_BB-20260504T071340Z-3-001\DXFImporter\DXFImporter.csproj">
+      <Project>{e1083e6f-23ee-4ec0-beb5-6eaf10169c79}</Project>
+      <Name>DXFImporter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" />

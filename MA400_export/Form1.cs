@@ -62,6 +62,7 @@ namespace MA400_export
             data = new GeneratorData();
             IsNew = true;
             fs.reset();
+            gc.reset();
         }
 
         public void EmptyStuds()
@@ -817,10 +818,11 @@ namespace MA400_export
             if (open)
             {
                 gc.OpenSVG();
+                gc.OpenCanvas();
             }
             else
             {
-                gc.CloseSVG();
+                gc.reset();
             }
 
             List<Circle> ToAdd = this.fs.Studs;
