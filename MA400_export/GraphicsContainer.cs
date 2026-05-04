@@ -247,6 +247,8 @@ namespace MA400_export
         {
             canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.dxf");
             GetLayout();
+            canvas.setup(Constants.Origin_Coord, layout.offset);
+
         }
 
         public void CloseCanvas() 
