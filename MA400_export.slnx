@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../source_code_Exemple_BB-20260504T071340Z-3-001/source_code_Exemple_BB/DXFImporter.csproj" Id="e1083e6f-23ee-4ec0-beb5-6eaf10169c79" />
   <Project Path="MA400_export/MA400_export.csproj" Id="8ceb34e6-cdb7-4424-bd76-14e3ab00155f" />
   <Project Path="UnitTestProject/UnitTestProject.csproj" Id="c18b7f1a-b47f-43fa-b75e-ade40c50c1aa" />
 </Solution>

@@ -68,12 +68,40 @@ namespace MA400_export
             open = false;
             Studs = new List<Circle>();
             SvgControl = new SVGcontroller();
-            
+
         }
 
+        /*_____________________________________PREVIEW_____________________________________*/
+
+        /*void generatePreview()
+        {
+            if (selectDWGfile.FileName.Length > 0)
+            {
+                string path = selectDWGfile.FileName;
+                try
+                {
+                    DwgPreview preview;
+                    using (DwgReader reader = new DwgReader(path))
+                    {
+                        doc = reader.Read();
+                        preview = reader.ReadPreview();
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, toolName);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Select a file first.", toolName);
+            }
+        }*/
+
         /*_____________________________________UTIL_____________________________________*/
-        
-        
+
+
         /**
          * <summary>restore the FileSystem to a base state.</summary>
          */
@@ -172,6 +200,12 @@ namespace MA400_export
 
 
             open = true;
+            //DEBUG
+            //MessageBox.Show("insert point = " + Doc.ModelSpace.Layout.InsertionBasePoint.X + " ; " + Doc.ModelSpace.Layout.InsertionBasePoint.Y);
+            //MessageBox.Show("origin = " + Doc.ModelSpace.Layout.Origin.X + " ; " + Doc.ModelSpace.Layout.Origin.Y);
+            //MessageBox.Show("origin = " + Doc.ModelSpace.Layout. + " ; " + Doc.ModelSpace.Layout.Origin.Y);
+
+
             return true;
 
         }
