@@ -187,7 +187,9 @@ namespace MA400_export
             
 
             Directory.CreateDirectory(tmpPath);
-            SaveToFile(tmpPath + @"\dxftmp.dxf");
+            //au lieu de fair eun save to file on va juste forward le fichier 
+            //SaveToFile(tmpPath + @"\dxftmp.dxf");
+            File.Copy(path, tmpPath + @"\dxftmp.dxf", overwrite: true);
 
             open = true;
 

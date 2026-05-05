@@ -65,7 +65,6 @@ namespace MA400_export
 
         public void reset()
         {
-            CloseSVG();
             CloseCanvas();
         }
 
@@ -254,16 +253,15 @@ namespace MA400_export
 
             GetLayout();
             canvas.setup(Constants.Origin_Coord);
-            //debug 
-            MessageBox.Show("layout" + Environment.NewLine + "offset : " + layout.offset.ToString()
-                                     + Environment.NewLine + "dimension : " + layout.dimension.ToString()
-                                     + Environment.NewLine + "scale : " + layout.scale.Xscale + " ; "+ layout.scale.Yscale);
 
         }
 
         public void CloseCanvas() 
         {
             canvas = new Canvas();
+            DXFImporter.Shape.Dimension = new RectangleF();
+            DXFImporter.Shape.PartOffset = new PointF();
+            DXFImporter.Shape.OriginOffset = new PointF();
         }
 
         public void OpenSVG()
@@ -313,13 +311,6 @@ namespace MA400_export
             if (open)
             {
                 canvas.Draw(graphics);
-            }
-        }
-        public void DrawSVG()
-        {
-            if (open)
-            {
-                RenderSVG();
             }
         }
 

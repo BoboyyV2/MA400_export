@@ -831,6 +831,7 @@ namespace MA400_export
             {
                 AddStud(circle);
             }
+            
 
             this.WorkZone.Invalidate();
 
