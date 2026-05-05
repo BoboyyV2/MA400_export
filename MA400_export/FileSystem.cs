@@ -47,14 +47,12 @@ namespace MA400_export
 
          public CadDocument Doc = null;
 
-        public SVGcontroller SvgControl; 
          public bool open {  get; private set; }
          public List<Circle> Studs {  get; private set; }
 
          private ProdFileGenerator Gen;
 
-         //inner data
-         //test data
+         public Layout_Info layout { get; set;  }
          
 
 
@@ -67,7 +65,7 @@ namespace MA400_export
             Doc = new CadDocument();
             open = false;
             Studs = new List<Circle>();
-            SvgControl = new SVGcontroller();
+            layout = new Layout_Info();//must be initialized later on before scanning the entities
 
         }
 
@@ -83,7 +81,7 @@ namespace MA400_export
             open = false;
             Doc = new CadDocument();
             Studs = new List<Circle>();
-            SvgControl = new SVGcontroller();
+            layout = new Layout_Info();//must be initialized later on before scanning the entities
 
         }
 
@@ -99,8 +97,28 @@ namespace MA400_export
             return transformed;
         }
 
+        /**
+         * <summary>Apply the necessary transformation to a Circle to bring it to the origin and in the right orientation and scale.</summary>
+         */
+        public Circle ApplyTransform(Circle stud, Layout_Info layout)
+        {
+            Circle transformed = (Circle)stud.Clone();
+            PointF pos = ProdFileGenerator.GetSpacialPosition(stud.Center, layout.offset, layout.dimension, layout.scale);
+            transformed.Center = new CSMath.XYZ(pos.X, pos.Y, 0);
+            return transformed;
+        }
 
-        
+        /**
+         * <summary>Apply the necessary transformation to a Circle to bring it to the origin and in the right orientation and scale.</summary>
+         */
+        public Circle ApplyTransform(Circle stud)
+        {
+            Circle transformed = (Circle)stud.Clone();
+            PointF pos = ProdFileGenerator.GetSpacialPosition(stud.Center, layout.offset, layout.dimension, layout.scale);
+            transformed.Center = new CSMath.XYZ(pos.X, pos.Y, 0);
+            return transformed;
+        }
+
 
         /**
         * <summary>Scan the document's entities and attempt to get Stud candidates as well as the dimentions of the document <br></br>
@@ -123,7 +141,7 @@ namespace MA400_export
 
                             if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
                             {
-                                Circle stud = ApplyTransform(candidate, SvgControl.offset, SvgControl.dimension, SvgControl.scale);
+                                Circle stud = ApplyTransform(candidate, layout.offset, layout.dimension, layout.scale);
                                 Studs.Add(stud);
                             }
                             break;
@@ -146,7 +164,8 @@ namespace MA400_export
 
 
         /**
-         * <summary>Open a file at the location specified by path and load it if it exist. </summary>
+         * <summary>Open a file at the location specified by path and load it if it exist.<br></br>
+         * Should be followed by an initialization of the layout aswell as a scan</summary>
          * <returns>true if the file was loaded succesfully, false if an error occured</returns>
          */
         public bool OpenDxfFile(string path)
@@ -164,24 +183,22 @@ namespace MA400_export
                 reader.OnNotification += NotificationHelper.LogConsoleNotification;
                 Doc = reader.Read();
             }
-            //first write to svg avant de scan pour chopper les paramètres
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
-            WriteToSVG(tmpPath, @"\tmp.svg");//local tmp file
-            SvgControl.OpenSVG(tmpPath, @"\tmp.svg");
-
-            ScanEntities();
-
-
-            open = true;
-            //DEBUG
-            //MessageBox.Show("insert point = " + Doc.ModelSpace.Layout.InsertionBasePoint.X + " ; " + Doc.ModelSpace.Layout.InsertionBasePoint.Y);
-            //MessageBox.Show("origin = " + Doc.ModelSpace.Layout.Origin.X + " ; " + Doc.ModelSpace.Layout.Origin.Y);
-            //MessageBox.Show("origin = " + Doc.ModelSpace.Layout. + " ; " + Doc.ModelSpace.Layout.Origin.Y);
+            
 
             Directory.CreateDirectory(tmpPath);
             SaveToFile(tmpPath + @"\dxftmp.dxf");
+
+            open = true;
+
             return true;
 
+        }
+
+        public void OpenDxfFileLayout(Layout_Info layout)
+        {
+            this.layout = layout;
+            ScanEntities();
         }
 
         /*_____________________________________PRODFILE_____________________________________*/
@@ -212,17 +229,14 @@ namespace MA400_export
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
-            WriteToSVG(tmpPath, @"\tmp.svg");//local tmp file
-
-
-            //Doc.
-            SvgControl.OpenSVG(tmpPath, @"\tmp.svg");
 
 
 
-            open = true;
             Directory.CreateDirectory(tmpPath);
             SaveToFile(tmpPath + @"\dxftmp.dxf");
+
+            open = true;
+
             return data;
 
         }
@@ -239,12 +253,7 @@ namespace MA400_export
         private Entity ParseGPHEntities(string[] file, ref int num_line)
         {
 
-            //debug 
-            /*
-            MessageBox.Show("offset = " + SvgControl.offset.ToString() + Environment.NewLine +
-                            "dim = " + SvgControl.dimension.ToString() + Environment.NewLine +
-                            "scale = " + SvgControl.scale.Xscale + " ; " + SvgControl.scale.Yscale + Environment.NewLine);
-            */
+            
 
             int EntitieType = int.Parse(file[num_line]);
             switch (EntitieType)
@@ -255,7 +264,7 @@ namespace MA400_export
                         Circle c = new Circle();
                         double centerX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double centerY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        c.Center = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
+                        c.Center = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), layout.offset, layout.dimension, new Scale(true, false));
 
                         ++num_line;
                         double radius = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
@@ -276,10 +285,10 @@ namespace MA400_export
                         Line l = new Line();
                         double startX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double startY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.StartPoint = Util.AdjustPointGPH(new CSMath.XYZ(startX, startY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false) );
+                        l.StartPoint = Util.AdjustPointGPH(new CSMath.XYZ(startX, startY, 0), layout.offset, layout.dimension, new Scale(true, false) );
                         double endX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double endY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.EndPoint = Util.AdjustPointGPH(new CSMath.XYZ(endX, endY, 0), SvgControl.offset, SvgControl.dimension, new Scale(true, false));
+                        l.EndPoint = Util.AdjustPointGPH(new CSMath.XYZ(endX, endY, 0), layout.offset, layout.dimension, new Scale(true, false));
                         num_line += 6;
 
                         //debug
@@ -356,7 +365,8 @@ namespace MA400_export
             string[] file = File.ReadAllLines(LAYPath);
 
 
-            SvgControl.offset = new PointF(float.Parse(file[0], CultureInfo.InvariantCulture),
+            //initialize the layout
+            layout.offset = new PointF(float.Parse(file[0], CultureInfo.InvariantCulture),
                                 float.Parse(file[1], CultureInfo.InvariantCulture));
 
 
@@ -364,12 +374,12 @@ namespace MA400_export
             //==> 0,0,210,110 =? 100,100,310,210 ou 100,100,210,110
             //probablement le second car je n'ai pas vu d'offset nul part
             //pour l'instant, marche impec si on est à l'origine
-            SvgControl.dimension = new RectangleF( float.Parse(file[0], CultureInfo.InvariantCulture), 
+            layout.dimension = new RectangleF( float.Parse(file[0], CultureInfo.InvariantCulture), 
                                         float.Parse(file[1], CultureInfo.InvariantCulture),
                                         float.Parse(file[2], CultureInfo.InvariantCulture),
                                         float.Parse(file[3], CultureInfo.InvariantCulture));
 
-            SvgControl.scale = new Scale(true, false);//toujours 1;1 normalement et on réajuste en 1, -1
+            layout.scale = new Scale(true, false);//toujours 1;1 normalement et on réajuste en 1, -1
         }
 
 
@@ -444,7 +454,7 @@ namespace MA400_export
             foreach (Stud stud in Studs)
             {
                 Circle clone = (Circle)stud.circle.Clone();
-                clone.Center = Util.AdjustPoint(clone.Center, SvgControl.offset, SvgControl.dimension, SvgControl.scale);
+                clone.Center = Util.AdjustPoint(clone.Center, layout.offset, layout.dimension, layout.scale);
                 save.Entities.Add(clone);
             }
 
@@ -461,7 +471,7 @@ namespace MA400_export
          */
         public void SaveToFile(string path)
         {
-            //creation d'un nouveua document pour accomoder la sauvegarde
+            //creation d'un nouveau document pour accomoder la sauvegarde
             CadDocument save = new CadDocument();
 
             //ajout de clones de toutes les entités presentes dans le doc dans la sauvegarde.
@@ -509,6 +519,15 @@ namespace MA400_export
         public void GenerateProdFiles(ref BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact) 
         {
             Gen = new ProdFileGenerator(ref Studs, Doc.Entities,Dimension, Offset, Data, Scalefact);
+            Gen.GenerateProductionFiles(Data.ProgramNumber);
+        }
+
+        /**
+         * <summary>Generates the productoin files necessary to the driver to function</summary>
+         */
+        public void GenerateProdFiles(ref BindingList<Stud> Studs,GeneratorData Data, Layout_Info layout)
+        {
+            Gen = new ProdFileGenerator(ref Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 

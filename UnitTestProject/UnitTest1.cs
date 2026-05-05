@@ -195,17 +195,7 @@ namespace UnitTestProject
             Assert.AreEqual(0, fs.Studs.Count);
         }
 
-        [TestMethod]
-        public void Reset_RestoresDefaultScale()
-        {
-            FileSystem fs = new FileSystem();
-            fs.SvgControl.scale = new Scale(true, false);
-
-            fs.reset();
-
-            Assert.AreEqual(1.0, fs.SvgControl.scale.Xscale);
-            Assert.AreEqual(1.0, fs.SvgControl.scale.Yscale);
-        }
+       
 
         [TestMethod]
         public void OpenDxfFile_ReturnsFalse_WhenPathDoesNotExist()

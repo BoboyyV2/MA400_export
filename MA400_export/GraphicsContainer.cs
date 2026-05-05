@@ -44,14 +44,14 @@ namespace MA400_export
         private float line_thickness = 0.4f;
 
         //dimensions variables 
-        public Layout_Info layout = new Layout_Info();
+        public Layout_Info layout;
 
 
         public GraphicsContainer(Graphics graphics)
         {
             this.graphics = graphics;
             open = false;
-
+            layout = new Layout_Info();
 
         }
 
@@ -59,6 +59,8 @@ namespace MA400_export
         {
             this.graphics = null;
             open = false;
+            layout = new Layout_Info();
+
         }
 
         public void reset()

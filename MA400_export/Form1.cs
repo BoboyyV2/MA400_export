@@ -103,7 +103,7 @@ namespace MA400_export
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.Paint(Studs, getSelectedStuds(), fs.SvgControl.offset );
+            gc.Paint(Studs, getSelectedStuds(), gc.layout.offset );
 
         }
 
@@ -145,12 +145,6 @@ namespace MA400_export
             CursorPosition = GetOffsetedCoords(point);
             XCoord_Display.Text = " X = " + (CursorPosition.X).ToString("0.0") + " ";
             YCoord_Display.Text = " Y = " + (CursorPosition.Y).ToString("0.0") + " ";
-
-            //debug
-            /*
-            this.origin_offset_label.Text = "offset : X = "+Origin_Offset.X+" Y = "+Origin_Offset.Y;
-            this.cursorPositionLabel.Text = "cursor position on panel : X = " + point.X + " Y = " + point.Y;
-            */
 
         }
 
@@ -518,12 +512,18 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Show a fileopen menu made to open dxf files</summary>
+         */
         private void ouvrirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialogOpen.ShowDialog();
             
         }
 
+        /**
+         * <summary>Open a dxf file and import it once it has been correctly selected via a fileopen menu</summary>
+         */
         private void openFileDialogOpen_FileOk(object sender, CancelEventArgs e)
         {
             reset();
@@ -537,6 +537,8 @@ namespace MA400_export
                 MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
                 $"Details:\n\n{ex.StackTrace}");
             }
+            gc.GetLayout();
+            fs.OpenDxfFileLayout(gc.layout);
 
             DisplayWhenOpen(open);
         }
@@ -752,7 +754,7 @@ namespace MA400_export
             GetFormData();
             
             
-            fs.GenerateProdFiles(ref Studs, fs.SvgControl.dimension, fs.SvgControl.offset, data, fs.SvgControl.scale); // en dernier, une fois que tout est bien rempli
+            fs.GenerateProdFiles(ref Studs, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale); // en dernier, une fois que tout est bien rempli
         }
 
 
@@ -796,6 +798,9 @@ namespace MA400_export
             Application.Exit();
         }
 
+        /**
+         * <summary>Open a program via an existing program number</summary>
+         */
         private void ouvrirprogramToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (ProgramNumberOpen programNumberWindow = new ProgramNumberOpen())
