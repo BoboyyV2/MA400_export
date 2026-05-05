@@ -810,7 +810,11 @@ namespace MA400_export
                     int ProgramNumber = programNumberWindow.ProgramNumber;
                     reset();
                     data = fs.OpenProdFile(ProgramNumber);
+                    
                     IsNew = false;
+                    gc.OpenCanvas();
+                    fs.OpenProdFileLayout(gc.layout);
+
                     DisplayWhenOpen(true);
                 }
 

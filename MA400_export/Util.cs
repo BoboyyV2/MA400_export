@@ -20,15 +20,15 @@ namespace MA400_export
         public static XYZ AdjustPoint(XYZ point, PointF offset, RectangleF dimension, Scale scale)
         {
 
-            double posx = point.X + offset.X;
-            double posy = point.Y + offset.Y;
+            double posx = offset.X + point.X ;
+            double posy = offset.Y + point.Y ;
             if (scale.Xscale < 0)
             {
-                posx = -point.X + offset.X; 
+                posx = offset.X - point.X + dimension.Width; 
             }
             if (scale.Yscale < 0)
             {
-                posy = -point.Y + offset.Y;
+                posy = offset.Y - point.Y + dimension.Height;
             }
             
             return new XYZ(posx, posy, 0);

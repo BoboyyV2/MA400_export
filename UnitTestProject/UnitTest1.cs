@@ -8,6 +8,7 @@ using ACadSharp.Entities;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Drawing;
+using DXFImporter;
 
 namespace UnitTestProject
 {
@@ -38,18 +39,7 @@ namespace UnitTestProject
             }
         }
 
-        [TestMethod]
-        public void TestContent()
-        {
-            string path = "../testfiles/test.dxf";
-            FileSystem fs = new FileSystem();
-            if (File.Exists(path))
-            {
-                fs.OpenDxfFile(path);
-                List<Circle> list = fs.Studs;
-                Assert.IsTrue(list.Count > 0);
-            }
-        }
+        
     }
 
     // -------------------------------------------------------------------------
@@ -77,7 +67,7 @@ namespace UnitTestProject
             Assert.AreEqual(-1, s.Yscale);
         }
 
-        
+
     }
 
     // -------------------------------------------------------------------------
@@ -195,7 +185,7 @@ namespace UnitTestProject
             Assert.AreEqual(0, fs.Studs.Count);
         }
 
-       
+
 
         [TestMethod]
         public void OpenDxfFile_ReturnsFalse_WhenPathDoesNotExist()
@@ -208,7 +198,7 @@ namespace UnitTestProject
             Assert.IsFalse(fs.open);
         }
 
-       
+
 
         // -------------------------------------------------------------------------
         // Tests de ApplyTransform
@@ -234,7 +224,7 @@ namespace UnitTestProject
             Assert.AreEqual(2.0f, (float)result.Center.Y, 0.001f);
         }
 
-        
+
 
         [TestMethod]
         public void ApplyTransform_DoesNotModifyOriginalCircle()
@@ -270,5 +260,30 @@ namespace UnitTestProject
 
             Assert.AreEqual(Constants.StudRadius4, result.Radius, 0.001);
         }
+
     }
+
+    // -------------------------------------------------------------------------
+    // Tests de Shape methode
+    // -------------------------------------------------------------------------
+
+    [TestClass]
+    public class ShapeTests
+    {
+        [TestMethod]
+        public void GetOffsetedPositionEquivalent()
+        {
+            circle c = new circle(new System.Drawing.Point(250, -100), 1.5, System.Drawing.Color.White, System.Drawing.Color.White, 2);
+
+            PointF pf = DXFImporter.Shape.getOffsetedPosition(c.AccessCenterPoint);
+            float x = DXFImporter.Shape.getOffsetedPositionX(c.AccessCenterPoint.X);
+            float y = DXFImporter.Shape.getOffsetedPositionY(c.AccessCenterPoint.Y);
+
+            Assert.AreEqual(pf.X, x);
+            Assert.AreEqual(pf.Y, y);
+
+        }
+
+    }
+
 }

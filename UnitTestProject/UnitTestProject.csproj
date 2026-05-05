@@ -77,6 +77,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\source_code_Exemple_BB-20260504T071340Z-3-001\DXFImporter\DXFImporter.csproj">
+      <Project>{e1083e6f-23ee-4ec0-beb5-6eaf10169c79}</Project>
+      <Name>DXFImporter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MA400_export\MA400_export.csproj">
       <Project>{8ceb34e6-cdb7-4424-bd76-14e3ab00155f}</Project>
       <Name>MA400_export</Name>

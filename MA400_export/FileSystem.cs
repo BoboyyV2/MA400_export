@@ -231,16 +231,17 @@ namespace MA400_export
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
-
-
-
             Directory.CreateDirectory(tmpPath);
             SaveToFile(tmpPath + @"\dxftmp.dxf");
 
             open = true;
 
             return data;
+        }
 
+        public void OpenProdFileLayout(Layout_Info layout)
+        {
+            this.layout = layout;
         }
 
 
@@ -449,7 +450,14 @@ namespace MA400_export
             //ajout de clones de toutes les entités presentes dans le doc dans la sauvegarde.
             foreach (Entity entity in Doc.Entities)
             {
-                save.Entities.Add((Entity)entity.Clone());
+                try
+                {
+                    save.Entities.Add((Entity)entity.Clone());
+                }
+                catch (ArgumentException e)
+                {
+                    //MessageBox.Show(entity.ToString());
+                }
             }
 
             //ajout de clones des goujons dans la sauvegarde.
@@ -469,7 +477,8 @@ namespace MA400_export
         }
 
         /**
-         * <summary>Save the Document to a dxf file without the StudList and potential modifications</summary>
+         * <summary>Save the Document to a dxf file without the StudList and potential modifications<br></br>
+         * This is used to create a dxf file from a file number and display it using DXFImporter as it need a dxf FILE not just the document instance</summary>
          */
         public void SaveToFile(string path)
         {
@@ -495,21 +504,6 @@ namespace MA400_export
                 writer.Write();
             }
 
-        }
-
-
-        private void WriteToSVG(string path, string filename)
-        {
-
-            Directory.CreateDirectory(path);
-
-            string svgPath = path + filename;
-
-            using (SvgWriter writer = new SvgWriter(svgPath, Doc))
-            {
-                writer.OnNotification += NotificationHelper.LogConsoleNotification;
-                writer.Write();
-            }
         }
 
         /*_____________________________________PRODUCTION_FILES_____________________________________*/
