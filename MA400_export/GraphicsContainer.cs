@@ -74,9 +74,8 @@ namespace MA400_export
             canvas.checkLayout();
             if (open)
             {
-                
-                layout.offset = new PointF((float)canvas.XMin, (float)canvas.YMin);
-                layout.dimension = new RectangleF((float)canvas.XMin, (float)canvas.YMin, (float)(canvas.XMax - canvas.XMin), (float)(canvas.YMax - canvas.YMin));
+                layout.offset = new PointF((float)canvas.XMin, (float)canvas.YMin);//tpo left corner
+                layout.dimension = new RectangleF((float)canvas.XMin, (float)canvas.YMin, (float)(canvas.XMax - canvas.XMin), (float)(canvas.YMax - canvas.YMin));// offset as origin
 
                 layout.scale = new Scale(true, false);
             }
@@ -250,8 +249,13 @@ namespace MA400_export
         {
             canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.dxf");
             open = true;
-
+            MessageBox.Show("layout before any update : " + Environment.NewLine
+                           + "offset = " + layout.offset.ToString() + Environment.NewLine
+                           + "dimention = " + layout.dimension.ToString() + Environment.NewLine);
             GetLayout();
+            MessageBox.Show("layout after update : " + Environment.NewLine
+                           + "offset = " + layout.offset.ToString() + Environment.NewLine
+                           + "dimention = " + layout.dimension.ToString() + Environment.NewLine);
             canvas.setup(Constants.Origin_Coord);
 
         }
@@ -269,12 +273,6 @@ namespace MA400_export
             open = true;
             
             svg = SvgDocument.Open(path);
-        }
-
-        public void CloseSVG()
-        {
-            open = false;
-            svg = null;
         }
 
         private void RenderSVG()

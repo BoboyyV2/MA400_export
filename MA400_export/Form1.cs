@@ -1,5 +1,6 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
+using ACadSharp.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -812,6 +813,7 @@ namespace MA400_export
                     data = fs.OpenProdFile(ProgramNumber);
                     
                     IsNew = false;
+                    
                     gc.OpenCanvas();
                     fs.OpenProdFileLayout(gc.layout);
 

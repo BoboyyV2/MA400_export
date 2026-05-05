@@ -576,10 +576,10 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".LAY"))
             {
-                sw.WriteLine(Dimension.Left );
-                sw.WriteLine(Dimension.Top );
-                sw.WriteLine(Dimension.Right );
-                sw.WriteLine(Dimension.Bottom );
+                sw.WriteLine(Dimension.X - Offset.X);
+                sw.WriteLine(Dimension.Y - Offset.Y);
+                sw.WriteLine(Dimension.Width );
+                sw.WriteLine(Dimension.Height);
                 WriteLine0(sw, 4);
 
                 //TODO c'est quoi le reste ?, implem

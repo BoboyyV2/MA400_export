@@ -232,6 +232,29 @@ namespace MA400_export
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
             Directory.CreateDirectory(tmpPath);
+            //DEBUG
+            /*
+            foreach(Entity entity in Doc.Entities)
+            {
+                var type = entity.ObjectType;
+                
+                switch (type)
+                {
+                    case ObjectType.CIRCLE:
+                        MessageBox.Show("Circle : " + Environment.NewLine
+                                       + ((Circle)entity).Center.ToString() );
+                        break;
+                    case ObjectType.LINE:
+                        MessageBox.Show("Line : " + Environment.NewLine
+                                       + ((Line)entity).StartPoint.ToString() + Environment.NewLine
+                                       + ((Line)entity).EndPoint.ToString());
+                        break;
+                    default:
+                        break;
+                }
+            }
+            */
+
             SaveToFile(tmpPath + @"\dxftmp.dxf");
 
             open = true;
@@ -242,6 +265,7 @@ namespace MA400_export
         public void OpenProdFileLayout(Layout_Info layout)
         {
             this.layout = layout;
+            
         }
 
 
