@@ -146,19 +146,19 @@ namespace MA400_export
             float posy;
             if(Scalefact.Xscale > 0)
             {
-                posx = (float)(position.X * Scalefact.Xscale - Offset.X);
+                posx = (float)(position.X - Offset.X);
             }else
             {
-                posx = (float)(position.X * Scalefact.Xscale + Offset.X) ;
+                posx = (float)( Dimension.Height - (position.X - Offset.X) );
             }
 
             if (Scalefact.Yscale > 0)
             {
-                posy = (float)(position.Y * Scalefact.Yscale - Offset.Y);
+                posy = (float)(position.Y - Offset.Y);
             }
             else
             {
-                posy = (float)(position.Y * Scalefact.Yscale + Offset.Y);
+                posy = (float)(Dimension.Height - (position.Y - Offset.Y) );
             }
 
             return new System.Drawing.PointF( posx, posy );

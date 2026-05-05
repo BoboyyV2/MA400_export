@@ -72,10 +72,12 @@ namespace MA400_export
 
         public void GetLayout()
         {
+            canvas.checkLayout();
             if (open)
             {
+                
                 layout.offset = new PointF((float)canvas.XMin, (float)canvas.YMin);
-                layout.dimension = new RectangleF((float)canvas.XMin, (float)canvas.YMin, (float)(canvas.XMin - canvas.XMax), (float)(canvas.YMin - canvas.YMax));
+                layout.dimension = new RectangleF((float)canvas.XMin, (float)canvas.YMin, (float)(canvas.XMax - canvas.XMin), (float)(canvas.YMax - canvas.YMin));
 
                 layout.scale = new Scale(true, false);
             }
@@ -248,8 +250,14 @@ namespace MA400_export
         public void OpenCanvas()
         {
             canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.dxf");
+            open = true;
+
             GetLayout();
-            canvas.setup(Constants.Origin_Coord, layout.offset);
+            canvas.setup(Constants.Origin_Coord);
+            //debug 
+            MessageBox.Show("layout" + Environment.NewLine + "offset : " + layout.offset.ToString()
+                                     + Environment.NewLine + "dimension : " + layout.dimension.ToString()
+                                     + Environment.NewLine + "scale : " + layout.scale.Xscale + " ; "+ layout.scale.Yscale);
 
         }
 

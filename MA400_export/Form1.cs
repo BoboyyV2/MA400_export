@@ -537,7 +537,7 @@ namespace MA400_export
                 MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
                 $"Details:\n\n{ex.StackTrace}");
             }
-            gc.GetLayout();
+            gc.OpenCanvas();
             fs.OpenDxfFileLayout(gc.layout);
 
             DisplayWhenOpen(open);
@@ -820,12 +820,7 @@ namespace MA400_export
 
         private void DisplayWhenOpen(bool open)
         {
-            if (open)
-            {
-                gc.OpenSVG();
-                gc.OpenCanvas();
-            }
-            else
+            if (!open)
             {
                 gc.reset();
             }
