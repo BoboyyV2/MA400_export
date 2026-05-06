@@ -87,14 +87,16 @@ namespace MA400_export
         public void DrawCircle(float positionX, float positionY, float radius)
         {
             RectangleF shape = new RectangleF();
+            SolidBrush drawBrush = new SolidBrush(Color.Purple);
+            Pen pen = new Pen(Color.White, 1);
+
             shape.X = positionX - radius;
             shape.Y = positionY - radius;
-            shape.Width = 2 * radius;
-            shape.Height = 2 * radius;
+            shape.Width = 2 * radius - pen.Width / 2;
+            shape.Height = 2 * radius - pen.Width / 2;
 
-            SolidBrush drawBrush = new SolidBrush(Color.Purple);
             graphics.FillEllipse(drawBrush, shape);
-            graphics.DrawEllipse(Pens.White, shape);
+            graphics.DrawEllipse(pen, shape);
 
         }
 
@@ -234,13 +236,13 @@ namespace MA400_export
             // Draw (dashed) connection line
             int delta = 5;
             float[] dashValues = { delta, delta };
-            Pen dashPen = new Pen(Color.Red, 1);
+            Pen dashPen = new Pen(Color.Red, 0.8f);
             dashPen.DashPattern = dashValues;
 
-            graphics.DrawLine(dashPen, Constants.Origin_Coord.X, Constants.Origin_Coord.Y, Constants.Origin_Coord.X, Constants.WorkZoneLimits_Coord.Y);
-            graphics.DrawLine(dashPen, Constants.Origin_Coord.X, Constants.WorkZoneLimits_Coord.Y, Constants.WorkZoneLimits_Coord.X, Constants.WorkZoneLimits_Coord.Y);
-            graphics.DrawLine(dashPen, Constants.WorkZoneLimits_Coord.X, Constants.WorkZoneLimits_Coord.Y, Constants.WorkZoneLimits_Coord.X, Constants.Origin_Coord.Y);
-            graphics.DrawLine(dashPen, Constants.WorkZoneLimits_Coord.X, Constants.Origin_Coord.Y, Constants.Origin_Coord.X, Constants.Origin_Coord.Y);
+            graphics.DrawLine(dashPen, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2);
+            graphics.DrawLine(dashPen, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2);
+            graphics.DrawLine(dashPen, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2);
+            graphics.DrawLine(dashPen, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2);
 
 
         }
@@ -320,7 +322,7 @@ namespace MA400_export
             float radius = 6.5f;//6.5mm
 
             //ligne du haut en Y
-            DrawCircle(Constants.Origin_Coord.X - radius + 20, Constants.Origin_Coord.Y - radius, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 20 , Constants.Origin_Coord.Y - radius, radius);
             DrawCircle(Constants.Origin_Coord.X - radius + 50, Constants.Origin_Coord.Y - radius, radius);
             DrawCircle(Constants.Origin_Coord.X - radius + 150, Constants.Origin_Coord.Y - radius, radius);
             DrawCircle(Constants.Origin_Coord.X - radius + 300, Constants.Origin_Coord.Y - radius, radius);
