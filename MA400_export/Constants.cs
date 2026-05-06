@@ -35,8 +35,10 @@ namespace MA400_export
         public static Scale DefaultDxfScale = new Scale(true, false);
 
         //GHP command id
-        public const int LINE_CMD = 4;
         public const int CIRCLE_CMD = 1;
+        public const int ARC_CMD = 3;
+        public const int LINE_CMD = 4;
+
 
         public const int line_per_NC_cmd = 21;
 
