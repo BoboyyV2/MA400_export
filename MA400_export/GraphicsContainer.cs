@@ -104,7 +104,7 @@ namespace MA400_export
          */
         public void Draw_Stud(Circle stud)
         {
-            float StudRadius = (float)stud.Radius + 0.35f;
+            float StudRadius = (float)stud.Radius;
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
@@ -133,7 +133,7 @@ namespace MA400_export
          */
         public void Draw_Selected_Stud(Circle stud)
         {
-            float StudRadius = (float)stud.Radius + 0.5f;
+            float StudRadius = (float)stud.Radius + 0.3f;
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
@@ -249,13 +249,16 @@ namespace MA400_export
         {
             canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.dxf");
             open = true;
-            MessageBox.Show("layout before any update : " + Environment.NewLine
-                           + "offset = " + layout.offset.ToString() + Environment.NewLine
-                           + "dimention = " + layout.dimension.ToString() + Environment.NewLine);
+            
             GetLayout();
+            //Debug
             MessageBox.Show("layout after update : " + Environment.NewLine
                            + "offset = " + layout.offset.ToString() + Environment.NewLine
-                           + "dimention = " + layout.dimension.ToString() + Environment.NewLine);
+                           + "dimention = " + layout.dimension.ToString() + Environment.NewLine
+                           + "coordinates :" + Environment.NewLine
+                           + "min = " + canvas.XMin + " ; " + canvas.YMin + Environment.NewLine
+                           + "max = " + canvas.XMax + " ; " + canvas.YMax + Environment.NewLine);
+
             canvas.setup(Constants.Origin_Coord);
 
         }

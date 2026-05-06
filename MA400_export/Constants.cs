@@ -20,7 +20,7 @@ namespace MA400_export
         public const double StudRadius3 = 1.5;
         public const double StudRadius4 = 2.0;
 
-        public const float Max_Zoom = 5.0f;
+        public const float Max_Zoom = 7.0f;
         public const float Min_Zoom = 0.7f;
 
         public static PointF Origin_Coord { get; private set; } = new PointF(50.0f, 50.0f);
