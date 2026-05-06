@@ -355,7 +355,6 @@ namespace MA400_export
             //affichage du dxf
             
             DrawDXF();//check if open
-            //DrawSVG();
 
             Draw_Studs(Studs);
             Draw_Selected_Studs(SelectedStuds);
