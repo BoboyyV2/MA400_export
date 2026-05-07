@@ -249,7 +249,7 @@ namespace MA400_export
 
         public void OpenCanvas()
         {
-            canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.dxf");
+            canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.ddxf");
             open = true;
             
             GetLayout();

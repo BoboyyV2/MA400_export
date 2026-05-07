@@ -150,13 +150,70 @@ namespace MA400_export
                         break;
 
                 }
+
             }
             
             return true;
 
         }
 
+        /*_____________________________________FLIP_____________________________________*/
 
+        /**
+         * <summary>flip a single entity in the document on the X axis</summary>
+         */
+        public void FlipEntity(ref CadObjectCollection<Entity> FlippedEntities, Entity e)
+        {
+            var type = e.ObjectType;
+            switch (type)
+            {
+                 
+                case ObjectType.LINE:
+                    {
+                        Line l = (Line)e.Clone();
+                        l.StartPoint = new XYZ(-l.StartPoint.X, -l.StartPoint.Y, l.StartPoint.Z);
+                        l.EndPoint = new XYZ(-l.EndPoint.X, -l.EndPoint.Y, l.EndPoint.Z);
+                        FlippedEntities.Add(l);
+                        break;
+                    }
+                case ObjectType.CIRCLE:
+                    {
+                        Circle c  = (Circle)e.Clone();
+                        c.Center = new XYZ(-c.Center.X, -c.Center.Y, c.Center.Z);
+                        FlippedEntities.Add(c);
+                        break;
+                    }
+                case ObjectType.ARC:
+                    {
+                        //more things to do here
+                        Arc a = (Arc)e.Clone();
+                        a.Center = new XYZ(-a.Center.X, -a.Center.Y, a.Center.Z);
+                        a.StartAngle = ((360 - a.StartAngle) % 360 + 360) % 360; 
+
+                        FlippedEntities.Add(a);
+                        break;
+                    }
+                    //TODO polyline
+                default:
+                    break;
+
+            }
+        }
+        
+        /**
+         * <summary>flip all of the document's entities on the X axis</summary>
+         */
+        public void FlipEntities()
+        {
+            CadObjectCollection<Entity> FlippedEntities = new CadObjectCollection<Entity>(null);
+            foreach (Entity e in Doc.Entities)
+            {
+                FlipEntity(ref FlippedEntities, e);
+            }
+            Doc.Entities.Clear();
+
+            Doc.Entities.AddRange(FlippedEntities);
+        }
 
 
         /*_____________________________________DXF_____________________________________*/
@@ -183,13 +240,15 @@ namespace MA400_export
                 reader.OnNotification += NotificationHelper.LogConsoleNotification;
                 Doc = reader.Read();
             }
+
+            FlipEntities();
+
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
-            
 
             Directory.CreateDirectory(tmpPath);
             //au lieu de fair eun save to file on va juste forward le fichier 
             //SaveToFile(tmpPath + @"\dxftmp.dxf");
-            File.Copy(path, tmpPath + @"\dxftmp.dxf", overwrite: true);
+            File.Copy(path, tmpPath + @"\dxftmp.ddxf", overwrite: true);
 
             open = true;
 
@@ -232,30 +291,9 @@ namespace MA400_export
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
             Directory.CreateDirectory(tmpPath);
-            //DEBUG
-            /*
-            foreach(Entity entity in Doc.Entities)
-            {
-                var type = entity.ObjectType;
-                
-                switch (type)
-                {
-                    case ObjectType.CIRCLE:
-                        MessageBox.Show("Circle : " + Environment.NewLine
-                                       + ((Circle)entity).Center.ToString() );
-                        break;
-                    case ObjectType.LINE:
-                        MessageBox.Show("Line : " + Environment.NewLine
-                                       + ((Line)entity).StartPoint.ToString() + Environment.NewLine
-                                       + ((Line)entity).EndPoint.ToString());
-                        break;
-                    default:
-                        break;
-                }
-            }
-            */
+            
 
-            SaveToFile(tmpPath + @"\dxftmp.dxf");
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
 
             open = true;
 

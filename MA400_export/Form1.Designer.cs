@@ -353,7 +353,7 @@ namespace MA400_export
             // 
             // openFileDialogOpen
             // 
-            this.openFileDialogOpen.Filter = "DXF files (*.dxf)|*dxf";
+            this.openFileDialogOpen.Filter = "dxf files (*.dxf)|*dxf|ddxf files(*.ddxf)|*.ddxf";
             this.openFileDialogOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialogOpen_FileOk);
             // 
             // YCoord_Display
@@ -507,7 +507,8 @@ namespace MA400_export
             // 
             // saveFileDialogSave
             // 
-            this.saveFileDialogSave.DefaultExt = "dxf";
+            this.saveFileDialogSave.DefaultExt = "ddxf";
+            this.saveFileDialogSave.AddExtension = true;
             this.saveFileDialogSave.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialogSave_FileOk);
             // 
             // MA400_export
