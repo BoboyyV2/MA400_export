@@ -74,7 +74,7 @@ namespace MA400_export
         private string FormatValue(double value)
         {
             CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
-            
+            /*
             double deci = (value % 1);
             if (deci > 0.951)
             {
@@ -91,6 +91,8 @@ namespace MA400_export
             }
 
             return value.ToString("0", culture) ;
+            */
+            return value.ToString(culture);
         }
 
 
