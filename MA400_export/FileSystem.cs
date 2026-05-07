@@ -162,7 +162,7 @@ namespace MA400_export
         /**
          * <summary>flip a single entity in the document on the X axis</summary>
          */
-        public void FlipEntity(ref CadObjectCollection<Entity> FlippedEntities, Entity e)
+        public void FlipEntity(ref List<Entity> FlippedEntities, Entity e)
         {
             var type = e.ObjectType;
             switch (type)
@@ -171,15 +171,15 @@ namespace MA400_export
                 case ObjectType.LINE:
                     {
                         Line l = (Line)e.Clone();
-                        l.StartPoint = new XYZ(-l.StartPoint.X, -l.StartPoint.Y, l.StartPoint.Z);
-                        l.EndPoint = new XYZ(-l.EndPoint.X, -l.EndPoint.Y, l.EndPoint.Z);
+                        l.StartPoint = new XYZ(l.StartPoint.X, -l.StartPoint.Y, l.StartPoint.Z);
+                        l.EndPoint = new XYZ(l.EndPoint.X, -l.EndPoint.Y, l.EndPoint.Z);
                         FlippedEntities.Add(l);
                         break;
                     }
                 case ObjectType.CIRCLE:
                     {
                         Circle c  = (Circle)e.Clone();
-                        c.Center = new XYZ(-c.Center.X, -c.Center.Y, c.Center.Z);
+                        c.Center = new XYZ(c.Center.X, -c.Center.Y, c.Center.Z);
                         FlippedEntities.Add(c);
                         break;
                     }
@@ -187,8 +187,12 @@ namespace MA400_export
                     {
                         //more things to do here
                         Arc a = (Arc)e.Clone();
-                        a.Center = new XYZ(-a.Center.X, -a.Center.Y, a.Center.Z);
-                        a.StartAngle = ((360 - a.StartAngle) % 360 + 360) % 360; 
+                        a.Center = new XYZ(a.Center.X, -a.Center.Y, a.Center.Z);
+
+                        //les angles sont en radians !
+                        double TwoPI = 2 * Math.PI;
+                        a.StartAngle = ( ( (TwoPI - ((Arc)e).EndAngle) % TwoPI) + TwoPI) % TwoPI;
+                        a.EndAngle =   ( ( (TwoPI - ((Arc)e).StartAngle)  % TwoPI) + TwoPI) % TwoPI;
 
                         FlippedEntities.Add(a);
                         break;
@@ -205,7 +209,7 @@ namespace MA400_export
          */
         public void FlipEntities()
         {
-            CadObjectCollection<Entity> FlippedEntities = new CadObjectCollection<Entity>(null);
+            List<Entity> FlippedEntities = new List<Entity>();
             foreach (Entity e in Doc.Entities)
             {
                 FlipEntity(ref FlippedEntities, e);
@@ -246,9 +250,9 @@ namespace MA400_export
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
             Directory.CreateDirectory(tmpPath);
-            //au lieu de fair eun save to file on va juste forward le fichier 
-            //SaveToFile(tmpPath + @"\dxftmp.dxf");
-            File.Copy(path, tmpPath + @"\dxftmp.ddxf", overwrite: true);
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            //il faut un savetofile car on flip
+            //File.Copy(path, tmpPath + @"\dxftmp.ddxf", overwrite: true);
 
             open = true;
 
