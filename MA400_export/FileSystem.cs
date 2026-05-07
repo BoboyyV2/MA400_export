@@ -157,12 +157,18 @@ namespace MA400_export
 
         }
 
+        public double NormalizeRadians(double angle)
+        {
+            double TwoPI = Math.PI * 2;
+            return ( (angle % TwoPI) + TwoPI) % TwoPI;
+        }
+
         /*_____________________________________FLIP_____________________________________*/
 
         /**
          * <summary>flip a single entity in the document on the X axis</summary>
          */
-        public void FlipEntity(ref List<Entity> FlippedEntities, Entity e)
+        private void FlipEntityX(ref List<Entity> FlippedEntities, Entity e)
         {
             var type = e.ObjectType;
             switch (type)
@@ -191,8 +197,9 @@ namespace MA400_export
 
                         //les angles sont en radians !
                         double TwoPI = 2 * Math.PI;
-                        a.StartAngle = ( ( (TwoPI - ((Arc)e).EndAngle) % TwoPI) + TwoPI) % TwoPI;
-                        a.EndAngle =   ( ( (TwoPI - ((Arc)e).StartAngle)  % TwoPI) + TwoPI) % TwoPI;
+                        //(may not be needed to normalize)
+                        a.StartAngle = NormalizeRadians(TwoPI - ((Arc)e).EndAngle);
+                        a.EndAngle   = NormalizeRadians(TwoPI - ((Arc)e).StartAngle);
 
                         FlippedEntities.Add(a);
                         break;
@@ -207,16 +214,86 @@ namespace MA400_export
         /**
          * <summary>flip all of the document's entities on the X axis</summary>
          */
-        public void FlipEntities()
+        private void FlipEntitiesX()
         {
             List<Entity> FlippedEntities = new List<Entity>();
             foreach (Entity e in Doc.Entities)
             {
-                FlipEntity(ref FlippedEntities, e);
+                FlipEntityX(ref FlippedEntities, e);
             }
             Doc.Entities.Clear();
 
             Doc.Entities.AddRange(FlippedEntities);
+        }
+
+        /**
+         * <summary>flip a single entity in the document on the Y axis</summary>
+         */
+        private void FlipEntityY(ref List<Entity> FlippedEntities, Entity e)
+        {
+            var type = e.ObjectType;
+            switch (type)
+            {
+
+                case ObjectType.LINE:
+                    {
+                        Line l = (Line)e.Clone();
+                        l.StartPoint = new XYZ(-l.StartPoint.X, l.StartPoint.Y, l.StartPoint.Z);
+                        l.EndPoint = new XYZ(-l.EndPoint.X, l.EndPoint.Y, l.EndPoint.Z);
+                        FlippedEntities.Add(l);
+                        break;
+                    }
+                case ObjectType.CIRCLE:
+                    {
+                        Circle c = (Circle)e.Clone();
+                        c.Center = new XYZ(-c.Center.X, c.Center.Y, c.Center.Z);
+                        FlippedEntities.Add(c);
+                        break;
+                    }
+                case ObjectType.ARC:
+                    {
+                        //more things to do here
+                        Arc a = (Arc)e.Clone();
+                        a.Center = new XYZ(-a.Center.X, a.Center.Y, a.Center.Z);
+
+                        //les angles sont en radians !
+                        double TwoPI = 2 * Math.PI;
+                        double HalfPI = 0.5 * Math.PI;
+                        //(may not be needed to normalize)
+
+                        //delta à 90
+                        a.StartAngle = NormalizeRadians(Math.PI - ((Arc)e).EndAngle);
+                        a.EndAngle   = NormalizeRadians(Math.PI - ((Arc)e).StartAngle);
+
+                        FlippedEntities.Add(a);
+                        break;
+                    }
+                //TODO polyline
+                default:
+                    break;
+
+            }
+        }
+
+        /**
+         * <summary>flip all of the document's entities on the Y axis</summary>
+         */
+        private void FlipEntitiesY()
+        {
+            List<Entity> FlippedEntities = new List<Entity>();
+            foreach (Entity e in Doc.Entities)
+            {
+                FlipEntityY(ref FlippedEntities, e);
+            }
+            Doc.Entities.Clear();
+
+            Doc.Entities.AddRange(FlippedEntities);
+        }
+
+        public void RotatePart180()
+        {
+            FlipEntitiesX();
+            FlipEntitiesY();
         }
 
 
@@ -245,7 +322,8 @@ namespace MA400_export
                 Doc = reader.Read();
             }
 
-            FlipEntities();
+            //DEBUG => sould be X
+            FlipEntitiesY();
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
