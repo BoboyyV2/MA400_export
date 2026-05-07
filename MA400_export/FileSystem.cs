@@ -291,11 +291,11 @@ namespace MA400_export
                         Circle c = new Circle();
                         double centerX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double centerY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        c.Center = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), layout.offset, layout.dimension, new Scale(true, false));
+                        c.Center       = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), layout.offset, layout.dimension, new Scale(true, false));
 
                         ++num_line;
-                        double radius = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        c.Radius = radius;
+                        double radius  = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        c.Radius       = radius;
                         num_line += 6;
 
                         //debug
@@ -312,10 +312,10 @@ namespace MA400_export
                         Line l = new Line();
                         double startX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double startY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.StartPoint = Util.AdjustPointGPH(new CSMath.XYZ(startX, startY, 0), layout.offset, layout.dimension, new Scale(true, false) );
-                        double endX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        double endY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.EndPoint = Util.AdjustPointGPH(new CSMath.XYZ(endX, endY, 0), layout.offset, layout.dimension, new Scale(true, false));
+                        l.StartPoint  = Util.AdjustPointGPH(new CSMath.XYZ(startX, startY, 0), layout.offset, layout.dimension, new Scale(true, false) );
+                        double endX   = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        double endY   = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        l.EndPoint    = Util.AdjustPointGPH(new CSMath.XYZ(endX, endY, 0), layout.offset, layout.dimension, new Scale(true, false));
                         num_line += 6;
 
                         //debug
@@ -326,6 +326,28 @@ namespace MA400_export
 
 
                         return l;
+                    }
+                    //arc
+                case 3:
+                    {
+                        Arc a = new Arc();
+                        double centerX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        double centerY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        a.Center       = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), layout.offset, layout.dimension, new Scale(true, false));
+
+                        ++num_line;
+                        double radius  = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        a.Radius       = radius;
+                        a.StartAngle   = (Double.Parse(file[++num_line], CultureInfo.InvariantCulture)) * Math.PI / 180;
+                        a.EndAngle     = (Double.Parse(file[++num_line], CultureInfo.InvariantCulture)) * Math.PI / 180; ;
+                        num_line += 4;
+
+                        //debug
+                        /*
+                        MessageBox.Show("center in : " + c.Center.ToString());
+                        */
+
+                        return a;
                     }
                 default:
                     {

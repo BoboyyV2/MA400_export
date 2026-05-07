@@ -517,6 +517,30 @@ namespace MA400_export
             WriteLine0(sw, 6);
         }
 
+        /**
+         * <summary>Write a command for an arc entity in the GPH file</summary>
+         * <param name="sw">The StreamWriter linkde to the GPH file</param>
+         * <param name="arc">The arc to turn into a command</param>
+         */
+        public void WriteGPH_ARC(StreamWriter sw, Arc arc)
+        {
+            PointF center = GetSpacialPosition(arc.Center, Offset, Dimension, Scalefact);
+            if (center.X < 0 || center.Y < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            sw.WriteLine(Constants.ARC_CMD);
+            sw.WriteLine(FormatValue(center.X));
+            sw.WriteLine(FormatValue(center.Y));
+            WriteLine0(sw, 1);
+            sw.WriteLine(FormatValue(arc.Radius));
+            //TODO, make sure the angle are the same, or modify it
+            sw.WriteLine(FormatValue(arc.StartAngle * 180 / Math.PI));
+            sw.WriteLine(FormatValue(arc.EndAngle * 180 / Math.PI));
+
+            WriteLine0(sw, 4);
+        }
+
 
         /**
          * <summary>Write a GPH command representing an entity</summary>
@@ -539,6 +563,12 @@ namespace MA400_export
                         Circle circle = (Circle)entity;
                         WriteGPH_CIRCLE(sw, circle);
 
+                        break;
+                    }
+                case ObjectType.ARC:
+                    {
+                        Arc arc = (Arc)entity;
+                        WriteGPH_ARC(sw, arc);
                         break;
                     }
             }
