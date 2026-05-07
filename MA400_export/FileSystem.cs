@@ -131,6 +131,7 @@ namespace MA400_export
             {
                 return false;
             }
+            Studs.Clear();
             foreach (var item in Doc.Entities)
             {
                 switch (item.ObjectType)
@@ -257,8 +258,6 @@ namespace MA400_export
                         a.Center = new XYZ(-a.Center.X, a.Center.Y, a.Center.Z);
 
                         //les angles sont en radians !
-                        double TwoPI = 2 * Math.PI;
-                        double HalfPI = 0.5 * Math.PI;
                         //(may not be needed to normalize)
 
                         //delta à 90
@@ -269,6 +268,7 @@ namespace MA400_export
                         break;
                     }
                 //TODO polyline
+                case ObjectType.LWPOLYLINE:
                 default:
                     break;
 
@@ -290,10 +290,23 @@ namespace MA400_export
             Doc.Entities.AddRange(FlippedEntities);
         }
 
+        /**
+         * <summary>rotate the part at 180 degrees by fliping it back on the X axis then on the Y axis.</summary>
+         * <remarks>this opération can be done a second time to cancel the effects.</remarks>
+         */
         public void RotatePart180()
         {
+            open = false;
             FlipEntitiesX();
             FlipEntitiesY();
+            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+
+            Directory.CreateDirectory(tmpPath);
+            //save dans un fichier temporaire pour l'affichage / traitement
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+
+            open = true;
+
         }
 
 
@@ -322,7 +335,10 @@ namespace MA400_export
                 Doc = reader.Read();
             }
 
+            //DEBUG
             FlipEntitiesX();
+
+
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 

@@ -53,17 +53,14 @@ namespace MA400_export
             this.enregistrersousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.quitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.générerLesFichiersDeSortieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.outilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.parametreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.personnaliserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sommaireToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rechercherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.VueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rotateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.àproposdeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.StudList_Display = new System.Windows.Forms.ListBox();
             this.StudsMenuLabel = new System.Windows.Forms.Label();
@@ -110,9 +107,9 @@ namespace MA400_export
             this.menuStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fichierToolStripMenuItem,
-            this.editionToolStripMenuItem,
-            this.outilsToolStripMenuItem,
-            this.aideToolStripMenuItem});
+            this.generationToolStripMenuItem,
+            this.parametreToolStripMenuItem,
+            this.VueToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -197,13 +194,13 @@ namespace MA400_export
             this.quitterToolStripMenuItem.Text = "&Quitter";
             this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
-            // editionToolStripMenuItem
+            // generationToolStripMenuItem
             // 
-            this.editionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.générerLesFichiersDeSortieToolStripMenuItem});
-            this.editionToolStripMenuItem.Name = "editionToolStripMenuItem";
-            this.editionToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
-            this.editionToolStripMenuItem.Text = "&Générer";
+            this.generationToolStripMenuItem.Name = "generationToolStripMenuItem";
+            this.generationToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
+            this.generationToolStripMenuItem.Text = "&Générer";
             // 
             // générerLesFichiersDeSortieToolStripMenuItem
             // 
@@ -212,68 +209,48 @@ namespace MA400_export
             this.générerLesFichiersDeSortieToolStripMenuItem.Text = "&Générer les fichiers de sortie";
             this.générerLesFichiersDeSortieToolStripMenuItem.Click += new System.EventHandler(this.générerLesFichiersDeSortieToolStripMenuItem_Click);
             // 
-            // outilsToolStripMenuItem
+            // parametreToolStripMenuItem
             // 
-            this.outilsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.parametreToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.personnaliserToolStripMenuItem,
             this.optionsToolStripMenuItem});
-            this.outilsToolStripMenuItem.Name = "outilsToolStripMenuItem";
-            this.outilsToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
-            this.outilsToolStripMenuItem.Text = "&Paramètres";
+            this.parametreToolStripMenuItem.Name = "parametreToolStripMenuItem";
+            this.parametreToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
+            this.parametreToolStripMenuItem.Text = "&Paramètres";
             // 
             // personnaliserToolStripMenuItem
             // 
             this.personnaliserToolStripMenuItem.Name = "personnaliserToolStripMenuItem";
-            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.personnaliserToolStripMenuItem.Text = "&Personnaliser";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
-            // aideToolStripMenuItem
+            // VueToolStripMenuItem
             // 
-            this.aideToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sommaireToolStripMenuItem,
-            this.indexToolStripMenuItem,
-            this.rechercherToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.àproposdeToolStripMenuItem});
-            this.aideToolStripMenuItem.Name = "aideToolStripMenuItem";
-            this.aideToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.aideToolStripMenuItem.Text = "&Aide";
+            this.VueToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.rotateToolStripMenuItem,
+            this.toolStripSeparator5});
+            this.VueToolStripMenuItem.Name = "VueToolStripMenuItem";
+            this.VueToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.VueToolStripMenuItem.Text = "&Vue";
             // 
-            // sommaireToolStripMenuItem
+            // rotateToolStripMenuItem
             // 
-            this.sommaireToolStripMenuItem.Name = "sommaireToolStripMenuItem";
-            this.sommaireToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.sommaireToolStripMenuItem.Text = "&Sommaire";
-            // 
-            // indexToolStripMenuItem
-            // 
-            this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.indexToolStripMenuItem.Text = "&Index";
-            // 
-            // rechercherToolStripMenuItem
-            // 
-            this.rechercherToolStripMenuItem.Name = "rechercherToolStripMenuItem";
-            this.rechercherToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.rechercherToolStripMenuItem.Text = "&Rechercher";
+            this.rotateToolStripMenuItem.Name = "rotateToolStripMenuItem";
+            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rotateToolStripMenuItem.Text = "&Tourner à 180°";
+            this.rotateToolStripMenuItem.Click += new System.EventHandler(this.rotateToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(144, 6);
-            // 
-            // àproposdeToolStripMenuItem
-            // 
-            this.àproposdeToolStripMenuItem.Name = "àproposdeToolStripMenuItem";
-            this.àproposdeToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.àproposdeToolStripMenuItem.Text = "À &propos de...";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStrip1
             // 
@@ -508,7 +485,6 @@ namespace MA400_export
             // saveFileDialogSave
             // 
             this.saveFileDialogSave.DefaultExt = "ddxf";
-            this.saveFileDialogSave.AddExtension = true;
             this.saveFileDialogSave.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialogSave_FileOk);
             // 
             // MA400_export
@@ -561,16 +537,10 @@ namespace MA400_export
         private System.Windows.Forms.ToolStripMenuItem enregistrersousToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem quitterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem outilsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem parametreToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem personnaliserToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aideToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sommaireToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem indexToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rechercherToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem àproposdeToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ListBox StudList_Display;
         private System.Windows.Forms.Label StudsMenuLabel;
@@ -598,6 +568,9 @@ namespace MA400_export
         private ToolStripMenuItem générerLesFichiersDeSortieToolStripMenuItem;
         private ToolStripMenuItem ouvrirprogramToolStripMenuItem;
         private ToolStripButton ButtonSelectStudMode;
+        private ToolStripMenuItem VueToolStripMenuItem;
+        private ToolStripMenuItem rotateToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator5;
     }
 }
 

@@ -535,8 +535,8 @@ namespace MA400_export
             }
             catch (SecurityException ex)
             {
-                MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
-                $"Details:\n\n{ex.StackTrace}");
+                MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
+                $"Details:\r\n{ex.StackTrace}");
             }
             gc.OpenCanvas();
             fs.OpenDxfFileLayout(gc.layout);
@@ -862,6 +862,18 @@ namespace MA400_export
                 settingsWindow.ShowDialog();
                 //c'est tout
             }
+        }
+
+        private void rotateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            fs.RotatePart180();
+            gc.OpenCanvas();
+            fs.OpenDxfFileLayout(gc.layout);
+            DisplayWhenOpen(true);
+
+
+
         }
 
 

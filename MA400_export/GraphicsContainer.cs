@@ -254,12 +254,14 @@ namespace MA400_export
             
             GetLayout();
             //Debug
+            /*
             MessageBox.Show("layout after update : " + Environment.NewLine
                            + "offset = " + layout.offset.ToString() + Environment.NewLine
                            + "dimention = " + layout.dimension.ToString() + Environment.NewLine
                            + "coordinates :" + Environment.NewLine
                            + "min = " + canvas.XMin + " ; " + canvas.YMin + Environment.NewLine
                            + "max = " + canvas.XMax + " ; " + canvas.YMax + Environment.NewLine);
+            */
 
             canvas.setup(Constants.Origin_Coord);
 
