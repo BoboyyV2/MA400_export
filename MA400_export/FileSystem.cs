@@ -322,15 +322,13 @@ namespace MA400_export
                 Doc = reader.Read();
             }
 
-            //DEBUG => sould be X
-            FlipEntitiesY();
+            FlipEntitiesX();
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
             Directory.CreateDirectory(tmpPath);
+            //save dans un fichier temporaire pour l'affichage / traitement
             SaveToFile(tmpPath + @"\dxftmp.ddxf");
-            //il faut un savetofile car on flip
-            //File.Copy(path, tmpPath + @"\dxftmp.ddxf", overwrite: true);
 
             open = true;
 

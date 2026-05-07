@@ -162,7 +162,7 @@
     <None Include="Resources\plus.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\source_code_Exemple_BB-20260504T071340Z-3-001\DXFImporter\DXFImporter.csproj">
+    <ProjectReference Include="..\..\DXFImporter\DXFImporter\DXFImporter.csproj">
       <Project>{e1083e6f-23ee-4ec0-beb5-6eaf10169c79}</Project>
       <Name>DXFImporter</Name>
     </ProjectReference>
