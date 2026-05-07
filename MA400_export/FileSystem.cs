@@ -296,16 +296,22 @@ namespace MA400_export
          */
         public void RotatePart180()
         {
+            //reset without a new document
+            //try debug
             open = false;
+            Studs = new List<Circle>();
+            layout = new Layout_Info();//must be initialized later on before scanning the entities
+
             FlipEntitiesX();
             FlipEntitiesY();
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
             Directory.CreateDirectory(tmpPath);
             //save dans un fichier temporaire pour l'affichage / traitement
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            SaveToFile(tmpPath  + @"\dxftmp.ddxf");
 
-            open = true;
+            reset();
+            OpenDxfFile(tmpPath + @"\dxftmp.ddxf");
 
         }
 

@@ -871,7 +871,7 @@ namespace MA400_export
             gc.OpenCanvas();
             fs.OpenDxfFileLayout(gc.layout);
             DisplayWhenOpen(true);
-
+            WorkZone.Invalidate();
 
 
         }
