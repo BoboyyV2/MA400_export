@@ -310,15 +310,51 @@ namespace MA400_export
             //save dans un fichier temporaire pour l'affichage / traitement
             SaveToFile(tmpPath  + @"\dxftmp.ddxf");
 
+            //ré open le fichier tmp en ddxf
             reset();
-            OpenDxfFile(tmpPath + @"\dxftmp.ddxf");
+            OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
+
+        }
+
+
+        /*_____________________________________DDXF_____________________________________*/
+
+        /**
+         * <summary>Open a file at the location specified by path and load it if it exist.<br></br>
+         * Should be followed by an initialization of the layout aswell as a scan</summary>
+         * <returns>true if the file was loaded succesfully, false if an error occured</returns>
+         */
+        public bool OpenDDxfFile(string path)
+        {
+            reset();
+
+            if (!(File.Exists(path)))
+            {
+                return false;
+            }
+
+            using (DxfReader reader = new DxfReader(path))
+            {
+                //Inform about non critical error
+                reader.OnNotification += NotificationHelper.LogConsoleNotification;
+                Doc = reader.Read();
+            }
+
+
+            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+
+            Directory.CreateDirectory(tmpPath);
+            //save dans un fichier temporaire pour l'affichage / traitement
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+
+            open = true;
+
+            return true;
 
         }
 
 
         /*_____________________________________DXF_____________________________________*/
-
-
 
         /**
          * <summary>Open a file at the location specified by path and load it if it exist.<br></br>

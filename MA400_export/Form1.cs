@@ -529,14 +529,41 @@ namespace MA400_export
         {
             reset();
             bool open = false;
-            try
+            string filename = this.openFileDialogOpen.FileName;
+            string extension = Path.GetExtension(filename);
+
+            switch (extension)
             {
-                open = this.fs.OpenDxfFile(this.openFileDialogOpen.FileName);
-            }
-            catch (SecurityException ex)
-            {
-                MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
-                $"Details:\r\n{ex.StackTrace}");
+                //fichier dxf classique
+                case ".dxf":
+                    try
+                    {
+                        open = this.fs.OpenDxfFile(filename);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
+                        $"Details:\r\n{ex.StackTrace}");
+                    }
+                    break;
+
+                //fichier dxf modifié par nos soins
+                case ".ddxf":
+                    try
+                    {
+                        open = this.fs.OpenDDxfFile(filename);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
+                        $"Details:\r\n{ex.StackTrace}");
+                    }
+                    break;
+
+                default:
+                    MessageBox.Show("Extention de fichier invalide." + Environment.NewLine +
+                                    "Doit être .dxf ou .ddxf");
+                    return;
             }
             gc.OpenCanvas();
             fs.OpenDxfFileLayout(gc.layout);
@@ -868,6 +895,7 @@ namespace MA400_export
         {
             
             fs.RotatePart180();
+            gc.reset();
             gc.OpenCanvas();
             fs.OpenDxfFileLayout(gc.layout);
             DisplayWhenOpen(true);
