@@ -44,23 +44,29 @@ namespace MA400_export
      public class FileSystem
      {
 
+        //the cad document
+        public CadDocument Doc = null;
 
-         public CadDocument Doc = null;
+        //whether a document or program is open
+        public bool open {  get; private set; }
 
-         public bool open {  get; private set; }
-         public List<Circle> Studs {  get; private set; }
+        //The list of studs in the document, adjusted to the origion coordinates
+        public List<Circle> Studs {  get; private set; }
 
-         private ProdFileGenerator Gen;
+        //a copy of the above list used as remnant
+        private List<Circle> StudsTMP = null ;
 
-         public Layout_Info layout { get; set;  }
-         
+
+        private ProdFileGenerator Gen;
+
+        public Layout_Info layout { get; set;  }
 
 
 
          /**
           * <summary>create the file systeme with a new document</summary>
           */
-    public FileSystem()
+     public FileSystem()
         {
             Doc = new CadDocument();
             open = false;
@@ -121,8 +127,8 @@ namespace MA400_export
 
 
         /**
-        * <summary>Scan the document's entities and attempt to get Stud candidates as well as the dimentions of the document <br></br>
-        * any stud candidate will be removed from the document, they would be added if we were to save the document to a file.</summary>
+        * <summary>Scan the document's entities and attempt to get Stud candidates.<br></br>
+        * Stud candidate will not be removed from the document.</summary>
         * <returns> true if everything went well, false otherwise </returns>
         */
         private bool ScanEntities()
@@ -291,19 +297,55 @@ namespace MA400_export
         }
 
         /**
+         * <summary>rotate each stud on the part 180° and add them newStuds</summary>
+         * <param name="newStuds">The stud list to be filled by the rotated studs</param> 
+         * <param name="Studs">The stud list to be rotated</param>
+         */
+        private List<Circle> GetRotatedStuds()
+        {
+            List<Circle> newStuds = new List<Circle>();
+
+            if (StudsTMP != null)
+            {
+                foreach (Circle c in StudsTMP)
+                {
+                    Circle rotated = (Circle)c.Clone();
+                    double x = layout.dimension.Width - c.Center.X;
+                    double y = layout.dimension.Height - c.Center.Y;
+                    rotated.Center = new XYZ(x, y, c.Center.Z);
+
+                    newStuds.Add(rotated);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Erreur interne lors de la rotation des goujons");
+            }
+
+            return newStuds;
+        }
+
+
+        /**
          * <summary>rotate the part at 180 degrees by fliping it back on the X axis then on the Y axis.</summary>
          * <remarks>this opération can be done a second time to cancel the effects.</remarks>
          */
         public void RotatePart180()
         {
-            //reset without a new document
+            //reset without a new document our new studlist
             //try debug
             open = false;
-            Studs = new List<Circle>();
             layout = new Layout_Info();//must be initialized later on before scanning the entities
 
             FlipEntitiesX();
             FlipEntitiesY();
+
+            //then flip the modified studs aswell
+            //thus we will not scan the entities when we reopen and we must keep the studs
+            //TODO
+
+            List<Circle> oldStuds = Studs;
+
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
             Directory.CreateDirectory(tmpPath);
@@ -313,6 +355,20 @@ namespace MA400_export
             //ré open le fichier tmp en ddxf
             reset();
             OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
+            StudsTMP = oldStuds;
+
+
+        }
+
+        /**
+         * <summary>Get the layout of a part when it is being rotated</summary>
+         */
+        public void OpenFlipFileLayout(Layout_Info layout)
+        {
+            this.layout = layout;
+            Studs = GetRotatedStuds();
+            StudsTMP.Clear();
+            StudsTMP = null;
 
         }
 
@@ -352,6 +408,8 @@ namespace MA400_export
             return true;
 
         }
+
+        
 
 
         /*_____________________________________DXF_____________________________________*/
@@ -394,11 +452,17 @@ namespace MA400_export
 
         }
 
+
+        /**
+         * <summary>Get the layout of a dxf file when it is opening as well as performing a scan to get the studs</summary>
+         */
         public void OpenDxfFileLayout(Layout_Info layout)
         {
             this.layout = layout;
             ScanEntities();
         }
+
+        
 
         /*_____________________________________PRODFILE_____________________________________*/
 
