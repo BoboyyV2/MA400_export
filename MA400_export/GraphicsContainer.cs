@@ -275,41 +275,6 @@ namespace MA400_export
             DXFImporter.Shape.OriginOffset = new PointF();
         }
 
-        public void OpenSVG()
-        {
-            open = true;
-            
-            svg = SvgDocument.Open(path);
-        }
-
-        private void RenderSVG()
-        {
-            
-            if (svg == null) return;
-
-            SizeF dims = svg.GetDimensions();
-            if (dims.Width <= 0 || dims.Height <= 0) return;
-
-            int renderWidth = (int)dims.Width;
-            int renderHeight = (int)dims.Height;
-
-            string bmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath + @"bmp.BMP";
-            Directory.CreateDirectory(Properties.Settings.Default.OutputPath + Constants.tmpPath);
-            var bmp = svg.Draw();
-            bmp.Save(bmpPath, ImageFormat.Bmp);
-            using (Bitmap svgBitmap = svg.Draw(renderWidth, renderHeight))
-            {
-                graphics.DrawImage(
-                    svgBitmap,
-                    Constants.Origin_Coord.X + line_thickness,
-                    Constants.Origin_Coord.Y + line_thickness
-                );
-
-            }
-            
-            
-
-        }
 
         public void DrawDXF()
         {

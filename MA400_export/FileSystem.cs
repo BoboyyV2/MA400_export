@@ -51,10 +51,11 @@ namespace MA400_export
         public bool open {  get; private set; }
 
         //The list of studs in the document, adjusted to the origion coordinates
-        public List<Circle> Studs {  get; private set; }
+        public BindingList<Stud> Studs {  get; private set; }
 
         //a copy of the above list used as remnant
-        private List<Circle> StudsTMP = null ;
+        private BindingList<Stud> StudsTMP = null ;
+
 
 
         private ProdFileGenerator Gen;
@@ -70,7 +71,7 @@ namespace MA400_export
         {
             Doc = new CadDocument();
             open = false;
-            Studs = new List<Circle>();
+            Studs = new BindingList<Stud>();
             layout = new Layout_Info();//must be initialized later on before scanning the entities
 
         }
@@ -86,7 +87,7 @@ namespace MA400_export
         {
             open = false;
             Doc = new CadDocument();
-            Studs = new List<Circle>();
+            Studs.Clear();
             layout = new Layout_Info();//must be initialized later on before scanning the entities
 
         }
@@ -149,7 +150,7 @@ namespace MA400_export
                             if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
                             {
                                 Circle stud = ApplyTransform(candidate, layout.offset, layout.dimension, layout.scale);
-                                Studs.Add(stud);
+                                Studs.Add(new Stud(stud) );
                             }
                             break;
                         }
@@ -301,20 +302,20 @@ namespace MA400_export
          * <param name="newStuds">The stud list to be filled by the rotated studs</param> 
          * <param name="Studs">The stud list to be rotated</param>
          */
-        private List<Circle> GetRotatedStuds()
+        private BindingList<Stud> GetRotatedStuds()
         {
-            List<Circle> newStuds = new List<Circle>();
+            BindingList<Stud> newStuds = new BindingList<Stud>();
 
             if (StudsTMP != null)
             {
-                foreach (Circle c in StudsTMP)
+                foreach (Stud s in StudsTMP)
                 {
-                    Circle rotated = (Circle)c.Clone();
-                    double x = layout.dimension.Width - c.Center.X;
-                    double y = layout.dimension.Height - c.Center.Y;
-                    rotated.Center = new XYZ(x, y, c.Center.Z);
+                    Circle rotated = (Circle)s.circle.Clone();
+                    double x = layout.dimension.Width - s.circle.Center.X;
+                    double y = layout.dimension.Height - s.circle.Center.Y;
+                    rotated.Center = new XYZ(x, y, s.circle.Center.Z);
 
-                    newStuds.Add(rotated);
+                    newStuds.Add(new Stud(rotated) );
                 }
             }
             else
@@ -344,7 +345,11 @@ namespace MA400_export
             //thus we will not scan the entities when we reopen and we must keep the studs
             //TODO
 
-            List<Circle> oldStuds = Studs;
+            BindingList<Stud> oldStuds = new BindingList<Stud>();
+            foreach (Stud s in Studs)
+            {
+                oldStuds.Add(s);
+            }
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
@@ -366,7 +371,12 @@ namespace MA400_export
         public void OpenFlipFileLayout(Layout_Info layout)
         {
             this.layout = layout;
-            Studs = GetRotatedStuds();
+            StudsTMP = GetRotatedStuds();
+            //Studs.AddRange(StudsTMP);//no addrange defined 
+            foreach (Stud stud in StudsTMP)
+            {
+                Studs.Add(stud);
+            }
             StudsTMP.Clear();
             StudsTMP = null;
 
@@ -680,7 +690,7 @@ namespace MA400_export
                 //TODO , diamètre à récup
                 stud.Color = ACadSharp.Color.Green;
 
-                Studs.Add(stud);
+                Studs.Add( new Stud(stud) );
             }
             else
             {
@@ -782,18 +792,18 @@ namespace MA400_export
         /**
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          */
-        public void GenerateProdFiles(ref BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact) 
+        public void GenerateProdFiles( BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact) 
         {
-            Gen = new ProdFileGenerator(ref Studs, Doc.Entities,Dimension, Offset, Data, Scalefact);
+            Gen = new ProdFileGenerator( Studs, Doc.Entities,Dimension, Offset, Data, Scalefact);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 
         /**
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          */
-        public void GenerateProdFiles(ref BindingList<Stud> Studs,GeneratorData Data, Layout_Info layout)
+        public void GenerateProdFiles( BindingList<Stud> Studs,GeneratorData Data, Layout_Info layout)
         {
-            Gen = new ProdFileGenerator(ref Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale);
+            Gen = new ProdFileGenerator( Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 

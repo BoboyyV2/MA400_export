@@ -14,18 +14,15 @@ namespace MA400_export
 
 
         public Circle circle { get; set; }
-        public int id { get; set; }
 
         public Stud()
         {
             circle = new Circle();
-            id = -1;
         }
 
-        public Stud(Circle stud, int id)
+        public Stud(Circle stud)
         {
             circle = stud;
-            this.id = id;
         }
 
         
@@ -33,8 +30,8 @@ namespace MA400_export
 
         public override string ToString()
         {
-            return string.Format("G{0} : X = {1}; Y = {2}; D = {3}",
-              id, circle.Center.X.ToString("0.0"), circle.Center.Y.ToString("0.0"), circle.Radius*2);
+            return string.Format("G : X = {0}; Y = {1}; D = {2}",
+                                  circle.Center.X.ToString("0.0"), circle.Center.Y.ToString("0.0"), circle.Radius*2);
 
         }
     }

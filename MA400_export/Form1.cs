@@ -39,9 +39,6 @@ namespace MA400_export
         public FileSystem fs = new FileSystem();
         public GraphicsContainer gc = new GraphicsContainer();
 
-        //Studs informations
-        public BindingList<Stud> Studs = new BindingList<Stud>();
-        public int StudCurrentIndex = 0;
 
         private string savepath = string.Empty;
        
@@ -54,7 +51,7 @@ namespace MA400_export
         public MA400_export()
         {
             InitializeComponent();
-            StudList_Display.DataSource = Studs;
+            StudList_Display.DataSource = fs.Studs;
 
         }
 
@@ -74,7 +71,7 @@ namespace MA400_export
          */
         public void EmptyStuds()
         {
-            Studs.Clear();
+            fs.Studs.Clear();
         }
 
         /**
@@ -83,9 +80,8 @@ namespace MA400_export
         public void AddStud(Circle stud)
         {
 
-            Studs.Add(new Stud(stud, StudCurrentIndex));
+            fs.Studs.Add(new Stud(stud));
 
-            StudCurrentIndex++;
         }
 
         /**
@@ -114,7 +110,7 @@ namespace MA400_export
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.Paint(Studs, getSelectedStuds(), gc.layout.offset );
+            gc.Paint(fs.Studs, getSelectedStuds(), gc.layout.offset );
 
         }
 
@@ -496,7 +492,7 @@ namespace MA400_export
 
 
 
-            if (!Util.IsPossibleToAddStud(Stud, Studs))
+            if (!Util.IsPossibleToAddStud(Stud, fs.Studs))
             {
                 return;
             }
@@ -536,7 +532,7 @@ namespace MA400_export
 
             foreach (Stud selected in selectedList)
             {
-                Studs.Remove(selected);
+                fs.Studs.Remove(selected);
             }
 
 
@@ -581,6 +577,7 @@ namespace MA400_export
                         MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
                         $"Details:\r\n{ex.StackTrace}");
                     }
+                    
                     break;
 
                 //fichier dxf modifié par nos soins
@@ -678,7 +675,7 @@ namespace MA400_export
             PointF offseted_p = GetOffsetedCoords(p);
             List<Stud> selected = getSelectedStuds();
 
-            foreach (Stud stud in Studs)
+            foreach (Stud stud in fs.Studs)
             {
                 if (Util.getStudDistance(offseted_p, stud.circle) < stud.circle.Radius)
                 {
@@ -712,7 +709,7 @@ namespace MA400_export
             }
             double radius = (Double.Parse(diam_String)) / 2;
             Circle circle = createStud((double)offseted_p.X, (double)offseted_p.Y, radius);
-            if (!Util.IsPossibleToAddStud(circle, Studs))
+            if (!Util.IsPossibleToAddStud(circle, fs.Studs))
             {
                 return;
             }
@@ -734,11 +731,11 @@ namespace MA400_export
             p_rm = GetOffsetedCoords(p_rm);
 
             bool removed = false;
-            foreach (Stud stud in Studs)
+            foreach (Stud stud in fs.Studs)
             {
                 if (Util.getStudDistance(p_rm, stud.circle) < (stud.circle.Radius))
                 {
-                    Studs.Remove(stud);
+                    fs.Studs.Remove(stud);
                     removed = true;
                     break;
                 }
@@ -834,7 +831,7 @@ namespace MA400_export
             GetFormData();
             
             
-            fs.GenerateProdFiles(ref Studs, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale); // en dernier, une fois que tout est bien rempli
+            fs.GenerateProdFiles(fs.Studs, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale); // en dernier, une fois que tout est bien rempli
         }
 
         /**
@@ -866,7 +863,7 @@ namespace MA400_export
                 saveFileDialogSave.ShowDialog();
                 return;
             }
-            fs.SaveToFile(Studs, savepath);
+            fs.SaveToFile(fs.Studs, savepath);
 
         }
 
@@ -884,7 +881,7 @@ namespace MA400_export
         private void saveFileDialogSave_FileOk(object sender, CancelEventArgs e)
         {
             savepath = saveFileDialogSave.FileName;
-            fs.SaveToFile(Studs, savepath);
+            fs.SaveToFile(fs.Studs, savepath);
         }
 
 
@@ -931,17 +928,14 @@ namespace MA400_export
                 gc.reset();
             }
 
-            //get the detected studs from the CAD Document
-            List<Circle> ToAdd = this.fs.Studs;
 
             //clear the current list
-            EmptyStuds();
+            //EmptyStuds();not handled by the form anymore
 
             //and fill it with the correct studs
-            foreach (var circle in ToAdd)
-            {
-                AddStud(circle);
-            }
+            StudList_Display.DataSource = fs.Studs;
+
+            
             
 
             this.WorkZone.Invalidate();
@@ -980,7 +974,11 @@ namespace MA400_export
          */
         private void rotateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            if (!fs.open)
+            {
+                MessageBox.Show("aucun fichier ou programme ouvert.");
+                return;
+            }
             fs.RotatePart180();
             gc.reset();
             gc.OpenCanvas();

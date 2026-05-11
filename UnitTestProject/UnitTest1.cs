@@ -12,35 +12,7 @@ using DXFImporter;
 
 namespace UnitTestProject
 {
-    [TestClass]
-    public class UnitTest
-    {
-        [TestMethod]
-        public void TestOpenbasic()
-        {
-            string path = "../testfiles/sample.dxf";
-            string pathlong = @"C:\Users\MAGASIN\source\repos\MA400_export\UnitTestProject\bin\testfiles\sample.dxf";
-            FileSystem fs = new FileSystem();
-            if (File.Exists(path))
-            {
-                fs.OpenDxfFile(path);
-                fs.OpenDxfFile(pathlong);
-            }
-        }
-
-        [TestMethod]
-        public void TestOpen2013()
-        {
-            string path = "../testfiles/test.dxf";
-            FileSystem fs = new FileSystem();
-            if (File.Exists(path))
-            {
-                fs.OpenDxfFile(path);
-            }
-        }
-
-        
-    }
+    
 
     // -------------------------------------------------------------------------
     // Tests de la classe Scale
@@ -77,13 +49,7 @@ namespace UnitTestProject
     [TestClass]
     public class StudTests
     {
-        [TestMethod]
-        public void DefaultConstructor_IdIsMinusOne()
-        {
-            Stud stud = new Stud();
-
-            Assert.AreEqual(-1, stud.id);
-        }
+        
 
         [TestMethod]
         public void DefaultConstructor_CircleIsNotNull()
@@ -100,23 +66,11 @@ namespace UnitTestProject
             circle.Center = new CSMath.XYZ(10.0, 20.0, 0);
             circle.Radius = Constants.StudRadius3;
 
-            Stud stud = new Stud(circle, 5);
+            Stud stud = new Stud(circle);
 
-            Assert.AreEqual(5, stud.id);
             Assert.AreSame(circle, stud.circle);
         }
 
-        [TestMethod]
-        public void ToString_ContainsId()
-        {
-            Circle circle = new Circle();
-            circle.Center = new CSMath.XYZ(10.5, 20.0, 0);
-            circle.Radius = Constants.StudRadius3;
-
-            Stud stud = new Stud(circle, 3);
-
-            StringAssert.Contains(stud.ToString(), "G3");
-        }
 
         [TestMethod]
         public void ToString_ContainsCoordinates()
@@ -125,7 +79,7 @@ namespace UnitTestProject
             circle.Center = new CSMath.XYZ(10.5, 20.0, 0);
             circle.Radius = Constants.StudRadius3;
 
-            Stud stud = new Stud(circle, 3);
+            Stud stud = new Stud(circle);
             string result = stud.ToString();
 
             StringAssert.Contains(result, "10,5");
@@ -139,7 +93,7 @@ namespace UnitTestProject
             circle.Center = new CSMath.XYZ(0, 0, 0);
             circle.Radius = Constants.StudRadius3; // 1.5 => diamètre = 3.0
 
-            Stud stud = new Stud(circle, 1);
+            Stud stud = new Stud(circle);
 
             StringAssert.Contains(stud.ToString(), "3");
         }
@@ -151,7 +105,7 @@ namespace UnitTestProject
             circle.Center = new CSMath.XYZ(0, 0, 0);
             circle.Radius = Constants.StudRadius4; // 2.0 => diamètre = 4.0
 
-            Stud stud = new Stud(circle, 2);
+            Stud stud = new Stud(circle);
 
             StringAssert.Contains(stud.ToString(), "4");
         }

@@ -52,7 +52,7 @@ namespace MA400_export
 
 
 
-        public ProdFileGenerator(ref BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)//should work but C# and ref being themselves 
+        public ProdFileGenerator( BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)//should work but C# and ref being themselves 
         {
             this.Studs = Studs;
             this.Entities = Entities;
