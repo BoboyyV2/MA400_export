@@ -36,7 +36,6 @@ namespace MA400_export
         private String path = Properties.Settings.Default.OutputPath + Constants.tmpPath + "display.svg";//.exe loc
         //private String path = AppDomain.CurrentDomain.BaseDirectory + Constants.tmpPath + "truite.jpg";//used for debug
 
-        private SvgDocument svg = null;
 
         DXFImporter.Canvas canvas = null;
         private bool open { get; set; }

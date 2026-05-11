@@ -577,7 +577,9 @@ namespace MA400_export
                         MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
                         $"Details:\r\n{ex.StackTrace}");
                     }
-                    
+                    gc.OpenCanvas();
+                    fs.OpenDxfFileLayout(gc.layout);
+
                     break;
 
                 //fichier dxf modifié par nos soins
@@ -591,6 +593,9 @@ namespace MA400_export
                         MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
                         $"Details:\r\n{ex.StackTrace}");
                     }
+                    gc.OpenCanvas();
+                    fs.OpenDdxfFileLayout(gc.layout, filename);
+
                     break;
 
                 default:
@@ -598,8 +603,7 @@ namespace MA400_export
                                     "Doit être .dxf ou .ddxf");
                     return;
             }
-            gc.OpenCanvas();
-            fs.OpenDxfFileLayout(gc.layout);
+            
 
             DisplayWhenOpen(open);
         }

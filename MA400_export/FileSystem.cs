@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
@@ -131,8 +132,9 @@ namespace MA400_export
         * <summary>Scan the document's entities and attempt to get Stud candidates.<br></br>
         * Stud candidate will not be removed from the document.</summary>
         * <returns> true if everything went well, false otherwise </returns>
+        * <remarks>this function is used for dxf file</remarks>
         */
-        private bool ScanEntities()
+        private bool ScanDxfEntities()
         {
             if (Doc == null)
             {
@@ -161,6 +163,65 @@ namespace MA400_export
 
             }
             
+            return true;
+
+        }
+
+        /**
+        * <summary>Scan the document's entities and attempt to get Stud candidates.<br></br>
+        * Stud candidate will not be removed from the document.<br></br>
+        * When using ddxf file, the studs to scan are stored in a .sdxf file with the same name.</summary>
+        * <returns> true if everything went well, false otherwise </returns>
+        * <remarks>this function is used for ddxf file</remarks>
+        */
+        private bool ScanDdxfEntities(string path)
+        {
+            //TODO modif pour ddxf added studs
+            if (Doc == null)
+            {
+                return false;
+            }
+            string savepath = Path.GetDirectoryName(path) + @"\" + Path.GetFileNameWithoutExtension(path);
+            if (File.Exists(savepath + ".sdxf"))
+            {
+                CadDocument sdxf = new CadDocument();
+
+                using (DxfReader reader = new DxfReader(savepath + ".sdxf"))
+                {
+                    //Inform about non critical error
+                    reader.OnNotification += NotificationHelper.LogConsoleNotification;
+                    sdxf = reader.Read();
+
+                    foreach (var item in sdxf.Entities)
+                    {
+                        switch (item.ObjectType)
+                        {
+                            case ObjectType.CIRCLE:
+                                {
+                                    Circle candidate = (Circle)item;
+
+                                    if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
+                                    {
+                                        Circle stud = ApplyTransform(candidate, layout.offset, layout.dimension, layout.scale);
+                                        Studs.Add(new Stud(stud));
+                                    }
+                                    break;
+                                }
+                            default:
+                                break;
+
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+            
+            
+
             return true;
 
         }
@@ -419,7 +480,15 @@ namespace MA400_export
 
         }
 
-        
+        /**
+         * <summary>Get the layout of a dxf file when it is opening as well as performing a scan to get the studs</summary>
+         * <param name="path">the path to the file we are openning.</param>
+         */
+        public void OpenDdxfFileLayout(Layout_Info layout, string path)
+        {
+            this.layout = layout;
+            ScanDdxfEntities(path);
+        }
 
 
         /*_____________________________________DXF_____________________________________*/
@@ -469,7 +538,7 @@ namespace MA400_export
         public void OpenDxfFileLayout(Layout_Info layout)
         {
             this.layout = layout;
-            ScanEntities();
+            ScanDxfEntities();
         }
 
         
@@ -724,15 +793,17 @@ namespace MA400_export
          */
         public void SaveToFile(BindingList<Stud> Studs, string path)
         {
-            //creation d'un nouveua document pour accomoder la sauvegarde
-            CadDocument save = new CadDocument();
-
+            /*________________________________DXF_COPY________________________________*/
+            //creation d'un nouveau document pour accomoder la sauvegarde du document
+            CadDocument ddxf = new CadDocument();
+            string savepath = Path.GetDirectoryName(path) + @"\" + Path.GetFileNameWithoutExtension(path);
             //ajout de clones de toutes les entités presentes dans le doc dans la sauvegarde.
             foreach (Entity entity in Doc.Entities)
             {
                 try
                 {
-                    save.Entities.Add((Entity)entity.Clone());
+                    ddxf.Entities.Add((Entity)entity.Clone());
+                    //DEBUG
                 }
                 catch (ArgumentException e)
                 {
@@ -740,15 +811,27 @@ namespace MA400_export
                 }
             }
 
+
+            using (DxfWriter writer = new DxfWriter(savepath + ".ddxf", ddxf))
+            {
+                writer.OnNotification += NotificationHelper.LogConsoleNotification;
+                writer.Write();
+            }
+
+            /*________________________________DXF_STUDS________________________________*/
+            //creation d'un nouveau document pour accomoder la sauvegarde des goujons
+            CadDocument sdxf = new CadDocument();
+
             //ajout de clones des goujons dans la sauvegarde.
             foreach (Stud stud in Studs)
             {
                 Circle clone = (Circle)stud.circle.Clone();
                 clone.Center = Util.AdjustPoint(clone.Center, layout.offset, layout.dimension, layout.scale);
-                save.Entities.Add(clone);
+                clone.Color = ACadSharp.Color.Green;
+                sdxf.Entities.Add(clone);
             }
 
-            using (DxfWriter writer = new DxfWriter(path, save))
+            using (DxfWriter writer = new DxfWriter(savepath + ".sdxf", sdxf))
             {
                 writer.OnNotification += NotificationHelper.LogConsoleNotification;
                 writer.Write();
