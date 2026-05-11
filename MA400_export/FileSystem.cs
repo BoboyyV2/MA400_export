@@ -474,11 +474,6 @@ namespace MA400_export
                         c.Radius       = radius;
                         num_line += 6;
 
-                        //debug
-                        /*
-                        MessageBox.Show("center in : " + c.Center.ToString());
-                        */
-
                         return c;
                     }
 
@@ -493,12 +488,6 @@ namespace MA400_export
                         double endY   = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         l.EndPoint    = Util.AdjustPointGPH(new CSMath.XYZ(endX, endY, 0), layout.offset, layout.dimension, new Scale(true, false));
                         num_line += 6;
-
-                        //debug
-                        /*
-                        MessageBox.Show("start in : " + l.StartPoint.ToString());
-                        MessageBox.Show("end in : " + l.EndPoint.ToString());
-                        */
 
 
                         return l;
@@ -517,11 +506,6 @@ namespace MA400_export
                         a.StartAngle   = (Double.Parse(file[++num_line], CultureInfo.InvariantCulture)) * Math.PI / 180;
                         a.EndAngle     = (Double.Parse(file[++num_line], CultureInfo.InvariantCulture)) * Math.PI / 180; ;
                         num_line += 4;
-
-                        //debug
-                        /*
-                        MessageBox.Show("center in : " + c.Center.ToString());
-                        */
 
                         return a;
                     }
