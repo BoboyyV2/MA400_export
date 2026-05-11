@@ -58,6 +58,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>reset to a state where no part is loaded</summary>
+         */
         private void reset()
         {
             data = new GeneratorData();
@@ -66,10 +69,14 @@ namespace MA400_export
             gc.reset();
         }
 
+        /**
+         * <summary>Empties the studlist</summary>
+         */
         public void EmptyStuds()
         {
             Studs.Clear();
         }
+
         /**
          * <summary>add a stud to the local collection</summary>
          */
@@ -93,6 +100,9 @@ namespace MA400_export
             AddStud(circle);
         }
 
+        /**
+         * <summary>paint methode for the workzone, invoke the graphics container.</summary>
+         */
         private void WorkZone_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
             //draw the basic from of the workzone
@@ -108,6 +118,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <returns> the list of selected studs in the studlist</returns>
+         */
         public List<Stud> getSelectedStuds()
         {
             
@@ -139,6 +152,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Update the coordinates display under the workzone</summary>
+         */
         public void UpdateCoords()
         {
             System.Drawing.Point point = WorkZone.PointToClient(Cursor.Position);
@@ -149,12 +165,17 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Update the coordinates display whenever the mouse moves inside the workzone</summary>
+         */
         private void WorkZone_MouseMove(object sender, MouseEventArgs e)
         {
             UpdateCoords();
         }
 
-
+        /**
+         * <summary>function used to compute the zoom offset </summary>
+         */
         private void updateOrigin_Offset(PointF predicted_offset, float offsetX_min, float offsetX_max, float offsetY_min, float offsetY_max, float zoom_delta)
         {
 
@@ -189,6 +210,10 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Zoom or dezoom on the workzone whenever the mouse is scrolled.</summary>
+         * <remarks>As much as the zoom is functionning it is by no mean perfect.</remarks>
+         */
         private void WorkZone_Zoom(object sender, MouseEventArgs e)
         {
             //compute the zoom values
@@ -222,7 +247,9 @@ namespace MA400_export
             }
         }
 
-
+        /**
+         * <summary>Set some utilities on app launch</summary>
+         */
         private void Form1_Load(object sender, EventArgs e)
         {
             if(Properties.Settings.Default.OutputPath.Length < 1)
@@ -432,7 +459,9 @@ namespace MA400_export
             return true;
         }
 
-
+        /**
+         * <summary>a Circle constructor wrapper</summary>
+         */
         private Circle createStud(double x, double y, double radius)
         {
             Circle stud = new Circle();
@@ -441,6 +470,10 @@ namespace MA400_export
             return stud;
         }
 
+        /**
+         * <summary>Attempt to add a stud at the position given in the dedicated textbox when clicking the add button</summary>
+         * <remarks>show an error if it is not possible</remarks>
+         */
         private void buttonAddStud_Click(object sender, EventArgs e)
         {
 
@@ -487,6 +520,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Remove all the selected Studs in the studlist when clicking the remove button</summary>
+         */
         private void buttonRemoveStud_Click(object sender, EventArgs e)
         {
 
@@ -523,7 +559,7 @@ namespace MA400_export
         }
 
         /**
-         * <summary>Open a dxf file and import it once it has been correctly selected via a fileopen menu</summary>
+         * <summary>Open a dxf or ddxf file and import it once it has been correctly selected via a fileopen menu</summary>
          */
         private void openFileDialogOpen_FileOk(object sender, CancelEventArgs e)
         {
@@ -571,26 +607,42 @@ namespace MA400_export
             DisplayWhenOpen(open);
         }
 
+
+        /**
+         * <summary>Set the current mouseclick mode to mode</summary>
+         */
         public void setEditMode(EditMode mode)
         {
             editMode = mode;
         }
 
+        /**
+         * <summary>Set the current mouseclick mode to Cursor</summary>
+         */
         private void ButtonCursorMode_Click(object sender, EventArgs e)
         {
             setEditMode(EditMode.Cursor);
         }
 
+        /**
+         * <summary>Set the current mouseclick mode to Select</summary>
+         */
         private void ButtonSelectStudMode_Click(object sender, EventArgs e)
         {
             setEditMode(EditMode.SelectStud);
         }
 
+        /**
+         * <summary>Set the current mouseclick mode to Add</summary>
+         */
         private void ButtonAddStudMode_Click(object sender, EventArgs e)
         {
             setEditMode(EditMode.AddStud);
         }
 
+        /**
+         * <summary>Set the current mouseclick mode to Remove</summary>
+         */
         private void ButtonremoveStudMode_Click(object sender, EventArgs e)
         {
             setEditMode(EditMode.RemoveStud);
@@ -785,17 +837,27 @@ namespace MA400_export
             fs.GenerateProdFiles(ref Studs, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale); // en dernier, une fois que tout est bien rempli
         }
 
-
+        /**
+         * <summary>Open the form to generate the outputfiles when clicking the generate button</summary>
+         */
         private void buttonGenerer_Click(object sender, EventArgs e)
         {
             GenerateOutput();
         }
 
+        /**
+         * <summary>Open the form to generate the outputfiles when clicking the generate button in the menu</summary>
+         */
         private void générerLesFichiersDeSortieToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GenerateOutput();
         }
 
+
+        /**
+         * <summary>Open a SaveFileDialog menu to Save the part<br></br>
+         * if the file has already been saved once this session, simply overwrite the existing file</summary>
+         */
         private void enregistrerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (savepath.Length == 0)
@@ -808,11 +870,17 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Open a SaveFileDialog menu to Save the part</summary>
+         */
         private void enregistrersousToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialogSave.ShowDialog();
         }
 
+        /**
+         * <summary>Save a file at the path specified in the SaveFileDialog</summary>
+         */
         private void saveFileDialogSave_FileOk(object sender, CancelEventArgs e)
         {
             savepath = saveFileDialogSave.FileName;
@@ -820,7 +888,9 @@ namespace MA400_export
         }
 
 
-
+        /**
+         * <summary>exit the program</summary>
+         */
         private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -851,6 +921,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Prepare the display whenever we open a file or programm</summary>
+         */
         private void DisplayWhenOpen(bool open)
         {
             if (!open)
@@ -858,8 +931,13 @@ namespace MA400_export
                 gc.reset();
             }
 
+            //get the detected studs from the CAD Document
             List<Circle> ToAdd = this.fs.Studs;
+
+            //clear the current list
             EmptyStuds();
+
+            //and fill it with the correct studs
             foreach (var circle in ToAdd)
             {
                 AddStud(circle);
@@ -875,12 +953,18 @@ namespace MA400_export
             //puis ce sera le display qui va ensuite l'afficher, en plus de ce que le Filesystem va détecter comme goujon et donc qu'il va falloir highlight
         }
 
+        /**
+         * <summary>force the display to refresh whenever we change the selection in the studlist</summary>
+         */
         private void StudList_Display_SelectedIndexChanged(object sender, EventArgs e)
         {
             //refresh the graphics
             WorkZone.Invalidate();
         }
 
+        /**
+         * <summary>Show the options form when the option button is clicked</summary>
+         */
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //ouvre les options
@@ -891,6 +975,9 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Rotate the part when the rotate 180° button is clicked</summary>
+         */
         private void rotateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
