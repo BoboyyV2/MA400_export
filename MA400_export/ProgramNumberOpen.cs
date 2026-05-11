@@ -68,6 +68,9 @@ namespace MA400_export
             return true;
         }
 
+        /**
+         * <summary>accept if the program number if valid, show an error otherwise</summary>
+         */
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if (!getProgramNumber())
@@ -97,6 +100,9 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Cancel the form</summary>
+         */
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;

@@ -9,10 +9,6 @@ namespace MA400_export
     partial class MA400_export
     {
 
-        
-       
-
-
 
         /// <summary>
         /// Variable nécessaire au concepteur.

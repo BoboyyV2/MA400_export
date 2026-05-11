@@ -20,7 +20,16 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace MA400_export
 {
-    
+
+
+    //mode d'edition à la souris
+    public enum EditMode
+    {
+        Cursor,
+        SelectStud,
+        AddStud,
+        RemoveStud
+    }
 
     public partial class MA400_export : Form
     {

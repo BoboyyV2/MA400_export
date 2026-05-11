@@ -34,7 +34,6 @@ namespace MA400_export
          * <summary>the static path to the exported svg, beware of remnant</summary>
          */
         private String path = Properties.Settings.Default.OutputPath + Constants.tmpPath + "display.svg";//.exe loc
-        //private String path = AppDomain.CurrentDomain.BaseDirectory + Constants.tmpPath + "truite.jpg";//used for debug
 
 
         DXFImporter.Canvas canvas = null;
@@ -62,12 +61,18 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Reset the GraphicsContainer</summary>
+         */
         public void reset()
         {
             CloseCanvas();
         }
 
-
+        /**
+         * <summary>Get the layout information from the canvas</summary>
+         * <remarks>Make sure this is up to date.</remarks>
+         */
         public void GetLayout()
         {
             canvas.checkLayout();
@@ -158,21 +163,23 @@ namespace MA400_export
 
         }
 
-
+        /**
+         * <summary>Draw the coordiante system</summary>
+         */
         private void Draw_CoordSystem()
         {
 
             Pen pen = new Pen(Color.Green);
-            // Create font and brush.
+            //create font and brush.
             Font drawFont = new Font("Arial", 11);
             SolidBrush drawBrush = new SolidBrush(Color.Green);
-            // Create point for upper-left corner of drawing.
+            //create point for upper-left corner of drawing.
             PointF Xtarget = PointF.Empty;
             PointF Ytarget = PointF.Empty;
             PointF Origin = PointF.Empty;
 
 
-            // Set Maximum and minimum points
+            //set maximum and minimum points
             Xtarget.X = 50;
             Xtarget.Y = 20;
             Ytarget.X = 20;
@@ -182,7 +189,7 @@ namespace MA400_export
 
 
 
-            // Draw (dashed) connection line
+            //draw (dashed) connection line
             int delta = 4;
             float[] dashValues = { 6, delta };
             Pen dashPen = new Pen(Color.Green, 1);
@@ -229,6 +236,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Draw the wWorkzone limits</summary>
+         */
         private void Draw_WorkZoneLimits()
         {
 
@@ -246,6 +256,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Open & setup the Canvas to draw the ddxf file on the graphics aswell as setting the layout informations</summary>
+         */
         public void OpenCanvas()
         {
             canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.ddxf");
@@ -266,15 +279,22 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Reset the canvas aswell as the variable that might have been modified</summary>
+         */
         public void CloseCanvas() 
         {
             canvas = new Canvas();
             DXFImporter.Shape.Dimension = new RectangleF();
             DXFImporter.Shape.PartOffset = new PointF();
+
+            //may not be needed
             DXFImporter.Shape.OriginOffset = new PointF();
         }
 
-
+        /**
+         * <summary>Draw the current part into the graphics</summary>
+         */
         public void DrawDXF()
         {
             if (open)
@@ -283,6 +303,9 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Draw all the reference circles into the graphics</summary>
+         */
         private void Draw_ReferenceCircles()
         {
             float radius = 6.5f;//6.5mm
@@ -308,8 +331,10 @@ namespace MA400_export
 
         }
 
-        
 
+        /**
+         * <summary>Paint everything onto the graphics</summary>
+         */
         public void Paint(IEnumerable<Stud> Studs, IEnumerable<Stud>SelectedStuds, PointF offset)
         {
             //draw the basic from of the workzone

@@ -21,16 +21,6 @@ using System.Windows.Forms;
 namespace MA400_export
 {
 
-   
-
-    public enum EditMode
-    {
-        Cursor,
-        SelectStud,
-        AddStud,
-        RemoveStud
-    }
-
     public enum Machine
     {
         MA400S,
@@ -58,9 +48,12 @@ namespace MA400_export
         private BindingList<Stud> StudsTMP = null ;
 
 
-
+        //generatueur de fichier de sortie dédié
         private ProdFileGenerator Gen;
 
+        //information de layout de la pièce courante
+        //attention l'accès doit se faire uniquement après initialisation (ouverture du fichier) 
+        //USE WITH CAUTION
         public Layout_Info layout { get; set;  }
 
 
@@ -172,7 +165,7 @@ namespace MA400_export
         * Stud candidate will not be removed from the document.<br></br>
         * When using ddxf file, the studs to scan are stored in a .sdxf file with the same name.</summary>
         * <returns> true if everything went well, false otherwise </returns>
-        * <remarks>this function is used for ddxf file</remarks>
+        * <remarks>this function is used for ddxf & sdxf file</remarks>
         */
         private bool ScanDdxfEntities(string path)
         {
@@ -181,7 +174,9 @@ namespace MA400_export
             {
                 return false;
             }
+            //path du fichier sans l'extension
             string savepath = Path.GetDirectoryName(path) + @"\" + Path.GetFileNameWithoutExtension(path);
+
             if (File.Exists(savepath + ".sdxf"))
             {
                 CadDocument sdxf = new CadDocument();
@@ -192,14 +187,17 @@ namespace MA400_export
                     reader.OnNotification += NotificationHelper.LogConsoleNotification;
                     sdxf = reader.Read();
 
+                    //cherche dans les entités du sdxf(ne contenant que des goujons normalement)
                     foreach (var item in sdxf.Entities)
                     {
+                        //verif quand même
                         switch (item.ObjectType)
                         {
                             case ObjectType.CIRCLE:
                                 {
                                     Circle candidate = (Circle)item;
 
+                                    //ajoute les goujon au document courant
                                     if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
                                     {
                                         Circle stud = ApplyTransform(candidate, layout.offset, layout.dimension, layout.scale);
@@ -226,6 +224,11 @@ namespace MA400_export
 
         }
 
+
+        /**
+         * <summary>Normalize an angle in radian for it to be between 0 ans 2PI</summary>
+         * <param name="angle">angle given in radians</param>
+         */
         public double NormalizeRadians(double angle)
         {
             double TwoPI = Math.PI * 2;
@@ -236,6 +239,7 @@ namespace MA400_export
 
         /**
          * <summary>flip a single entity in the document on the X axis</summary>
+         * <remarks>handle arcs angles aswell</remarks>
          */
         private void FlipEntityX(ref List<Entity> FlippedEntities, Entity e)
         {
@@ -297,6 +301,7 @@ namespace MA400_export
 
         /**
          * <summary>flip a single entity in the document on the Y axis</summary>
+         * <remarks>handle arcs angles aswell</remarks>
          */
         private void FlipEntityY(ref List<Entity> FlippedEntities, Entity e)
         {
@@ -359,9 +364,9 @@ namespace MA400_export
         }
 
         /**
-         * <summary>rotate each stud on the part 180° and add them newStuds</summary>
-         * <param name="newStuds">The stud list to be filled by the rotated studs</param> 
-         * <param name="Studs">The stud list to be rotated</param>
+         * <summary>rotate each stud on the part 180°</summary>
+         * <remarks>require the layout to be up to date</remarks>
+         * <returns>the list of rotated studs</returns>
          */
         private BindingList<Stud> GetRotatedStuds()
         {
@@ -389,7 +394,8 @@ namespace MA400_export
 
 
         /**
-         * <summary>rotate the part at 180 degrees by fliping it back on the X axis then on the Y axis.</summary>
+         * <summary>rotate the part at 180 degrees by fliping it back on the X axis then on the Y axis making sure the part stays on the same face.<br></br>
+         * This function must be used along with the OpenFlipFileLayout() function </summary>
          * <remarks>this opération can be done a second time to cancel the effects.</remarks>
          */
         public void RotatePart180()
@@ -402,10 +408,7 @@ namespace MA400_export
             FlipEntitiesX();
             FlipEntitiesY();
 
-            //then flip the modified studs aswell
-            //thus we will not scan the entities when we reopen and we must keep the studs
-            //TODO
-
+            //save les studs dans une liste temporaire
             BindingList<Stud> oldStuds = new BindingList<Stud>();
             foreach (Stud s in Studs)
             {
@@ -414,13 +417,14 @@ namespace MA400_export
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
-            Directory.CreateDirectory(tmpPath);
             //save dans un fichier temporaire pour l'affichage / traitement
+            Directory.CreateDirectory(tmpPath);
             SaveToFile(tmpPath  + @"\dxftmp.ddxf");
 
             //ré open le fichier tmp en ddxf
-            reset();
             OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
+
+            //stock les stud non flipped => utilisés dans OpenFlipFileLayout()
             StudsTMP = oldStuds;
 
 
@@ -431,9 +435,14 @@ namespace MA400_export
          */
         public void OpenFlipFileLayout(Layout_Info layout)
         {
+            //set the layout
             this.layout = layout;
+
+            //rotate the studs according to the updated layout
             StudsTMP = GetRotatedStuds();
-            //Studs.AddRange(StudsTMP);//no addrange defined 
+
+            //no addrange defined 
+            //fill the local stud list with the temporary one then clear and void the temporary list
             foreach (Stud stud in StudsTMP)
             {
                 Studs.Add(stud);
@@ -460,6 +469,7 @@ namespace MA400_export
                 return false;
             }
 
+            //read the ddxf file for the graphics
             using (DxfReader reader = new DxfReader(path))
             {
                 //Inform about non critical error
@@ -487,6 +497,7 @@ namespace MA400_export
         public void OpenDdxfFileLayout(Layout_Info layout, string path)
         {
             this.layout = layout;
+            //read the sdxf for the studs
             ScanDdxfEntities(path);
         }
 
@@ -514,10 +525,8 @@ namespace MA400_export
                 Doc = reader.Read();
             }
 
-            //DEBUG
+            //flip the part so that the inner part faces upward
             FlipEntitiesX();
-
-
 
             string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
 
@@ -547,7 +556,7 @@ namespace MA400_export
 
 
         /**
-        * <summary>attempt to open a program's file via it's program number and to import it into the application</summary>
+        * <summary>attempt to open a program's file via it's program number and import it into the application</summary>
         */
         public GeneratorData OpenProdFile(int ProgramNumber)
         {
@@ -794,9 +803,11 @@ namespace MA400_export
         public void SaveToFile(BindingList<Stud> Studs, string path)
         {
             /*________________________________DXF_COPY________________________________*/
-            //creation d'un nouveau document pour accomoder la sauvegarde du document
+
+            //creation d'un nouveau document pour accomoder la sauvegarde du document (copie du document courant) 
             CadDocument ddxf = new CadDocument();
             string savepath = Path.GetDirectoryName(path) + @"\" + Path.GetFileNameWithoutExtension(path);
+
             //ajout de clones de toutes les entités presentes dans le doc dans la sauvegarde.
             foreach (Entity entity in Doc.Entities)
             {
@@ -819,7 +830,8 @@ namespace MA400_export
             }
 
             /*________________________________DXF_STUDS________________________________*/
-            //creation d'un nouveau document pour accomoder la sauvegarde des goujons
+
+            //creation d'un nouveau document pour accomoder la sauvegarde des goujons (goujons détectés dans de document)
             CadDocument sdxf = new CadDocument();
 
             //ajout de clones des goujons dans la sauvegarde.

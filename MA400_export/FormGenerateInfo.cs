@@ -10,6 +10,9 @@ using System.Windows.Forms;
 
 namespace MA400_export
 {
+    /**
+    * The <c>FormGenerateInfo</c> class is used to retrieve various information on the part & program from the user in order to generate the program files
+    */
     public partial class FormGenerateInfo : Form
     {
 
@@ -19,6 +22,7 @@ namespace MA400_export
 
         bool IsNew;
 
+        
         public FormGenerateInfo()
         {
             Today = DateTime.Now;
@@ -55,6 +59,11 @@ namespace MA400_export
 
         }
 
+        /**
+         * <returns>the current program number to generate to.</returns>
+         * <remarks>It is either the number of the already imported program if there is one<br></br>
+         * or the current value of the NewProgramNumber setting variable.</remarks>
+         */
         public int GetProgramNumber()
         {
             if(IsNew)
@@ -63,6 +72,10 @@ namespace MA400_export
             }
             return Data.ProgramNumber;
         }
+
+        /**
+         * <summary>Do the necessary change once a generation is validated</summary>
+         */
         public void ValidateProgram()
         {
             if (IsNew)
@@ -72,12 +85,17 @@ namespace MA400_export
             }
         }
 
+
         private bool CheckInput()
         {
             //message d'erreur eventuel
             return true;
         }
 
+
+        /**
+         * <summary>fill the Data information with informations given in the form's textbox</summary>
+         */
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if( CheckInput())
@@ -105,6 +123,9 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Cancel the form without saving</summary>
+         */
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
