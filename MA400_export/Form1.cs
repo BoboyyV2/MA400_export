@@ -1040,7 +1040,16 @@ namespace MA400_export
 
 
 
+        /*___________________________________________PANEL_RESIZE___________________________________________*/
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            WorkZone.Size = new Size(this.ClientSize.Width - Constants.Client_panel_delta_width, this.ClientSize.Height - Constants.Client_panel_delta_height);
+
+        }
+
         /*___________________________________________|___________________________________________*/
+
     }
 }
 

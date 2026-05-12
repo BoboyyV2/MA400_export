@@ -36,9 +36,6 @@ namespace MA400_export
         /// </summary>
         private void InitializeComponent()
         {
-            //MODIF
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
-
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MA400_export));
             this.WorkZone = new System.Windows.Forms.Panel();
@@ -499,11 +496,11 @@ namespace MA400_export
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.WorkZone);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MA400_export";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MA400_Export";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip2.ResumeLayout(false);

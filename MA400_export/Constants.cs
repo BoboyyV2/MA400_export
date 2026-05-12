@@ -54,6 +54,10 @@ namespace MA400_export
 
         public const int line_per_NC_cmd = 21;
 
+        public const int Client_panel_delta_width = 280;
+        public const int Client_panel_delta_height = 80;
+
+
     }
-    
+
 }
