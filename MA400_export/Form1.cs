@@ -358,6 +358,12 @@ namespace MA400_export
          */
         private bool AddStudButton_CheckInput(string X_string, string Y_string, string Diam_string)
         {
+            if (!fs.open)
+            {
+                MessageBox.Show("Aucune pièce ouverte sur laquelle placer un goujon.");
+                return false;
+            }
+
             string regexp_int = @"^\s*[0-9]+\s*$";//int
 
             string regexp_nb = @"^[0-9]+(\.[0-9]+)?$";//nombre
@@ -439,7 +445,11 @@ namespace MA400_export
          */
         private bool AddStudButtonOnClick_CheckInput(double X, double Y, string Diam_string)
         {
-
+            if (!fs.open)
+            {
+                MessageBox.Show("Aucune pièce ouverte sur laquelle placer un goujon.");
+                return false;
+            }
             string regexp_int = @"\s*[0-9]+\s*";
             string error = "";
 
