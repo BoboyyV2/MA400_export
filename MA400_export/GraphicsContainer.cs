@@ -1,7 +1,4 @@
 ﻿using ACadSharp.Entities;
-using Svg;
-using Svg.FilterEffects;
-using Svg.Transforms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

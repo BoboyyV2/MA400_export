@@ -2,7 +2,6 @@
 using ACadSharp.Entities;
 using ACadSharp.IO;
 using CSMath;
-using Svg;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
