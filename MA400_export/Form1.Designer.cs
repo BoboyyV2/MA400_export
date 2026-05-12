@@ -459,7 +459,7 @@ namespace MA400_export
             // 
             this.buttonGenerer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonGenerer.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
-            this.buttonGenerer.Location = new System.Drawing.Point(850, 496);
+            this.buttonGenerer.Location = new System.Drawing.Point(850, 534);
             this.buttonGenerer.Name = "buttonGenerer";
             this.buttonGenerer.Size = new System.Drawing.Size(160, 54);
             this.buttonGenerer.TabIndex = 22;
@@ -496,6 +496,7 @@ namespace MA400_export
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.WorkZone);
+            this.MinimumSize = new System.Drawing.Size(780, 540);
             this.Name = "MA400_export";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MA400_Export";
