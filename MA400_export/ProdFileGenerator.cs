@@ -1,5 +1,6 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
+using ACadSharp.Objects.Evaluations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -49,10 +50,11 @@ namespace MA400_export
         private RectangleF Dimension;
         private PointF Offset;
         private Scale Scalefact;
+        private bool Rotated;
 
 
 
-        public ProdFileGenerator( BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)//should work but C# and ref being themselves 
+        public ProdFileGenerator( BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, bool Rotated)//should work but C# and ref being themselves 
         {
             this.Studs = Studs;
             this.Entities = Entities;
@@ -60,6 +62,7 @@ namespace MA400_export
             this.Offset = Offset;
             this.Data = Data;
             this.Scalefact = Scalefact;
+            this.Rotated = Rotated;
 
         }
 
@@ -74,25 +77,8 @@ namespace MA400_export
         private string FormatValue(double value)
         {
             CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
-            /*
-            double deci = (value % 1);
-            if (deci > 0.951)
-            {
-                deci = 1; //arrondi pour écarter l'imprécision des float
-            }
-
-            if ( ( (deci * 100) % 10 ) >= 1)
-            {
-                return value.ToString("0.00", culture);
-            }
-            if (((deci * 10) % 10) >= 1)
-            {
-                return value.ToString("0.0", culture);
-            }
-
-            return value.ToString("0", culture) ;
-            */
-            return value.ToString(culture);
+            
+            return value.ToString("0.############################", culture);
         }
 
 
@@ -239,7 +225,7 @@ namespace MA400_export
             sw.WriteLine( "N6 (Zeichnungsnummer : " + Data.DrawingNumber + ")" );
             sw.WriteLine( "N7 (Erstellt am      : " + Data.DateCreation + ")" );
             sw.WriteLine( "N8 (Geändert am      : " + Data.DateModification + ")" );
-            string nullpoint = $"X{Dimension.X} Y{Dimension.Y} Z0/{Dimension.Width}/{Dimension.Height}";
+            string nullpoint = $"X{Dimension.X - Offset.X} Y{Dimension.Y - Offset.Y} Z0/{Dimension.Width}/{Dimension.Height}";
             sw.WriteLine( "N9 (Nullpunkt        : " + nullpoint + ")" );
             //9 lignes
         }
@@ -378,10 +364,13 @@ namespace MA400_export
             int numlines = 6;//TODO, un moyen de savoir combien il y en a de manière auto
             using (StreamWriter sw = File.CreateText(path + ".AN4"))
             {
+                
                 WriteLine0(sw, 1);
+                /*
                 WriteEmptyLine(sw, numlines);
                 WriteLine0(sw, 2);
-
+                */
+                WriteEmptyLine(sw, numlines);
             }
         }
 
@@ -415,7 +404,7 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".BST"))
             {
-                WriteLine0(sw, 5);
+                WriteLine0(sw, 8);
                 sw.WriteLine(" " + reoccuring_number );
 
                 int skippedlines = 5;//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
@@ -585,8 +574,8 @@ namespace MA400_export
             using (StreamWriter sw = File.CreateText(path + ".GPH"))
             {
                 //TODO graphic par, commandes sur 11 lignes, c'est quoi ce 1er nombre
-                int magicnumber = 6;
-                sw.WriteLine(magicnumber );
+                int NumCMD_minus_one = Entities.Count - 1 ;
+                sw.WriteLine(NumCMD_minus_one);
                 foreach (var entity in Entities)
                 {
                     GenerateGPH_CMD(sw, entity);
@@ -732,7 +721,15 @@ namespace MA400_export
                 sw.WriteLine(magicnumber );
                 sw.WriteLine(magicnumber );
                 sw.WriteLine(magicnumber );
-                sw.WriteLine(magicnumber );
+                int rotation_value = 0;
+                if (Rotated)
+                {
+                    rotation_value = 180;
+                }
+                {
+
+                }
+                sw.WriteLine(rotation_value );
 
             }
         }

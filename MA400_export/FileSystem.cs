@@ -55,7 +55,7 @@ namespace MA400_export
         //USE WITH CAUTION
         public Layout_Info layout { get; set;  }
 
-
+        private bool rotated = false;
 
          /**
           * <summary>create the file systeme with a new document</summary>
@@ -449,6 +449,8 @@ namespace MA400_export
             StudsTMP.Clear();
             StudsTMP = null;
 
+            //inverse la valeur 
+            rotated = !rotated;
         }
 
 
@@ -888,7 +890,7 @@ namespace MA400_export
          */
         public void GenerateProdFiles( BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact) 
         {
-            Gen = new ProdFileGenerator( Studs, Doc.Entities,Dimension, Offset, Data, Scalefact);
+            Gen = new ProdFileGenerator( Studs, Doc.Entities,Dimension, Offset, Data, Scalefact, rotated);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 
@@ -897,7 +899,7 @@ namespace MA400_export
          */
         public void GenerateProdFiles( BindingList<Stud> Studs,GeneratorData Data, Layout_Info layout)
         {
-            Gen = new ProdFileGenerator( Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale);
+            Gen = new ProdFileGenerator( Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotated);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 

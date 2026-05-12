@@ -36,6 +36,9 @@ namespace MA400_export
         /// </summary>
         private void InitializeComponent()
         {
+            //MODIF
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MA400_export));
             this.WorkZone = new System.Windows.Forms.Panel();
