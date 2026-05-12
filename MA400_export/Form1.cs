@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -323,7 +324,33 @@ namespace MA400_export
             WorkZone.Invalidate();
         }
 
+        /**
+         * <summary>Tells if a circle can fit into the part.</summary>
+         * <returns>true if it fits, false otherwise</returns>
+         * <remarks>this uses a rectangle dimension which means it will accept more than it should as the part might contain non rectangular outer limits which are not fully supported</remarks>
+         */
+        private bool IsPointInBounds(Circle c, ref string error)
+        {
+            bool InBounds = true;
+            //Bounds
+            if ( (c.Center.X > (Constants.WorkZoneLimits_Coord.X - Constants.Origin_Coord.X - c.Radius) ) || //hors workzone droite
+                 (c.Center.X < c.Radius) || // hors zone origin
+                 (c.Center.X > (gc.layout.dimension.Width - c.Radius) ) ) //hors pièce X
+            {
+                error += "La coordonée X saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
+                InBounds = false;
+            }
+            if ( (c.Center.Y > (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y - c.Radius) ) || // hors workzone bas
+                 (c.Center.Y < c.Radius) || // hors zone origin
+                 (c.Center.Y > gc.layout.dimension.Height - c.Radius)) //hors pièce Y
+            {
+                error += "La coordonée Y saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
+                InBounds = false;
+            }
 
+            return InBounds;
+        }
+        
 
         /**
          * <summary>Tell if the input given for the addstudbutton is valid or not and display an error message if not.</summary>
@@ -337,7 +364,7 @@ namespace MA400_export
             string error = "";
 
             //correct form
-            if (!System.Text.RegularExpressions.Regex.IsMatch(X_string, regexp_int))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(X_string, regexp_nb))
             {
                 if (X_string.Length > 0)
                 {
@@ -348,7 +375,7 @@ namespace MA400_export
                     error += "Veuillez saisir une coordonnée X pour ajouter un goujon.\r\n";
                 }
             }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(Y_string, regexp_int))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(Y_string, regexp_nb))
             {
                 if (Y_string.Length > 0)
                 {
@@ -376,27 +403,26 @@ namespace MA400_export
                 return false;
             }
             //correct values
-            Int32 X = Int32.Parse(X_string);
-            Int32 Y = Int32.Parse(Y_string);
-            int D = Int32.Parse(Diam_string);
+            double X = Convert.ToDouble(X_string, CultureInfo.InvariantCulture);
+            double Y = Convert.ToDouble(Y_string, CultureInfo.InvariantCulture);
+            Int32 D = Int32.Parse(Diam_string);
 
-            //Bounds
-            //TODO remplacer la zone de travail par la pièce en elle même, aussi mettre une sécu si il n'y a pas de pièce
-            if (X > ( Constants.WorkZoneLimits_Coord.X - Constants.Origin_Coord.X ) || X < 0)
-            {
-                error += "La coordonée X saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
-            }
-            if (Y > (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y ) || Y < 0)
-            {
-                error += "La coordonée Y saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
-            }
-
+            //Diam
             if (D != 3 && D != 4)
             {
                 error += "Le diamètre du goujon saisi est invalide.\r\n";
             }
+            //Bounds
+            Circle c = new Circle();
+            c.Center = new CSMath.XYZ(X, Y, 0);
+            c.Radius = (double)D / 2.0;
+            string bound_error = "";
+            if ( !IsPointInBounds(c, ref bound_error) )
+            {
+                error += bound_error;
+            }
 
-
+            //Error
             if (error.Length > 0)
             {
                 MessageBox.Show(error);
@@ -437,22 +463,22 @@ namespace MA400_export
             //correct values
             int D = Int32.Parse(Diam_string);
 
-            //Bounds
-            //TODO remplacer la zone de travail par la pièce en elle même, aussi mettre une sécu si il n'y a pas de pièce
-
-            if (X > (Constants.WorkZoneLimits_Coord.X - Constants.Origin_Coord.X) || X < 0)
-            {
-                error += "La coordonée X n'est pas un emplacement valide pour poser un goujon.\r\n";
-            }
-            if (Y > (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y) || Y < 0)
-            {
-                error += "La coordonée Y saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
-            }
-
+            //Diam
             if (D != 3 && D != 4)
             {
                 error += "Le diamètre du goujon saisi est invalide.\r\n";
             }
+            //Bounds
+            Circle c = new Circle();
+            c.Center = new CSMath.XYZ(X, Y, 0);
+            c.Radius = (double)D / 2.0;
+            string bound_error = "";
+            if ( !IsPointInBounds(c, ref bound_error))
+            {
+                error += bound_error;
+            }
+
+            //Error
 
 
             if (error.Length > 0)
@@ -494,10 +520,10 @@ namespace MA400_export
 
 
 
-            int x = Int32.Parse(X_string);
-            int y = Int32.Parse(Y_string);
+            double x = Convert.ToDouble(X_string, CultureInfo.InvariantCulture);
+            double y = Convert.ToDouble(Y_string, CultureInfo.InvariantCulture);
             int diam = Int32.Parse(Diam_string);
-            Circle Stud = createStud((double)x, (double)y, ((double)diam) / 2);
+            Circle Stud = createStud(x, y, ((double)diam) / 2);
 
 
 
