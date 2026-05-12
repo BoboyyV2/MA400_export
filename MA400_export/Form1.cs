@@ -57,6 +57,7 @@ namespace MA400_export
         GeneratorData data = new GeneratorData();
         public bool IsNew = true;
 
+        private double currentFramedCircleHash = -1.0;
 
         public MA400_export()
         {
@@ -177,6 +178,33 @@ namespace MA400_export
         private void WorkZone_MouseMove(object sender, MouseEventArgs e)
         {
             UpdateCoords();
+            Circle c;
+            fs.TryFrame(CursorPosition, out c );
+
+            //security
+            double hash = Util.HashCircleCenter(c.Center);
+
+            //pas de changement
+            if (hash == currentFramedCircleHash)
+            {
+                return;
+            }
+
+            //update
+            currentFramedCircleHash = hash;
+
+            // < 0 = pas dans un cercle
+            if (hash < 0 )
+            {
+                gc.RemoveFramedCircle();
+            }
+            else
+            {
+                gc.FrameCircle(c);
+
+            }
+
+            WorkZone.Invalidate();
         }
 
         /**

@@ -234,6 +234,55 @@ namespace MA400_export
             return ( (angle % TwoPI) + TwoPI) % TwoPI;
         }
 
+
+        /*_____________________________________FRAME_____________________________________*/
+
+
+        public bool IsInsideCircle(PointF point, Circle circle)
+        {
+            //si la distance entre le point et le centre du cercle est inférieure au rayon
+            if( ( (circle.Center.X - point.X) * (circle.Center.X - point.X)
+                + (circle.Center.Y - point.Y) * (circle.Center.Y - point.Y) ) //disante au carré
+                < (circle.Radius * circle.Radius) ) // rayon au carré
+            { 
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * <summary>check if the cursor is inside a circle and set c to the circle it is in</summary>
+         * <remarks>will set c to  -1 ; -1 if no circle matches.</remarks>
+         */
+        public void TryFrame(PointF CursorPosition, out Circle c)
+        {
+            c = new Circle();
+                c.Center = new XYZ(-1, -1, 0);
+
+            if (!open)
+            {
+                //security
+                return;
+            }
+
+            foreach(var entity in Doc.Entities)
+            {
+                if (entity.ObjectType == ObjectType.CIRCLE)
+                {
+                    Circle candidate = (Circle)entity;
+                    if (IsInsideCircle(CursorPosition, candidate))
+                    {
+                        c.Center = new XYZ( candidate.Center.X, candidate.Center.Y , 0);
+                        c.Radius = candidate.Radius;
+                        return;
+                    }
+
+                }
+
+            }
+
+        }
+
         /*_____________________________________FLIP_____________________________________*/
 
         /**

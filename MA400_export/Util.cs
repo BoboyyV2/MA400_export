@@ -14,6 +14,14 @@ namespace MA400_export
     {
 
         /**
+         * <summary>Hash the center point of a circle so that we can check if two are the same :)</summary>
+         */
+        public static double HashCircleCenter(XYZ CircleCenter) 
+        {
+            return (CircleCenter.X + CircleCenter.Y * (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y));
+        }
+
+        /**
          * <summary>Adjust a point to the new scale</summary>
          * <returns>a new point that have been adjusted to the new scale</returns>
          */

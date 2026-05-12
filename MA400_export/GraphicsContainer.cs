@@ -41,12 +41,14 @@ namespace MA400_export
         //dimensions variables 
         public Layout_Info layout;
 
+        private Circle FramedCircle;
 
         public GraphicsContainer(Graphics graphics)
         {
             this.graphics = graphics;
             open = false;
             layout = new Layout_Info();
+            FramedCircle = null;
 
         }
 
@@ -55,6 +57,7 @@ namespace MA400_export
             this.graphics = null;
             open = false;
             layout = new Layout_Info();
+            FramedCircle = null;
 
         }
 
@@ -64,6 +67,8 @@ namespace MA400_export
         public void reset()
         {
             CloseCanvas();
+            FramedCircle = null;
+
         }
 
         /**
@@ -328,7 +333,21 @@ namespace MA400_export
 
         }
 
+       
+        public void FrameCircle(Circle c)
+        {
+            FramedCircle = c;
+        }
 
+        public void RemoveFramedCircle()
+        {
+            FramedCircle = null;
+        }
+
+        private void DrawFrame()
+        {
+            //TODO
+        }
         /**
          * <summary>Paint everything onto the graphics</summary>
          */
@@ -351,6 +370,10 @@ namespace MA400_export
 
             Draw_Studs(Studs);
             Draw_Selected_Studs(SelectedStuds);
+
+            
+            DrawFrame();
+           
 
         }
 
