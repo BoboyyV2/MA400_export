@@ -144,7 +144,7 @@ namespace MA400_export
             // 
             this.ouvrirprogramToolStripMenuItem.Name = "ouvrirprogramToolStripMenuItem";
             this.ouvrirprogramToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.ouvrirprogramToolStripMenuItem.Text = "&Ouvrir &program";
+            this.ouvrirprogramToolStripMenuItem.Text = "&Ouvrir un program";
             this.ouvrirprogramToolStripMenuItem.Click += new System.EventHandler(this.ouvrirprogramToolStripMenuItem_Click);
             // 
             // toolStripSeparator
