@@ -334,6 +334,14 @@ namespace MA400_export
         }
 
         /**
+         * <summary>public getter for FramedCircle</summary>
+         */
+        public Circle GetFramedCircle()
+        {
+            return FramedCircle;
+        }
+
+        /**
          * <summary>public setter for FramedCircle</summary>
          */
         public void FrameCircle(Circle c)

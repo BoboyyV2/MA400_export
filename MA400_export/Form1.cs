@@ -802,8 +802,8 @@ namespace MA400_export
 
         /**
          * <summary>
-         * Handle the behavior when clicking somwhere on the WorkZone using the add mode.<br></br>
-         * Add a stud at the clicked coordinates if possible, show an error if not.
+         * Handle the behavior when clicking somwhere on the WorkZone using the add mode and left click.<br></br>
+         * Add a stud at the clicked coordinates if possible, show an error if it isn't.
          * </summary>
          */
         private void WorkZone_Click_AddStud()
@@ -826,10 +826,40 @@ namespace MA400_export
             this.WorkZone.Refresh();
         }
 
+        /**
+         * <summary>
+         * Handle the behavior when clicking somwhere on the WorkZone using the add mode and right click.<br></br>
+         * Add a stud on the framed circle if possible, show an error otherwise.
+         * </summary>
+         */
+        private void WorkZone_Click_Turn_Framed_Circle_Into_Stud()
+        {
+            Circle c = gc.GetFramedCircle();
+            if (c == null)
+            {
+                return;
+            }
+            string diam_String = this.comboBoxDiam.Text;
+            PointF offseted_p = new PointF( (float)c.Center.X, (float)c.Center.Y);
+            if (!AddStudButtonOnClick_CheckInput((double)offseted_p.X, (double)offseted_p.Y, diam_String))
+            {
+                return;
+            }
+            double radius = (Double.Parse(diam_String)) / 2;
+            Circle circle = createStud((double)offseted_p.X, (double)offseted_p.Y, radius);
+            if (!Util.IsPossibleToAddStud(circle, fs.Studs))
+            {
+                return;
+            }
+
+            AddStud(circle);
+            this.WorkZone.Refresh();
+        }
+
 
         /**
          * <summary>
-         * Handle the behavior when clicking somwhere on the WorkZone using the remove mode.<br></br>
+         * Handle the behavior when clicking somwhere on the WorkZone using the remove mode and left click.<br></br>
          * Remove the clicked stud if there is one, show a message if no stud were found.
          * </summary>
          */
@@ -856,6 +886,38 @@ namespace MA400_export
             this.WorkZone.Refresh();
         }
 
+        /**
+         * <summary>
+         * Handle the behavior when clicking somwhere on the WorkZone using the remove mode and right click.<br></br>
+         * Remove framed stud if there is one, show a message if no stud were found.
+         * </summary>
+         */
+        private void WorkZone_Click_Remove_Framed_Stud()
+        {
+            Circle c = gc.GetFramedCircle();
+            if (c == null)
+            {
+                return;
+            }
+            PointF p_rm = new PointF((float)c.Center.X, (float)c.Center.Y);
+
+            bool removed = false;
+            foreach (Stud stud in fs.Studs)
+            {
+                if (Util.getStudDistance(p_rm, stud.circle) < (stud.circle.Radius))
+                {
+                    fs.Studs.Remove(stud);
+                    removed = true;
+                    break;
+                }
+
+            }
+            if (!removed)
+            {
+                MessageBox.Show("aucun goujon trouvé à cette position.");
+            }
+            this.WorkZone.Refresh();
+        }
 
         /**
          * <summary>Handle the behavior when clicking somwhere on the WorkZone depending on the mode</summary>
@@ -887,6 +949,24 @@ namespace MA400_export
                         break;
                 }
             }
+            else if (e.Button == MouseButtons.Right)
+            {
+
+                switch (editMode)
+                {
+
+                    //select
+                    case EditMode.RemoveStud:
+                        WorkZone_Click_Remove_Framed_Stud();
+                        break;
+
+                    //add
+                    case EditMode.AddStud:
+                        WorkZone_Click_Turn_Framed_Circle_Into_Stud();
+                        break;
+                }
+            }
+
         }
 
        
