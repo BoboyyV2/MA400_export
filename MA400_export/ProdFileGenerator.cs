@@ -404,10 +404,10 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".BST"))
             {
-                WriteLine0(sw, 8);
+                WriteLine0(sw, 5);
                 sw.WriteLine(" " + reoccuring_number );
 
-                int skippedlines = 5;//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
+                int skippedlines = 8;//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
                 WriteEmptyLine(sw, skippedlines);
 
                 int magicnumber = 2;
