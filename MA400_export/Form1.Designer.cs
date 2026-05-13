@@ -80,6 +80,10 @@ namespace MA400_export
             this.buttonGenerer = new System.Windows.Forms.Button();
             this.saveFileDialogSave = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.labelCursorPosition = new System.Windows.Forms.Label();
+            this.labelHoveredCircle = new System.Windows.Forms.Label();
+            this.labelHoveredCircleX = new System.Windows.Forms.Label();
+            this.labelHoveredCircleY = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -322,7 +326,7 @@ namespace MA400_export
             // 
             this.YCoord_Display.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.YCoord_Display.AutoSize = true;
-            this.YCoord_Display.Location = new System.Drawing.Point(540, 659);
+            this.YCoord_Display.Location = new System.Drawing.Point(585, 659);
             this.YCoord_Display.Name = "YCoord_Display";
             this.YCoord_Display.Size = new System.Drawing.Size(71, 13);
             this.YCoord_Display.TabIndex = 11;
@@ -332,7 +336,7 @@ namespace MA400_export
             // 
             this.XCoord_Display.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.XCoord_Display.AutoSize = true;
-            this.XCoord_Display.Location = new System.Drawing.Point(468, 659);
+            this.XCoord_Display.Location = new System.Drawing.Point(513, 659);
             this.XCoord_Display.Name = "XCoord_Display";
             this.XCoord_Display.Size = new System.Drawing.Size(71, 13);
             this.XCoord_Display.TabIndex = 12;
@@ -472,11 +476,51 @@ namespace MA400_export
             this.saveFileDialogSave.DefaultExt = "ddxf";
             this.saveFileDialogSave.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialogSave_FileOk);
             // 
+            // labelCursorPosition
+            // 
+            this.labelCursorPosition.AutoSize = true;
+            this.labelCursorPosition.Location = new System.Drawing.Point(458, 659);
+            this.labelCursorPosition.Name = "labelCursorPosition";
+            this.labelCursorPosition.Size = new System.Drawing.Size(49, 13);
+            this.labelCursorPosition.TabIndex = 23;
+            this.labelCursorPosition.Text = "Curseur :";
+            // 
+            // labelHoveredCircle
+            // 
+            this.labelHoveredCircle.AutoSize = true;
+            this.labelHoveredCircle.Location = new System.Drawing.Point(225, 659);
+            this.labelHoveredCircle.Name = "labelHoveredCircle";
+            this.labelHoveredCircle.Size = new System.Drawing.Size(43, 13);
+            this.labelHoveredCircle.TabIndex = 26;
+            this.labelHoveredCircle.Text = "Cercle :";
+            // 
+            // labelHoveredCircleX
+            // 
+            this.labelHoveredCircleX.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelHoveredCircleX.AutoSize = true;
+            this.labelHoveredCircleX.Location = new System.Drawing.Point(280, 659);
+            this.labelHoveredCircleX.Name = "labelHoveredCircleX";
+            this.labelHoveredCircleX.Size = new System.Drawing.Size(0, 13);
+            this.labelHoveredCircleX.TabIndex = 25;
+            // 
+            // labelHoveredCircleY
+            // 
+            this.labelHoveredCircleY.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelHoveredCircleY.AutoSize = true;
+            this.labelHoveredCircleY.Location = new System.Drawing.Point(352, 659);
+            this.labelHoveredCircleY.Name = "labelHoveredCircleY";
+            this.labelHoveredCircleY.Size = new System.Drawing.Size(0, 13);
+            this.labelHoveredCircleY.TabIndex = 24;
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 681);
+            this.Controls.Add(this.labelHoveredCircle);
+            this.Controls.Add(this.labelHoveredCircleX);
+            this.Controls.Add(this.labelHoveredCircleY);
+            this.Controls.Add(this.labelCursorPosition);
             this.Controls.Add(this.buttonGenerer);
             this.Controls.Add(this.comboBoxDiam);
             this.Controls.Add(this.label3);
@@ -556,6 +600,10 @@ namespace MA400_export
         private ToolStripMenuItem VueToolStripMenuItem;
         private ToolStripMenuItem rotateToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
+        private Label labelCursorPosition;
+        private Label labelHoveredCircle;
+        private Label labelHoveredCircleX;
+        private Label labelHoveredCircleY;
     }
 }
 

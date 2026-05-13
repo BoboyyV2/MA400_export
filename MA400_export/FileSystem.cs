@@ -1,6 +1,7 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
 using ACadSharp.IO;
+using ACadSharp.Objects;
 using CSMath;
 using System;
 using System.Collections.Generic;
@@ -234,14 +235,16 @@ namespace MA400_export
             return ( (angle % TwoPI) + TwoPI) % TwoPI;
         }
 
+        
 
         /*_____________________________________FRAME_____________________________________*/
 
 
         public bool IsInsideCircle(PointF point, Circle circle)
         {
+
             //si la distance entre le point et le centre du cercle est inférieure au rayon
-            if( ( (circle.Center.X - point.X) * (circle.Center.X - point.X)
+            if ( ( (circle.Center.X - point.X) * (circle.Center.X - point.X)
                 + (circle.Center.Y - point.Y) * (circle.Center.Y - point.Y) ) //disante au carré
                 < (circle.Radius * circle.Radius) ) // rayon au carré
             { 
@@ -269,7 +272,7 @@ namespace MA400_export
             {
                 if (entity.ObjectType == ObjectType.CIRCLE)
                 {
-                    Circle candidate = (Circle)entity;
+                    Circle candidate = ApplyTransform((Circle)entity);
                     if (IsInsideCircle(CursorPosition, candidate))
                     {
                         c.Center = new XYZ( candidate.Center.X, candidate.Center.Y , 0);

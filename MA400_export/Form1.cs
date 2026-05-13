@@ -172,14 +172,22 @@ namespace MA400_export
 
         }
 
-        /**
-         * <summary>Update the coordinates display whenever the mouse moves inside the workzone</summary>
-         */
-        private void WorkZone_MouseMove(object sender, MouseEventArgs e)
+        private void DisplayHoveredCircleCoord(Circle c)
         {
-            UpdateCoords();
+            labelHoveredCircleX.Text = " X = " + c.Center.X.ToString("0.00", CultureInfo.InvariantCulture);
+            labelHoveredCircleY.Text = " Y = " + c.Center.Y.ToString("0.00", CultureInfo.InvariantCulture);
+        }
+
+        private void RemoveDisplayedHoveredCircleCoord()
+        {
+            labelHoveredCircleX.Text = "";
+            labelHoveredCircleY.Text = "";
+        }
+
+        private void TryFrame()
+        {
             Circle c;
-            fs.TryFrame(CursorPosition, out c );
+            fs.TryFrame(CursorPosition, out c);
 
             //security
             double hash = Util.HashCircleCenter(c.Center);
@@ -194,17 +202,27 @@ namespace MA400_export
             currentFramedCircleHash = hash;
 
             // < 0 = pas dans un cercle
-            if (hash < 0 )
+            if (hash < 0)
             {
                 gc.RemoveFramedCircle();
+                RemoveDisplayedHoveredCircleCoord();
             }
             else
             {
                 gc.FrameCircle(c);
-
+                DisplayHoveredCircleCoord(c);
             }
-
             WorkZone.Invalidate();
+
+        }
+
+        /**
+         * <summary>Update the coordinates display whenever the mouse moves inside the workzone and if the mouse is sitting on a circle, frame it</summary>
+         */
+        private void WorkZone_MouseMove(object sender, MouseEventArgs e)
+        {
+            UpdateCoords();
+            TryFrame();
         }
 
         /**
@@ -257,7 +275,7 @@ namespace MA400_export
             //if needs be
             if (new_Zoom != _Zoom)
             {
-                //update
+                //update mouse position
                 UpdateCoords();
                 zoom_delta = new_Zoom - _Zoom;
 
@@ -276,8 +294,11 @@ namespace MA400_export
                 
                 _Zoom = new_Zoom;
 
-                WorkZone.Invalidate();
                 UpdateCoords();
+                //reframe a circle if needed
+                TryFrame();
+
+                WorkZone.Invalidate();
             }
         }
 

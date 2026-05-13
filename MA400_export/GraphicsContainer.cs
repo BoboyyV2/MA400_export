@@ -344,9 +344,45 @@ namespace MA400_export
             FramedCircle = null;
         }
 
-        private void DrawFrame()
+        private void DrawFrameOverCircle(Circle circle)
+        {
+            //lagreur scale avec le rayon
+            Pen pen = new Pen(Color.Brown, 0.45f + (float)circle.Radius * 0.015f );
+
+            //get les points où on commence les traits
+            PointF topleft = new PointF( (float)circle.Center.X - (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y - (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
+            PointF bottomleft = new PointF( (float)circle.Center.X - (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y + (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
+            PointF topright = new PointF( (float)circle.Center.X + (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y - (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
+            PointF bottomright = new PointF( (float)circle.Center.X + (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y + (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
+
+            //draw
+
+            //topleft
+            graphics.DrawLine(pen, topleft.X , topleft.Y, topleft.X, topleft.Y + (float)circle.Radius / 1.2f);
+            graphics.DrawLine(pen, topleft.X, topleft.Y, topleft.X + (float)circle.Radius / 1.2f, topleft.Y );
+
+            //botleft
+            graphics.DrawLine(pen, bottomleft.X, bottomleft.Y, bottomleft.X, bottomleft.Y - (float)circle.Radius / 1.2f);
+            graphics.DrawLine(pen, bottomleft.X, bottomleft.Y, bottomleft.X + (float)circle.Radius / 1.2f, bottomleft.Y);
+
+            //topright
+            graphics.DrawLine(pen, topright.X, topright.Y, topright.X, topright.Y + (float)circle.Radius / 1.2f);
+            graphics.DrawLine(pen, topright.X, topright.Y, topright.X - (float)circle.Radius / 1.2f, topright.Y);
+
+            //botright
+            graphics.DrawLine(pen, bottomright.X, bottomright.Y, bottomright.X, bottomright.Y - (float)circle.Radius / 1.2f);
+            graphics.DrawLine(pen, bottomright.X, bottomright.Y, bottomright.X - (float)circle.Radius / 1.2f, bottomright.Y);
+
+        }
+
+        private void DrawFramedCircle()
         {
             //TODO
+            if (FramedCircle != null)
+            {
+                //draw a frame
+                DrawFrameOverCircle(FramedCircle);
+            }
         }
         /**
          * <summary>Paint everything onto the graphics</summary>
@@ -372,7 +408,7 @@ namespace MA400_export
             Draw_Selected_Studs(SelectedStuds);
 
             
-            DrawFrame();
+            DrawFramedCircle();
            
 
         }
