@@ -91,7 +91,7 @@ namespace MA400_export
             // WorkZone
             // 
             this.WorkZone.AutoSize = true;
-            this.WorkZone.Location = new System.Drawing.Point(0, 52);
+            this.WorkZone.Location = new System.Drawing.Point(1, 52);
             this.WorkZone.Name = "WorkZone";
             this.WorkZone.Size = new System.Drawing.Size(800, 600);
             this.WorkZone.TabIndex = 10;

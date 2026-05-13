@@ -65,7 +65,7 @@ namespace MA400_export
         {
             InitializeComponent();
             StudList_Display.DataSource = fs.Studs;
-
+            //this.CreateGraphics();
         }
 
         /**
