@@ -61,7 +61,7 @@ namespace MA400_export
          /**
           * <summary>create the file systeme with a new document</summary>
           */
-     public FileSystem()
+        public FileSystem()
         {
             Doc = new CadDocument();
             open = false;
@@ -239,7 +239,9 @@ namespace MA400_export
 
         /*_____________________________________FRAME_____________________________________*/
 
-
+        /**
+         * <summary>Tells if a point is located inside a circle</summary>
+         */
         public bool IsInsideCircle(PointF point, Circle circle)
         {
 

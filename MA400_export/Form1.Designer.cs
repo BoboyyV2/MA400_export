@@ -478,6 +478,7 @@ namespace MA400_export
             // 
             // labelCursorPosition
             // 
+            this.labelCursorPosition.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.labelCursorPosition.AutoSize = true;
             this.labelCursorPosition.Location = new System.Drawing.Point(458, 659);
             this.labelCursorPosition.Name = "labelCursorPosition";
@@ -487,6 +488,7 @@ namespace MA400_export
             // 
             // labelHoveredCircle
             // 
+            this.labelHoveredCircle.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.labelHoveredCircle.AutoSize = true;
             this.labelHoveredCircle.Location = new System.Drawing.Point(225, 659);
             this.labelHoveredCircle.Name = "labelHoveredCircle";

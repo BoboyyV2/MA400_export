@@ -172,18 +172,28 @@ namespace MA400_export
 
         }
 
+
+        /**
+         * <summary>change the displayed coordinates of the hovered circle to that of the given Circle.</summary>
+         */
         private void DisplayHoveredCircleCoord(Circle c)
         {
-            labelHoveredCircleX.Text = " X = " + c.Center.X.ToString("0.00", CultureInfo.InvariantCulture);
-            labelHoveredCircleY.Text = " Y = " + c.Center.Y.ToString("0.00", CultureInfo.InvariantCulture);
+            labelHoveredCircleX.Text = " X = " + c.Center.X.ToString("0.0", CultureInfo.InvariantCulture);
+            labelHoveredCircleY.Text = " Y = " + c.Center.Y.ToString("0.0", CultureInfo.InvariantCulture);
         }
 
+        /**
+         * <summary>remove the displayed coordinates of the hovered circle.</summary>
+         */
         private void RemoveDisplayedHoveredCircleCoord()
         {
             labelHoveredCircleX.Text = "";
             labelHoveredCircleY.Text = "";
         }
 
+        /**
+         * <summary>If the Mouse cursor is hovering a circle, put a frame around it and update the displayed coordinates of said circle</summary>
+         */
         private void TryFrame()
         {
             Circle c;
@@ -1091,6 +1101,10 @@ namespace MA400_export
 
         /*___________________________________________PANEL_RESIZE___________________________________________*/
 
+
+        /**
+         * <summary>change the Worzone size whenever we resize the form</summary>
+         */
         private void Form1_Resize(object sender, EventArgs e)
         {
             WorkZone.Size = new Size(this.ClientSize.Width - Constants.Client_panel_delta_width, this.ClientSize.Height - Constants.Client_panel_delta_height);

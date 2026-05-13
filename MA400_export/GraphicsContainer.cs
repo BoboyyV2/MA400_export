@@ -333,17 +333,26 @@ namespace MA400_export
 
         }
 
-       
+        /**
+         * <summary>public setter for FramedCircle</summary>
+         */
         public void FrameCircle(Circle c)
         {
             FramedCircle = c;
         }
 
+        /**
+         * <summary>public deleter for FramedCircle</summary>
+         */
         public void RemoveFramedCircle()
         {
             FramedCircle = null;
         }
 
+        /**
+         * <summary>Draw a frame over a circle.</summary>
+         * <param name="circle">the circle to draw around</param>
+         */
         private void DrawFrameOverCircle(Circle circle)
         {
             //lagreur scale avec le rayon
@@ -375,6 +384,9 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>If there is a framed circle, draw a frame around it</summary>
+         */
         private void DrawFramedCircle()
         {
             //TODO
