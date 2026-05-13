@@ -51,7 +51,6 @@ namespace MA400_export
             this.generationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.générerLesFichiersDeSortieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.parametreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.personnaliserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.VueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rotateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -201,17 +200,10 @@ namespace MA400_export
             // parametreToolStripMenuItem
             // 
             this.parametreToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.personnaliserToolStripMenuItem,
             this.optionsToolStripMenuItem});
             this.parametreToolStripMenuItem.Name = "parametreToolStripMenuItem";
             this.parametreToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
             this.parametreToolStripMenuItem.Text = "&Paramètres";
-            // 
-            // personnaliserToolStripMenuItem
-            // 
-            this.personnaliserToolStripMenuItem.Name = "personnaliserToolStripMenuItem";
-            this.personnaliserToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.personnaliserToolStripMenuItem.Text = "&Personnaliser";
             // 
             // optionsToolStripMenuItem
             // 
@@ -570,7 +562,6 @@ namespace MA400_export
         private System.Windows.Forms.ToolStripMenuItem quitterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem parametreToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem personnaliserToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ListBox StudList_Display;
