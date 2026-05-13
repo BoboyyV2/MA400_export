@@ -16,6 +16,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using System.Windows.Input;
+
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
@@ -828,7 +830,7 @@ namespace MA400_export
 
         /**
          * <summary>
-         * Handle the behavior when clicking somwhere on the WorkZone using the add mode and right click.<br></br>
+         * Handle the behavior when clicking somwhere on the WorkZone using the add mode and right click or ctrl + right click.<br></br>
          * Add a stud on the framed circle if possible, show an error otherwise.
          * </summary>
          */
@@ -886,44 +888,20 @@ namespace MA400_export
             this.WorkZone.Refresh();
         }
 
-        /**
-         * <summary>
-         * Handle the behavior when clicking somwhere on the WorkZone using the remove mode and right click.<br></br>
-         * Remove framed stud if there is one, show a message if no stud were found.
-         * </summary>
-         */
-        private void WorkZone_Click_Remove_Framed_Stud()
-        {
-            Circle c = gc.GetFramedCircle();
-            if (c == null)
-            {
-                return;
-            }
-            PointF p_rm = new PointF((float)c.Center.X, (float)c.Center.Y);
-
-            bool removed = false;
-            foreach (Stud stud in fs.Studs)
-            {
-                if (Util.getStudDistance(p_rm, stud.circle) < (stud.circle.Radius))
-                {
-                    fs.Studs.Remove(stud);
-                    removed = true;
-                    break;
-                }
-
-            }
-            if (!removed)
-            {
-                MessageBox.Show("aucun goujon trouvé à cette position.");
-            }
-            this.WorkZone.Refresh();
-        }
+        
 
         /**
          * <summary>Handle the behavior when clicking somwhere on the WorkZone depending on the mode</summary>
          */
         private void WorkZone_Click(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
+        { 
+            //check if the control key is pressed
+            if ((Control.ModifierKeys & Keys.Control) != 0)
+            {
+                WorkZone_Click_Turn_Framed_Circle_Into_Stud();
+                return;
+            }
+
             if (e.Button == MouseButtons.Left)
             {
                 switch (editMode)
@@ -954,11 +932,6 @@ namespace MA400_export
 
                 switch (editMode)
                 {
-
-                    //select
-                    case EditMode.RemoveStud:
-                        WorkZone_Click_Remove_Framed_Stud();
-                        break;
 
                     //add
                     case EditMode.AddStud:
