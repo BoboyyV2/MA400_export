@@ -883,7 +883,7 @@ namespace MA400_export
                     ddxf.Entities.Add((Entity)entity.Clone());
                     //DEBUG
                 }
-                catch (ArgumentException e)
+                catch (ArgumentException)
                 {
                     //MessageBox.Show(entity.ToString());
                 }
@@ -934,7 +934,7 @@ namespace MA400_export
                 {
                     save.Entities.Add((Entity)entity.Clone());
                 }
-                catch(ArgumentException e)
+                catch(ArgumentException)
                 {
                     //MessageBox.Show(entity.ToString());
                 }
