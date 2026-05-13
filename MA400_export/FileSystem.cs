@@ -16,7 +16,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
+/***
+ * This app use two personnalized file extension : ddxf and sdxf
+ * 
+ * Both of them are dxf file
+ * We use them to differenciate the input file from our save files, they might still be used in dxf viewer / editor (you might need to change the extension manually for the logi to recognize the file)
+ * 
+ * The ddxf stores all dxf Entities (the part form)
+ * The sdxf stores all the  actual studs (that have been detected / added and not removed)
+ * 
+ * It is done this way for 2 major reason :
+ *  1 - To separate the graphics from the studs.
+ *  2 - The produced files may or may not open in certain dxf viewer / editor for unknown reason so it is better not to label them as dxf files, they might still be repaired by some CADMAN commands.
+ */
 
 namespace MA400_export
 {
