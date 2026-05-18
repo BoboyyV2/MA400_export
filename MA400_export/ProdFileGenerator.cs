@@ -78,7 +78,7 @@ namespace MA400_export
         {
             CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
             
-            return value.ToString("0.############################", culture);
+            return value.ToString("0.##############", culture);
         }
 
 
