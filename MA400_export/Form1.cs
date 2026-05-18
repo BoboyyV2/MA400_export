@@ -989,10 +989,11 @@ namespace MA400_export
                 return;
             }
 
-            GetFormData();
-            
-            
-            fs.GenerateProdFiles(fs.Studs, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale); // en dernier, une fois que tout est bien rempli
+            if (GetFormData())
+            {
+                fs.GenerateProdFiles(fs.Studs, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale); // en dernier, une fois que tout est bien rempli
+            }
+
         }
 
         /**
