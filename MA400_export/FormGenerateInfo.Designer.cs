@@ -46,6 +46,7 @@
             this.DateModifiedText = new System.Windows.Forms.TextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonNewProgNumber = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // PartDesignationText
@@ -185,7 +186,7 @@
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(580, 311);
+            this.buttonOK.Location = new System.Drawing.Point(450, 311);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(101, 27);
             this.buttonOK.TabIndex = 16;
@@ -203,12 +204,23 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // buttonNewProgNumber
+            // 
+            this.buttonNewProgNumber.Location = new System.Drawing.Point(557, 311);
+            this.buttonNewProgNumber.Name = "buttonNewProgNumber";
+            this.buttonNewProgNumber.Size = new System.Drawing.Size(124, 27);
+            this.buttonNewProgNumber.TabIndex = 18;
+            this.buttonNewProgNumber.Text = "&Nouveau Programme";
+            this.buttonNewProgNumber.UseVisualStyleBackColor = true;
+            this.buttonNewProgNumber.Click += new System.EventHandler(this.buttonNewProgNumber_Click);
+            // 
             // FormGenerateInfo
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 347);
+            this.Controls.Add(this.buttonNewProgNumber);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.DateModifiedText);
@@ -256,5 +268,6 @@
         private System.Windows.Forms.TextBox DateModifiedText;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonNewProgNumber;
     }
 }

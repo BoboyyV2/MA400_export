@@ -94,7 +94,7 @@ namespace MA400_export
 
 
         /**
-         * <summary>fill the Data information with informations given in the form's textbox</summary>
+         * <summary>fill the Data information with informations given in the form's textbox and validate the form, if an existing program was imported, overwrite it, create a new one otherwise.</summary>
          */
         private void buttonOK_Click(object sender, EventArgs e)
         {
@@ -129,6 +129,35 @@ namespace MA400_export
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+        }
+
+        /**
+         * <summary>force a new program number, even if an existing program was imported making sure not to overwrite existing program.</summary>
+         */
+        private void buttonNewProgNumber_Click(object sender, EventArgs e)
+        {
+            
+
+            //prefilled values
+            if (!IsNew)
+            {
+                IsNew = true;
+
+                //since IsNew is now set, it will return a new program number
+                Data.ProgramNumber = GetProgramNumber();
+
+                //and update the 
+                Data.DateCreation = Today.ToString("dd.MM.yyyy");
+                Data.DateModification = "          "; //10 espaces
+
+
+                this.DateCreatedText.Text = Data.DateCreation;
+                this.DateModifiedText.Text = Data.DateModification;
+
+                this.ProgramNumberText.Text = "" + Data.ProgramNumber;
+
+            }
+            
         }
     }
 }
