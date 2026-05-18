@@ -78,7 +78,7 @@ namespace MA400_export
         {
             CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
             
-            return value.ToString("0.##############", culture);
+            return value.ToString("0.##############", culture); //14max
         }
 
 
@@ -361,7 +361,7 @@ namespace MA400_export
          */
         private void GenerateAN4(string path)
         {
-            int numlines = 6;//TODO, un moyen de savoir combien il y en a de manière auto
+            int numlines = 4;//TODO, un moyen de savoir combien il y en a de manière auto
             using (StreamWriter sw = File.CreateText(path + ".AN4"))
             {
                 
@@ -371,6 +371,8 @@ namespace MA400_export
                 WriteLine0(sw, 2);
                 */
                 WriteEmptyLine(sw, numlines);
+                WriteLine0(sw, 2);
+
             }
         }
 
@@ -407,7 +409,7 @@ namespace MA400_export
                 WriteLine0(sw, 5);
                 sw.WriteLine(" " + reoccuring_number );
 
-                int skippedlines = 8;//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
+                int skippedlines = 5;//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
                 WriteEmptyLine(sw, skippedlines);
 
                 int magicnumber = 2;
