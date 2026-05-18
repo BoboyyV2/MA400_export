@@ -128,7 +128,7 @@ namespace MA400_export
         {
             List<Stud> SortedStuds = Studs.ToList(); 
             SortedStuds = SortedStuds.OrderBy(item => item.circle.Center.X) //primary sort by X
-            .ThenBy(item => item.circle.Center.X) //secondary sort by Y
+            .ThenBy(item => item.circle.Center.Y) //secondary sort by Y
             .ToList();
             return SortedStuds;
         }
