@@ -117,7 +117,22 @@ namespace MA400_export
             }
             return true;
         }
-
         
+       
+        /**
+         * <summary>Sort a collection of Studs by their X position then by their Y position.</summary>
+         * <returns>the collection sorted and turned into a list</returns>
+         * <param name="Studs">The collection to sort</param>
+         */
+        public static List<Stud> SortStuds(IEnumerable<Stud> Studs) 
+        {
+            List<Stud> SortedStuds = Studs.ToList(); 
+            SortedStuds = SortedStuds.OrderBy(item => item.circle.Center.X) //primary sort by X
+            .ThenBy(item => item.circle.Center.X) //secondary sort by Y
+            .ToList();
+            return SortedStuds;
+        }
+        
+
     }
 }

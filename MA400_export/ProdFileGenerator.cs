@@ -78,7 +78,7 @@ namespace MA400_export
         {
             CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
             
-            return value.ToString("0.##############", culture); //14max
+            return value.ToString("0.####", culture); //14max
         }
 
 
@@ -335,7 +335,11 @@ namespace MA400_export
                 //                         N19 autre blabla)
                 //                         N21 truc
                 // => commandes 
-                foreach (Stud stud in Studs)
+
+                //problème : le path est chaotique et sous optimal
+                //donc on va trier
+                List<Stud> SortedStuds = Util.SortStuds(Studs);
+                foreach (Stud stud in SortedStuds)
                 {
                     N += 2;//num de commande
                     //sauvegarde le premier pour écrire à la fin
