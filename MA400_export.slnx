@@ -12,7 +12,7 @@
     <Platform Solution="*|x64" Project="x64" />
     <Platform Solution="Debug|Any CPU" Project="x64" />
   </Project>
-  <Project Path="MA400_export_setup/MA400_export_setup.vdproj" Type="Installer" />
+  <Project Path="Ma400_export_setup/Ma400_export_setup.vdproj" Type="Installer" />
   <Project Path="UnitTestProject/UnitTestProject.csproj" Id="c18b7f1a-b47f-43fa-b75e-ade40c50c1aa">
     <BuildType Solution="Release|x64" Project="Debug" />
     <Platform Solution="*|x64" Project="x64" />
