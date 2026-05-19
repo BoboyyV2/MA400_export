@@ -32,7 +32,7 @@ namespace MA400_export
         public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
 
         //path auto-calculé vers le dossier d'output
-        public static string Outputpath { get; private set; } = AppDomain.CurrentDomain.BaseDirectory + @"output\";//.exe\output loc
+        public static string Outputpath { get; private set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MA400_export\";//location dans document 
 
         //path auto-calculé vers le dossier daten
         public static string DatenPath { get; private set; } = @"\Daten\2\";

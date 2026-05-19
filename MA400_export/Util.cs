@@ -3,7 +3,10 @@ using CSMath;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -132,7 +135,25 @@ namespace MA400_export
             .ToList();
             return SortedStuds;
         }
-        
+
+
+        /**
+         * <summary>Grant permission to read/write to a folder</summary>
+         */
+        public static void SetPermissions(string dirPath)
+        {
+            DirectoryInfo info = new DirectoryInfo(dirPath);
+            WindowsIdentity self = System.Security.Principal.WindowsIdentity.GetCurrent();
+            DirectorySecurity ds = info.GetAccessControl();
+            ds.AddAccessRule(new FileSystemAccessRule(self.Name,
+            FileSystemRights.FullControl,
+            InheritanceFlags.ObjectInherit |
+            InheritanceFlags.ContainerInherit,
+            PropagationFlags.None,
+            AccessControlType.Allow));
+            info.SetAccessControl(ds);
+        }
+
 
     }
 }

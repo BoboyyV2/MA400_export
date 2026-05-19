@@ -682,7 +682,14 @@ namespace MA400_export
                     {
                         MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
                         $"Details:\r\n{ex.StackTrace}");
+                        return;
                     }
+
+                    if (!open)
+                    {
+                        MessageBox.Show("Echec de l'ouverture du fichier.");
+                    }
+
                     gc.OpenCanvas();
                     fs.OpenDxfFileLayout(gc.layout);
 
@@ -698,7 +705,14 @@ namespace MA400_export
                     {
                         MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
                         $"Details:\r\n{ex.StackTrace}");
+                        return;
                     }
+
+                    if (!open)
+                    {
+                        MessageBox.Show("Echec de l'ouverture du fichier.");
+                    }
+
                     gc.OpenCanvas();
                     fs.OpenDdxfFileLayout(gc.layout, filename);
 

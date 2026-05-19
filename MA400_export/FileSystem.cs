@@ -467,6 +467,26 @@ namespace MA400_export
             //reset without a new document our new studlist
             open = false;
             layout = new Layout_Info();//must be initialized later on before scanning the entities
+            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+
+            //save dans un fichier temporaire pour l'affichage / traitement
+            try
+            {
+                Directory.CreateDirectory(tmpPath);
+                Util.SetPermissions(tmpPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de la rotation");
+            }
 
             FlipEntitiesX();
             FlipEntitiesY();
@@ -478,10 +498,8 @@ namespace MA400_export
                 oldStuds.Add(s);
             }
 
-            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+            
 
-            //save dans un fichier temporaire pour l'affichage / traitement
-            Directory.CreateDirectory(tmpPath);
             SaveToFile(tmpPath  + @"\dxftmp.ddxf");
 
             //ré open le fichier tmp en ddxf
@@ -528,6 +546,28 @@ namespace MA400_export
         public bool OpenDDxfFile(string path)
         {
             reset();
+            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+
+            try
+            {
+                Directory.CreateDirectory(tmpPath);
+                Util.SetPermissions(tmpPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier " + e.Message);
+                return false;
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier " + e.Message);
+                return false;
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier");
+                return false;
+            }
 
             if (!(File.Exists(path)))
             {
@@ -543,9 +583,8 @@ namespace MA400_export
             }
 
 
-            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+            
 
-            Directory.CreateDirectory(tmpPath);
             //save dans un fichier temporaire pour l'affichage / traitement
             SaveToFile(tmpPath + @"\dxftmp.ddxf");
 
@@ -577,6 +616,28 @@ namespace MA400_export
         public bool OpenDxfFile(string path)
         {
             reset();
+            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+
+            try
+            {
+                Directory.CreateDirectory(tmpPath);
+                Util.SetPermissions(tmpPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier " + e.Message);
+                return false;
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier " + e.Message);
+                return false;
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier");
+                return false;
+            }
 
             if (!(File.Exists(path)))
             {
@@ -593,9 +654,8 @@ namespace MA400_export
             //flip the part so that the inner part faces upward
             FlipEntitiesX();
 
-            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+            
 
-            Directory.CreateDirectory(tmpPath);
             //save dans un fichier temporaire pour l'affichage / traitement
             SaveToFile(tmpPath + @"\dxftmp.ddxf");
 
@@ -625,6 +685,26 @@ namespace MA400_export
         */
         public GeneratorData OpenProdFile(int ProgramNumber)
         {
+            //string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+            try
+            {
+                Directory.CreateDirectory(tmpPath);
+                Util.SetPermissions(tmpPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier");
+            }
+
             GeneratorData data = new GeneratorData();
             data.ProgramNumber = ProgramNumber;
             /*___________________________________*/
@@ -643,10 +723,8 @@ namespace MA400_export
             // ==>>
             ReadNC(ProgramNumber);
 
-            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
-
-            Directory.CreateDirectory(tmpPath);
             
+
 
             SaveToFile(tmpPath + @"\dxftmp.ddxf");
 

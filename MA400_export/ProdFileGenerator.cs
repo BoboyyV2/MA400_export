@@ -122,7 +122,7 @@ namespace MA400_export
         }
 
 
-        /**
+        /** 
          * <returns>A PointF corresponding to the position given in argument once put to the correct scale (orientation).</returns>
          * <param name="position">The raw position in the document.</param>
          */
@@ -164,8 +164,27 @@ namespace MA400_export
             string Daten = Properties.Settings.Default.OutputPath + Constants.DatenPath;
             string Cnc = Properties.Settings.Default.OutputPath + Constants.CncPath;
 
-            Directory.CreateDirectory(Daten);
-            Directory.CreateDirectory(Cnc);
+            
+            try
+            {
+                Directory.CreateDirectory(Daten);
+                Directory.CreateDirectory(Cnc);
+                Util.SetPermissions(Daten);
+                Util.SetPermissions(Cnc);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show("Erreur lors de la generation des fichiers" + e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("Erreur lors de la generation des fichiers" + e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de la generation des fichiers");
+            }
+
 
             //Daten
             GenerateAN4(Daten + fileID);
