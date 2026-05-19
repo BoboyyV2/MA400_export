@@ -15,7 +15,7 @@ namespace MA400_export
      */
     public static class Constants
     {
-        public const bool Debug = true;//TODO changer avant de partir en deploy
+        public const bool Debug = false;
 
         //rayon des goujons en mm
         public const double StudRadius3 = 1.5;

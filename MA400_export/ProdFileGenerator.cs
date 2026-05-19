@@ -27,7 +27,6 @@ namespace MA400_export
         public Machine machine;
 
         //dates toujours sur 10 char DD.MM.YYYY si non renseigné : on écrit 10 espaces.
-        //TODO gestion chaine vide 
         public string DateCreation;
         public string DateModification;
 
@@ -41,7 +40,7 @@ namespace MA400_export
     internal class ProdFileGenerator
     {
 
-        private int reoccuring_number = 233; //TODO savoir qui c'est celui là
+        private int reoccuring_number = 233;
         private BindingList<Stud> Studs;//can't use ref or pointer it 
         private CadObjectCollection<Entity> Entities;//same shee
 
@@ -322,7 +321,6 @@ namespace MA400_export
          */
         private void GenerateCNC(string path)
         {
-            //TODO, besoin du formulaire
             using (StreamWriter sw = File.CreateText(path + ".CNC"))
             {
                 GenerateCNCHeader(sw);
@@ -365,7 +363,7 @@ namespace MA400_export
          */
         private void GenerateAN4(string path)
         {
-            int numlines = 4;//TODO, un moyen de savoir combien il y en a de manière auto
+            int numlines = 4;
             using (StreamWriter sw = File.CreateText(path + ".AN4"))
             {
                 
@@ -413,7 +411,7 @@ namespace MA400_export
                 WriteLine0(sw, 5);
                 sw.WriteLine(" " + reoccuring_number );
 
-                int skippedlines = 5;//TODO, le nombre de ligne n'est pas fix, c'est quoi ?
+                int skippedlines = 5;
                 WriteEmptyLine(sw, skippedlines);
 
                 int magicnumber = 2;
@@ -531,7 +529,6 @@ namespace MA400_export
             sw.WriteLine(FormatValue(center.Y));
             WriteLine0(sw, 1);
             sw.WriteLine(FormatValue(arc.Radius));
-            //TODO, make sure the angle are the same, or modify it
             sw.WriteLine(FormatValue(arc.StartAngle * 180 / Math.PI));
             sw.WriteLine(FormatValue(arc.EndAngle * 180 / Math.PI));
 
@@ -579,7 +576,6 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".GPH"))
             {
-                //TODO graphic par, commandes sur 11 lignes, c'est quoi ce 1er nombre
                 int NumCMD_minus_one = Entities.Count - 1 ;
                 sw.WriteLine(NumCMD_minus_one);
                 foreach (var entity in Entities)
@@ -609,7 +605,6 @@ namespace MA400_export
                 sw.WriteLine(Dimension.Height);
                 WriteLine0(sw, 4);
 
-                //TODO c'est quoi le reste ?, implem
 
             }
         }
@@ -706,7 +701,7 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".ST"))
             {
-                int magicnumber = 0;//TODO, comprendre c'est quoi
+                int magicnumber = 0;
                 sw.WriteLine(magicnumber );
             }
         }
@@ -723,7 +718,7 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".VER"))
             {
-                int magicnumber = 0;//TODO, comprendre c'est quoi, 4 nombres potentiellement différent, souvent des 0
+                int magicnumber = 0;//TODO, comprendre c'est quoi, 3 nombres potentiellement différent, souvent des 0
                 sw.WriteLine(magicnumber );
                 sw.WriteLine(magicnumber );
                 sw.WriteLine(magicnumber );

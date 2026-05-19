@@ -1097,16 +1097,8 @@ namespace MA400_export
             //and fill it with the correct studs
             StudList_Display.DataSource = fs.Studs;
 
-            
-            
 
             this.WorkZone.Invalidate();
-
-            //TODO
-            //s'assurer des dimentions
-            //on va ouvrir le ficheir ici
-            //donc on aura note FileSystem qui va l'ouvrir et faire des bétises avec
-            //puis ce sera le display qui va ensuite l'afficher, en plus de ce que le Filesystem va détecter comme goujon et donc qu'il va falloir highlight
         }
 
         /**

@@ -181,7 +181,6 @@ namespace MA400_export
         */
         private bool ScanDdxfEntities(string path)
         {
-            //TODO modif pour ddxf added studs
             if (Doc == null)
             {
                 return false;
@@ -466,7 +465,6 @@ namespace MA400_export
         public void RotatePart180()
         {
             //reset without a new document our new studlist
-            //try debug
             open = false;
             layout = new Layout_Info();//must be initialized later on before scanning the entities
 
@@ -798,10 +796,6 @@ namespace MA400_export
                                 float.Parse(file[1], CultureInfo.InvariantCulture));
 
 
-            //TODO, verif si les deux dernier param sont les limites ou la hauteur / largeur
-            //==> 0,0,210,110 =? 100,100,310,210 ou 100,100,210,110
-            //probablement le second car je n'ai pas vu d'offset nul part
-            //pour l'instant, marche impec si on est à l'origine
             layout.dimension = new RectangleF( float.Parse(file[0], CultureInfo.InvariantCulture), 
                                         float.Parse(file[1], CultureInfo.InvariantCulture),
                                         float.Parse(file[2], CultureInfo.InvariantCulture),
@@ -831,8 +825,7 @@ namespace MA400_export
                 //create the stud
                 Circle stud = new Circle();
                 stud.Center = new CSMath.XYZ(X, Y, 0);
-                stud.Radius = Constants.StudRadius3;
-                //TODO , diamètre à récup
+                stud.Radius = Constants.StudRadius3;//toujours 3 (default)
                 stud.Color = ACadSharp.Color.Green;
 
                 Studs.Add( new Stud(stud) );
@@ -881,7 +874,6 @@ namespace MA400_export
                 try
                 {
                     ddxf.Entities.Add((Entity)entity.Clone());
-                    //DEBUG
                 }
                 catch (ArgumentException)
                 {
