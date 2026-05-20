@@ -4,18 +4,13 @@
     <Platform Name="x64" />
   </Configurations>
   <Project Path="../DXFImporter/DXFImporter/DXFImporter.csproj" Id="e1083e6f-23ee-4ec0-beb5-6eaf10169c79">
-    <BuildType Solution="Release|x64" Project="Debug" />
     <Platform Solution="*|x64" Project="x64" />
   </Project>
   <Project Path="MA400_export/MA400_export.csproj" Id="8ceb34e6-cdb7-4424-bd76-14e3ab00155f">
-    <BuildType Solution="Release|x64" Project="Debug" />
     <Platform Solution="*|x64" Project="x64" />
-    <Platform Solution="Debug|Any CPU" Project="x64" />
   </Project>
   <Project Path="Ma400_export_setup/Ma400_export_setup.vdproj" Type="Installer" />
   <Project Path="UnitTestProject/UnitTestProject.csproj" Id="c18b7f1a-b47f-43fa-b75e-ade40c50c1aa">
-    <BuildType Solution="Release|x64" Project="Debug" />
     <Platform Solution="*|x64" Project="x64" />
-    <Build Solution="Debug|x64" Project="false" />
   </Project>
 </Solution>
