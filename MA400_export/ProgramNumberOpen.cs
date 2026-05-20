@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MA400_export
@@ -14,10 +7,10 @@ namespace MA400_export
     public partial class ProgramNumberOpen : Form
     {
 
-        public int ProgramNumber = -1 ;
+        public int ProgramNumber = -1;
         public ProgramNumberOpen()
         {
-            
+
             InitializeComponent();
         }
 
@@ -37,12 +30,12 @@ namespace MA400_export
                 MessageBox.Show("Numéro saisi non valide : " + ex.Message);
                 return false;
             }
-            if(ProgramNumber < 0)
+            if (ProgramNumber < 0)
             {
                 MessageBox.Show("Numéro saisi non valide : " + "La valeur doit être positive");
                 return false;
             }
-            
+
             return true;
         }
 
@@ -77,7 +70,7 @@ namespace MA400_export
             {
                 return;
             }
-            
+
             bool valid;
             string message = "";
             try

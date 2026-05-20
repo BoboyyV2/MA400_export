@@ -1,15 +1,7 @@
 ﻿using ACadSharp.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using DXFImporter;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace MA400_export
 {
@@ -260,7 +252,7 @@ namespace MA400_export
             //MessageBox.Show("path = " + Constants.Outputpath + Constants.tmpPath + @"\dxftmp.ddxf");
             canvas.ReadFromFile(Constants.Outputpath + Constants.tmpPath + @"\dxftmp.ddxf");
             open = true;
-            
+
             GetLayout();
 
             canvas.setup(Constants.Origin_Coord);
@@ -270,7 +262,7 @@ namespace MA400_export
         /**
          * <summary>Reset the canvas aswell as the variable that might have been modified</summary>
          */
-        public void CloseCanvas() 
+        public void CloseCanvas()
         {
             canvas = new Canvas();
             DXFImporter.Shape.Dimension = new RectangleF();
@@ -299,7 +291,7 @@ namespace MA400_export
             float radius = 6.5f;//6.5mm
 
             //ligne du haut en Y
-            DrawCircle(Constants.Origin_Coord.X - radius + 20 , Constants.Origin_Coord.Y - radius, radius);
+            DrawCircle(Constants.Origin_Coord.X - radius + 20, Constants.Origin_Coord.Y - radius, radius);
             DrawCircle(Constants.Origin_Coord.X - radius + 50, Constants.Origin_Coord.Y - radius, radius);
             DrawCircle(Constants.Origin_Coord.X - radius + 150, Constants.Origin_Coord.Y - radius, radius);
             DrawCircle(Constants.Origin_Coord.X - radius + 300, Constants.Origin_Coord.Y - radius, radius);
@@ -350,19 +342,19 @@ namespace MA400_export
         private void DrawFrameOverCircle(Circle circle)
         {
             //lagreur scale avec le rayon
-            Pen pen = new Pen(Color.Brown, 0.45f + (float)circle.Radius * 0.015f );
+            Pen pen = new Pen(Color.Brown, 0.45f + (float)circle.Radius * 0.015f);
 
             //get les points où on commence les traits
-            PointF topleft = new PointF( (float)circle.Center.X - (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y - (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
-            PointF bottomleft = new PointF( (float)circle.Center.X - (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y + (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
-            PointF topright = new PointF( (float)circle.Center.X + (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y - (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
-            PointF bottomright = new PointF( (float)circle.Center.X + (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y + (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
+            PointF topleft = new PointF((float)circle.Center.X - (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y - (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
+            PointF bottomleft = new PointF((float)circle.Center.X - (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y + (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
+            PointF topright = new PointF((float)circle.Center.X + (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y - (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
+            PointF bottomright = new PointF((float)circle.Center.X + (float)circle.Radius * 1.4f + Constants.Origin_Coord.X, (float)circle.Center.Y + (float)circle.Radius * 1.4f + Constants.Origin_Coord.Y);
 
             //draw
 
             //topleft
-            graphics.DrawLine(pen, topleft.X , topleft.Y, topleft.X, topleft.Y + (float)circle.Radius / 1.2f);
-            graphics.DrawLine(pen, topleft.X, topleft.Y, topleft.X + (float)circle.Radius / 1.2f, topleft.Y );
+            graphics.DrawLine(pen, topleft.X, topleft.Y, topleft.X, topleft.Y + (float)circle.Radius / 1.2f);
+            graphics.DrawLine(pen, topleft.X, topleft.Y, topleft.X + (float)circle.Radius / 1.2f, topleft.Y);
 
             //botleft
             graphics.DrawLine(pen, bottomleft.X, bottomleft.Y, bottomleft.X, bottomleft.Y - (float)circle.Radius / 1.2f);
@@ -392,7 +384,7 @@ namespace MA400_export
         /**
          * <summary>Paint everything onto the graphics</summary>
          */
-        public void Paint(IEnumerable<Stud> Studs, IEnumerable<Stud>SelectedStuds, PointF offset)
+        public void Paint(IEnumerable<Stud> Studs, IEnumerable<Stud> SelectedStuds, PointF offset)
         {
             //draw the basic from of the workzone
             //including but not restricted to :
@@ -406,15 +398,15 @@ namespace MA400_export
             Draw_WorkZoneLimits();
             Draw_ReferenceCircles();
             //affichage du dxf
-            
+
             DrawDXF();//check if open
 
             Draw_Studs(Studs);
             Draw_Selected_Studs(SelectedStuds);
 
-            
+
             DrawFramedCircle();
-           
+
 
         }
 

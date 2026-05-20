@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MA400_export
@@ -17,12 +10,12 @@ namespace MA400_export
     {
 
         public GeneratorData Data;
-        DateTime Today ;
+        DateTime Today;
         DateTime Modified;
 
         bool IsNew;
 
-        
+
         public FormGenerateInfo()
         {
             Today = DateTime.Now;
@@ -66,7 +59,7 @@ namespace MA400_export
          */
         public int GetProgramNumber()
         {
-            if(IsNew)
+            if (IsNew)
             {
                 return Properties.Settings.Default.NewProgramNumber;
             }
@@ -98,7 +91,7 @@ namespace MA400_export
          */
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if( CheckInput())
+            if (CheckInput())
             {
                 //fill the values
                 Data.Company = this.CompanyText.Text.Trim();
@@ -136,7 +129,7 @@ namespace MA400_export
          */
         private void buttonNewProgNumber_Click(object sender, EventArgs e)
         {
-            
+
 
             //prefilled values
             if (!IsNew)
@@ -157,7 +150,7 @@ namespace MA400_export
                 this.ProgramNumberText.Text = "" + Data.ProgramNumber;
 
             }
-            
+
         }
     }
 }

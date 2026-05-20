@@ -1,16 +1,11 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
-using ACadSharp.Objects.Evaluations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MA400_export
@@ -53,7 +48,7 @@ namespace MA400_export
 
 
 
-        public ProdFileGenerator( BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, bool Rotated)//should work but C# and ref being themselves 
+        public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, bool Rotated)//should work but C# and ref being themselves 
         {
             this.Studs = Studs;
             this.Entities = Entities;
@@ -76,7 +71,7 @@ namespace MA400_export
         private string FormatValue(double value)
         {
             CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
-            
+
             return value.ToString("0.####", culture); //14max
         }
 
@@ -117,7 +112,7 @@ namespace MA400_export
         {
             for (int i = 0; i < numlines; i++)
             {
-                sw.WriteLine("*" );
+                sw.WriteLine("*");
             }
         }
 
@@ -128,15 +123,16 @@ namespace MA400_export
          */
         public static System.Drawing.PointF GetSpacialPosition(CSMath.XYZ position, PointF Offset, RectangleF Dimension, Scale Scalefact)
         {
-            
+
             float posx;
             float posy;
-            if(Scalefact.Xscale > 0)
+            if (Scalefact.Xscale > 0)
             {
                 posx = (float)(position.X - Offset.X);
-            }else
+            }
+            else
             {
-                posx = (float)( Dimension.Height - (position.X - Offset.X) );
+                posx = (float)(Dimension.Height - (position.X - Offset.X));
             }
 
             if (Scalefact.Yscale > 0)
@@ -145,10 +141,10 @@ namespace MA400_export
             }
             else
             {
-                posy = (float)(Dimension.Height - (position.Y - Offset.Y) );
+                posy = (float)(Dimension.Height - (position.Y - Offset.Y));
             }
 
-            return new System.Drawing.PointF( posx, posy );
+            return new System.Drawing.PointF(posx, posy);
         }
 
 
@@ -164,7 +160,7 @@ namespace MA400_export
             string Daten = Properties.Settings.Default.OutputPath + Constants.DatenPath;
             string Cnc = Properties.Settings.Default.OutputPath + Constants.CncPath;
 
-            
+
             try
             {
                 Directory.CreateDirectory(Daten);
@@ -224,8 +220,8 @@ namespace MA400_export
             N8 (Geändert am      : 07.11.2019)
             N9 (Nullpunkt        : X0 Y0 Z0/400/160)
              */
-            
-            sw.WriteLine( "N1 (P"+ Data.ProgramNumber +")" );
+
+            sw.WriteLine("N1 (P" + Data.ProgramNumber + ")");
             string machineName;
             switch (Data.machine)
             {
@@ -236,15 +232,15 @@ namespace MA400_export
                     machineName = "other";//TODO
                     break;
             }
-            sw.WriteLine( "N2 (Steuerung        : " + machineName + ")" );
-            sw.WriteLine( "N3 (Firma            : " + Data.Company  + ")" );
-            sw.WriteLine( "N4 (Teilebezeichnung : " + Data.PartDesignation + ")" );
-            sw.WriteLine( "N5 (Teilenummer      : " + Data.PartNumber + ")" );
-            sw.WriteLine( "N6 (Zeichnungsnummer : " + Data.DrawingNumber + ")" );
-            sw.WriteLine( "N7 (Erstellt am      : " + Data.DateCreation + ")" );
-            sw.WriteLine( "N8 (Geändert am      : " + Data.DateModification + ")" );
+            sw.WriteLine("N2 (Steuerung        : " + machineName + ")");
+            sw.WriteLine("N3 (Firma            : " + Data.Company + ")");
+            sw.WriteLine("N4 (Teilebezeichnung : " + Data.PartDesignation + ")");
+            sw.WriteLine("N5 (Teilenummer      : " + Data.PartNumber + ")");
+            sw.WriteLine("N6 (Zeichnungsnummer : " + Data.DrawingNumber + ")");
+            sw.WriteLine("N7 (Erstellt am      : " + Data.DateCreation + ")");
+            sw.WriteLine("N8 (Geändert am      : " + Data.DateModification + ")");
             string nullpoint = $"X{Dimension.X - Offset.X} Y{Dimension.Y - Offset.Y} Z0/{Dimension.Width}/{Dimension.Height}";
-            sw.WriteLine( "N9 (Nullpunkt        : " + nullpoint + ")" );
+            sw.WriteLine("N9 (Nullpunkt        : " + nullpoint + ")");
             //9 lignes
         }
 
@@ -265,14 +261,14 @@ namespace MA400_export
             N18 (Bolzenschweisszyklus ein)
              */
 
-            sw.WriteLine("N10 M20" );
-            sw.WriteLine("N10 M80" );
-            sw.WriteLine("N11 F100" );
-            sw.WriteLine("N12 (Massespanner zu)" );
-            sw.WriteLine("N13 M08" );
-            sw.WriteLine("N14 T0" );
-            sw.WriteLine("N15 G90" );
-            sw.WriteLine("N18 (Bolzenschweisszyklus ein)" );
+            sw.WriteLine("N10 M20");
+            sw.WriteLine("N10 M80");
+            sw.WriteLine("N11 F100");
+            sw.WriteLine("N12 (Massespanner zu)");
+            sw.WriteLine("N13 M08");
+            sw.WriteLine("N14 T0");
+            sw.WriteLine("N15 G90");
+            sw.WriteLine("N18 (Bolzenschweisszyklus ein)");
             //8 lignes
             //mais fini à N18
             //on reprend a partir de N19
@@ -299,16 +295,16 @@ namespace MA400_export
              */
             //PointF p = GetSpacialPosition(firstStud.circle.Center, Offset, Dimension, Scalefact);
 
-            sw.WriteLine($"N{++N} M20" );
+            sw.WriteLine($"N{++N} M20");
             if (first)
             {
                 sw.WriteLine($"N{++N} G00 X{FormatValue(firstStud.circle.Center.X - 0.2f)} Y{FormatValue(firstStud.circle.Center.Y)}");
             }
-            sw.WriteLine($"N{++N} (Massespanner auf)" );
-            sw.WriteLine($"N{++N} M09" );
-            sw.WriteLine($"N{++N} (Werkstueck entnehmen)" );
-            sw.WriteLine($"N{++N} M30" );
-            sw.WriteLine("%" );
+            sw.WriteLine($"N{++N} (Massespanner auf)");
+            sw.WriteLine($"N{++N} M09");
+            sw.WriteLine($"N{++N} (Werkstueck entnehmen)");
+            sw.WriteLine($"N{++N} M30");
+            sw.WriteLine("%");
 
             //on va de 1 en 1 
         }
@@ -319,7 +315,7 @@ namespace MA400_export
          * <param name="N">The Current line number</param>
          * <param name="stud">The Stud to place</param>
          */
-        private void GenerateCNCCommand(StreamWriter sw , int N, Stud stud)
+        private void GenerateCNCCommand(StreamWriter sw, int N, Stud stud)
         {
             /*
             N19 G00 X39 Y30
@@ -327,8 +323,8 @@ namespace MA400_export
              */
             //PointF p = GetSpacialPosition(stud.circle.Center, Offset, Dimension, Scalefact);
 
-            sw.WriteLine($"N{N} G00 X{FormatValue(stud.circle.Center.X)} Y{FormatValue(stud.circle.Center.Y)}" );
-            sw.WriteLine($"N{N} M81" );
+            sw.WriteLine($"N{N} G00 X{FormatValue(stud.circle.Center.X)} Y{FormatValue(stud.circle.Center.Y)}");
+            sw.WriteLine($"N{N} M81");
 
 
         }
@@ -385,7 +381,7 @@ namespace MA400_export
             int numlines = 4;
             using (StreamWriter sw = File.CreateText(path + ".AN4"))
             {
-                
+
                 WriteLine0(sw, 1);
                 /*
                 WriteEmptyLine(sw, numlines);
@@ -410,7 +406,7 @@ namespace MA400_export
             using (StreamWriter sw = File.CreateText(path + ".BOL"))
             {
                 WriteLine0(sw, 1);
-                sw.WriteLine(" " + reoccuring_number );//nombre qui apparait partout
+                sw.WriteLine(" " + reoccuring_number);//nombre qui apparait partout
                 sw.WriteLine(Studs.Count.ToString());//le nombre de goujons 
             }
         }
@@ -428,13 +424,13 @@ namespace MA400_export
             using (StreamWriter sw = File.CreateText(path + ".BST"))
             {
                 WriteLine0(sw, 5);
-                sw.WriteLine(" " + reoccuring_number );
+                sw.WriteLine(" " + reoccuring_number);
 
                 int skippedlines = 5;
                 WriteEmptyLine(sw, skippedlines);
 
                 int magicnumber = 2;
-                sw.WriteLine(magicnumber );
+                sw.WriteLine(magicnumber);
 
                 WriteEmptyLine(sw, skippedlines);
 
@@ -455,13 +451,13 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".DAT"))
             {
-                sw.WriteLine(Data.Company );
-                sw.WriteLine(Data.PartDesignation );
-                sw.WriteLine(Data.PartNumber );
-                sw.WriteLine(Data.DrawingNumber );
-                sw.WriteLine(Data.Notes );
-                sw.WriteLine(Data.DateCreation );
-                sw.WriteLine(Data.DateModification );
+                sw.WriteLine(Data.Company);
+                sw.WriteLine(Data.PartDesignation);
+                sw.WriteLine(Data.PartNumber);
+                sw.WriteLine(Data.DrawingNumber);
+                sw.WriteLine(Data.Notes);
+                sw.WriteLine(Data.DateCreation);
+                sw.WriteLine(Data.DateModification);
 
             }
         }
@@ -479,7 +475,7 @@ namespace MA400_export
             using (StreamWriter sw = File.CreateText(path + ".DUP"))
             {
                 WriteLine0(sw, 1);
-                sw.WriteLine("1" );
+                sw.WriteLine("1");
                 WriteLine0(sw, 4);
 
             }
@@ -498,15 +494,15 @@ namespace MA400_export
         {
             PointF start = GetSpacialPosition(line.StartPoint, Offset, Dimension, Scalefact);
             PointF end = GetSpacialPosition(line.EndPoint, Offset, Dimension, Scalefact);
-            if(start.X < 0 || start.Y < 0 || end.X < 0 || end.Y < 0)
+            if (start.X < 0 || start.Y < 0 || end.X < 0 || end.Y < 0)
             {
                 //throw new ArgumentOutOfRangeException();
             }
-            sw.WriteLine(Constants.LINE_CMD );
-            sw.WriteLine( FormatValue(start.X) );
-            sw.WriteLine( FormatValue(start.Y));
-            sw.WriteLine( FormatValue(end.X));
-            sw.WriteLine( FormatValue(end.Y));
+            sw.WriteLine(Constants.LINE_CMD);
+            sw.WriteLine(FormatValue(start.X));
+            sw.WriteLine(FormatValue(start.Y));
+            sw.WriteLine(FormatValue(end.X));
+            sw.WriteLine(FormatValue(end.Y));
             WriteLine0(sw, 6);
 
         }
@@ -519,15 +515,15 @@ namespace MA400_export
         public void WriteGPH_CIRCLE(StreamWriter sw, Circle circle)
         {
             PointF center = GetSpacialPosition(circle.Center, Offset, Dimension, Scalefact);
-            if ( center.X < 0 || center.Y < 0)
+            if (center.X < 0 || center.Y < 0)
             {
                 throw new ArgumentOutOfRangeException();
             }
-            sw.WriteLine(Constants.CIRCLE_CMD );
-            sw.WriteLine( FormatValue(center.X) );
-            sw.WriteLine( FormatValue(center.Y) );
+            sw.WriteLine(Constants.CIRCLE_CMD);
+            sw.WriteLine(FormatValue(center.X));
+            sw.WriteLine(FormatValue(center.Y));
             WriteLine0(sw, 1);
-            sw.WriteLine( FormatValue(circle.Radius));
+            sw.WriteLine(FormatValue(circle.Radius));
             WriteLine0(sw, 6);
         }
 
@@ -595,14 +591,14 @@ namespace MA400_export
         {
             using (StreamWriter sw = File.CreateText(path + ".GPH"))
             {
-                int NumCMD_minus_one = Entities.Count - 1 ;
+                int NumCMD_minus_one = Entities.Count - 1;
                 sw.WriteLine(NumCMD_minus_one);
                 foreach (var entity in Entities)
                 {
                     GenerateGPH_CMD(sw, entity);
                 }
 
-                
+
             }
         }
 
@@ -620,7 +616,7 @@ namespace MA400_export
             {
                 sw.WriteLine(Dimension.X - Offset.X);
                 sw.WriteLine(Dimension.Y - Offset.Y);
-                sw.WriteLine(Dimension.Width );
+                sw.WriteLine(Dimension.Width);
                 sw.WriteLine(Dimension.Height);
                 WriteLine0(sw, 4);
 
@@ -658,22 +654,22 @@ namespace MA400_export
          */
         private void WriteNcCommand(StreamWriter sw, Stud stud)
         {
-            sw.WriteLine("PUNKT" );
+            sw.WriteLine("PUNKT");
             //PointF RealPosition = GetSpacialPosition(stud.circle.Center, Offset, Dimension, Scalefact);
-            sw.WriteLine( FormatValue(stud.circle.Center.X) );
-            sw.WriteLine( FormatValue(stud.circle.Center.Y) );
+            sw.WriteLine(FormatValue(stud.circle.Center.X));
+            sw.WriteLine(FormatValue(stud.circle.Center.Y));
 
             //param incertains
-            sw.WriteLine("0" );
-            sw.WriteLine("2" );
-            sw.WriteLine("A" );
+            sw.WriteLine("0");
+            sw.WriteLine("2");
+            sw.WriteLine("A");
 
             //fill la commande avec des *
             WriteLineStar(sw, 13);
 
             //fin de la cmd
-            sw.WriteLine(" " + reoccuring_number +"/1" );
-            sw.WriteLine("1" );
+            sw.WriteLine(" " + reoccuring_number + "/1");
+            sw.WriteLine("1");
 
         }
 
@@ -684,7 +680,7 @@ namespace MA400_export
          */
         private void WriteNcEmptyCommand(StreamWriter sw)
         {
-            
+
             //fill la commande avec des *
             WriteLineStar(sw, 21);
         }
@@ -721,7 +717,7 @@ namespace MA400_export
             using (StreamWriter sw = File.CreateText(path + ".ST"))
             {
                 int magicnumber = 0;
-                sw.WriteLine(magicnumber );
+                sw.WriteLine(magicnumber);
             }
         }
 
@@ -738,9 +734,9 @@ namespace MA400_export
             using (StreamWriter sw = File.CreateText(path + ".VER"))
             {
                 int magicnumber = 0;//TODO, comprendre c'est quoi, 3 nombres potentiellement différent, souvent des 0
-                sw.WriteLine(magicnumber );
-                sw.WriteLine(magicnumber );
-                sw.WriteLine(magicnumber );
+                sw.WriteLine(magicnumber);
+                sw.WriteLine(magicnumber);
+                sw.WriteLine(magicnumber);
                 int rotation_value = 0;
                 if (Rotated)
                 {
@@ -749,7 +745,7 @@ namespace MA400_export
                 {
 
                 }
-                sw.WriteLine(rotation_value );
+                sw.WriteLine(rotation_value);
 
             }
         }

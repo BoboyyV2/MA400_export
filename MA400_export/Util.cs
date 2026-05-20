@@ -7,8 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MA400_export
@@ -19,7 +17,7 @@ namespace MA400_export
         /**
          * <summary>Hash the center point of a circle so that we can check if two are the same :)</summary>
          */
-        public static double HashCircleCenter(XYZ CircleCenter) 
+        public static double HashCircleCenter(XYZ CircleCenter)
         {
             return (CircleCenter.X + CircleCenter.Y * (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y));
         }
@@ -31,17 +29,17 @@ namespace MA400_export
         public static XYZ AdjustPoint(XYZ point, PointF offset, RectangleF dimension, Scale scale)
         {
 
-            double posx = offset.X + point.X ;
-            double posy = offset.Y + point.Y ;
+            double posx = offset.X + point.X;
+            double posy = offset.Y + point.Y;
             if (scale.Xscale < 0)
             {
-                posx = offset.X - point.X + dimension.Width; 
+                posx = offset.X - point.X + dimension.Width;
             }
             if (scale.Yscale < 0)
             {
                 posy = offset.Y - point.Y + dimension.Height;
             }
-            
+
             return new XYZ(posx, posy, 0);
         }
 
@@ -120,16 +118,16 @@ namespace MA400_export
             }
             return true;
         }
-        
-       
+
+
         /**
          * <summary>Sort a collection of Studs by their X position then by their Y position.</summary>
          * <returns>the collection sorted and turned into a list</returns>
          * <param name="Studs">The collection to sort</param>
          */
-        public static List<Stud> SortStuds(IEnumerable<Stud> Studs) 
+        public static List<Stud> SortStuds(IEnumerable<Stud> Studs)
         {
-            List<Stud> SortedStuds = Studs.ToList(); 
+            List<Stud> SortedStuds = Studs.ToList();
             SortedStuds = SortedStuds.OrderBy(item => item.circle.Center.X) //primary sort by X
             .ThenBy(item => item.circle.Center.Y) //secondary sort by Y
             .ToList();

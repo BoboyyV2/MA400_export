@@ -1,18 +1,12 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using MA400_export;
-using System.IO;
-using ACadSharp;
-using ACadSharp.IO;
 using ACadSharp.Entities;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Drawing;
 using DXFImporter;
+using MA400_export;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Drawing;
 
 namespace UnitTestProject
 {
-    
+
 
     // -------------------------------------------------------------------------
     // Tests de la classe Scale
@@ -49,7 +43,7 @@ namespace UnitTestProject
     [TestClass]
     public class StudTests
     {
-        
+
 
         [TestMethod]
         public void DefaultConstructor_CircleIsNotNull()

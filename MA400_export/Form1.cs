@@ -1,25 +1,12 @@
-﻿using ACadSharp;
-using ACadSharp.Entities;
-using ACadSharp.Objects;
+﻿using ACadSharp.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Security;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
-using System.Windows.Input;
-
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace MA400_export
 {
@@ -53,7 +40,7 @@ namespace MA400_export
 
 
         private string savepath = string.Empty;
-       
+
         //Edit variables
         public EditMode editMode = EditMode.Cursor;
         GeneratorData data = new GeneratorData();
@@ -123,7 +110,7 @@ namespace MA400_export
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.Paint(fs.Studs, getSelectedStuds(), gc.layout.offset );
+            gc.Paint(fs.Studs, getSelectedStuds(), gc.layout.offset);
 
         }
 
@@ -132,7 +119,7 @@ namespace MA400_export
          */
         public List<Stud> getSelectedStuds()
         {
-            
+
             //start by getting the data
             List<Stud> selectedList = new List<Stud>();
             foreach (Stud selectedStud in StudList_Display.SelectedItems)
@@ -148,9 +135,9 @@ namespace MA400_export
          */
         public PointF GetOffsetedCoords(PointF p)
         {
-            return new PointF(Origin_Offset.X - Constants.Origin_Coord.X + ( p.X  / _Zoom ), Origin_Offset.Y - Constants.Origin_Coord.Y + (p.Y  / _Zoom) );
+            return new PointF(Origin_Offset.X - Constants.Origin_Coord.X + (p.X / _Zoom), Origin_Offset.Y - Constants.Origin_Coord.Y + (p.Y / _Zoom));
         }
-        
+
 
         /**
          *<returns>a point to the coordonate of the cursor in the pannel without adjusting it</returns>
@@ -244,11 +231,12 @@ namespace MA400_export
         {
 
             //offsetX
-            if(predicted_offset.X < offsetX_min)
+            if (predicted_offset.X < offsetX_min)
             {
                 Origin_Offset.X = offsetX_min;
 
-            }else if (predicted_offset.X > offsetX_max)
+            }
+            else if (predicted_offset.X > offsetX_max)
             {
                 Origin_Offset.X = offsetX_max;
             }
@@ -282,7 +270,7 @@ namespace MA400_export
         {
             //compute the zoom values
             float zoom_delta = (e.Delta > 0 ? zoomValue : -zoomValue);
-            float new_Zoom = Math.Max(Math.Min(_Zoom + zoom_delta, Constants.Max_Zoom),Constants.Min_Zoom);
+            float new_Zoom = Math.Max(Math.Min(_Zoom + zoom_delta, Constants.Max_Zoom), Constants.Min_Zoom);
 
             //if needs be
             if (new_Zoom != _Zoom)
@@ -294,16 +282,16 @@ namespace MA400_export
                 //check if we stay in bounds
                 PointF predicted_offset = new PointF(Origin_Offset.X + CursorPosition.X / _Zoom * zoom_delta, Origin_Offset.Y + CursorPosition.Y / _Zoom * zoom_delta);
                 float offsetX_min = -Constants.Origin_Coord.X - 141.6f;
-                float offsetY_min = -Constants.Origin_Coord.X ;
+                float offsetY_min = -Constants.Origin_Coord.X;
 
 
                 //depends on the zoom (can't see further away than 50 out of the worspace)
                 float offsetX_max = Constants.WorkZoneLimits_Coord.X + Constants.Origin_Coord.X - (WorkZone.Width / new_Zoom) + 141.6f;
                 float offsetY_max = Constants.WorkZoneLimits_Coord.Y + Constants.Origin_Coord.Y - (WorkZone.Height / new_Zoom);
-                
-                
+
+
                 updateOrigin_Offset(predicted_offset, offsetX_min, offsetX_max, offsetY_min, offsetY_max, zoom_delta);
-                
+
                 _Zoom = new_Zoom;
 
                 UpdateCoords();
@@ -319,7 +307,7 @@ namespace MA400_export
          */
         private void Form1_Load(object sender, EventArgs e)
         {
-            if(Properties.Settings.Default.OutputPath.Length < 1)
+            if (Properties.Settings.Default.OutputPath.Length < 1)
             {
                 Properties.Settings.Default.OutputPath = Constants.Outputpath;
                 Properties.Settings.Default.Save();
@@ -366,7 +354,7 @@ namespace MA400_export
             {
                 int index = StudList_Display.SelectedIndex;
 
-                if ( ( StudList_Display.SelectedItems.Count == 1 ) && ( index < StudList_Display.Items.Count - 1 ) )
+                if ((StudList_Display.SelectedItems.Count == 1) && (index < StudList_Display.Items.Count - 1))
                 {
                     StudList_Display.SelectedItems.Clear();
                     StudList_Display.SelectedIndex = index + 1;
@@ -378,7 +366,7 @@ namespace MA400_export
                 }
 
             }
-            
+
             StudList_Display.Focus();
 
             //refresh the graphics
@@ -394,14 +382,14 @@ namespace MA400_export
         {
             bool InBounds = true;
             //Bounds
-            if ( (c.Center.X > (Constants.WorkZoneLimits_Coord.X - Constants.Origin_Coord.X - c.Radius) ) || //hors workzone droite
+            if ((c.Center.X > (Constants.WorkZoneLimits_Coord.X - Constants.Origin_Coord.X - c.Radius)) || //hors workzone droite
                  (c.Center.X < c.Radius) || // hors zone origin
-                 (c.Center.X > (gc.layout.dimension.Width - c.Radius) ) ) //hors pièce X
+                 (c.Center.X > (gc.layout.dimension.Width - c.Radius))) //hors pièce X
             {
                 error += "La coordonée X saisie n'est pas un emplacement valide pour poser un goujon.\r\n";
                 InBounds = false;
             }
-            if ( (c.Center.Y > (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y - c.Radius) ) || // hors workzone bas
+            if ((c.Center.Y > (Constants.WorkZoneLimits_Coord.Y - Constants.Origin_Coord.Y - c.Radius)) || // hors workzone bas
                  (c.Center.Y < c.Radius) || // hors zone origin
                  (c.Center.Y > gc.layout.dimension.Height - c.Radius)) //hors pièce Y
             {
@@ -411,7 +399,7 @@ namespace MA400_export
 
             return InBounds;
         }
-        
+
 
         /**
          * <summary>Tell if the input given for the addstudbutton is valid or not and display an error message if not.</summary>
@@ -484,7 +472,7 @@ namespace MA400_export
             c.Center = new CSMath.XYZ(X, Y, 0);
             c.Radius = (double)D / 2.0;
             string bound_error = "";
-            if ( !IsPointInBounds(c, ref bound_error) )
+            if (!IsPointInBounds(c, ref bound_error))
             {
                 error += bound_error;
             }
@@ -544,7 +532,7 @@ namespace MA400_export
             c.Center = new CSMath.XYZ(X, Y, 0);
             c.Radius = (double)D / 2.0;
             string bound_error = "";
-            if ( !IsPointInBounds(c, ref bound_error))
+            if (!IsPointInBounds(c, ref bound_error))
             {
                 error += bound_error;
             }
@@ -632,7 +620,7 @@ namespace MA400_export
             // Shutdown the painting of the ListBox as items are removed.
             StudList_Display.BeginUpdate();
 
-            
+
             //start by getting the data
             List<Stud> selectedList = getSelectedStuds();
 
@@ -657,7 +645,7 @@ namespace MA400_export
         private void ouvrirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialogOpen.ShowDialog();
-            
+
         }
 
         /**
@@ -723,7 +711,7 @@ namespace MA400_export
                                     "Doit être .dxf ou .ddxf");
                     return;
             }
-            
+
 
             DisplayWhenOpen(open);
         }
@@ -809,7 +797,7 @@ namespace MA400_export
                         newSelectionValue = false;
                     }
                     setStudSelected(stud, newSelectionValue);
-                    
+
                 }
             }
 
@@ -856,7 +844,7 @@ namespace MA400_export
                 return;
             }
             string diam_String = this.comboBoxDiam.Text;
-            PointF offseted_p = new PointF( (float)c.Center.X, (float)c.Center.Y);
+            PointF offseted_p = new PointF((float)c.Center.X, (float)c.Center.Y);
             if (!AddStudButtonOnClick_CheckInput((double)offseted_p.X, (double)offseted_p.Y, diam_String))
             {
                 return;
@@ -902,13 +890,13 @@ namespace MA400_export
             this.WorkZone.Refresh();
         }
 
-        
+
 
         /**
          * <summary>Handle the behavior when clicking somwhere on the WorkZone depending on the mode</summary>
          */
         private void WorkZone_Click(object sender, System.Windows.Forms.MouseEventArgs e)
-        { 
+        {
             //check if the control key is pressed
             if ((Control.ModifierKeys & Keys.Control) != 0)
             {
@@ -956,7 +944,7 @@ namespace MA400_export
 
         }
 
-       
+
 
         /**
          * <summary>Open the Form to generate the driver's files and get the data.</summary>
@@ -975,7 +963,7 @@ namespace MA400_export
                         IsNew = false;
                         return true;
                     }
-                    
+
                 }
             }
             else
@@ -1081,9 +1069,9 @@ namespace MA400_export
                     int ProgramNumber = programNumberWindow.ProgramNumber;
                     reset();
                     data = fs.OpenProdFile(ProgramNumber);
-                    
+
                     IsNew = false;
-                    
+
                     gc.OpenCanvas();
                     fs.OpenProdFileLayout(gc.layout);
 
@@ -1130,7 +1118,7 @@ namespace MA400_export
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //ouvre les options
-            using ( UserSettings settingsWindow = new UserSettings())
+            using (UserSettings settingsWindow = new UserSettings())
             {
                 settingsWindow.ShowDialog();
                 //c'est tout

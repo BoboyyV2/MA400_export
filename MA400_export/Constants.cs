@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MA400_export
 {
-    
+
     /**
      * <summary>
      * The <c>Constant</c> Class is used to store constants throughout the project

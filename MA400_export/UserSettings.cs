@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MA400_export
@@ -33,13 +26,13 @@ namespace MA400_export
 
         private void buttonChoseOutputPath_Click(object sender, EventArgs e)
         {
-            
+
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
             {
 
-                
+
                 dialog.SelectedPath = Properties.Settings.Default.OutputPath;
-                
+
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     outputPath = dialog.SelectedPath;
@@ -54,7 +47,7 @@ namespace MA400_export
             //verif path
 
             //si l'un des deux échoue
-            if ( !applyOutputPathChange() || !applyProgramNumberChange())
+            if (!applyOutputPathChange() || !applyProgramNumberChange())
             {
                 return false;
             }
@@ -79,16 +72,16 @@ namespace MA400_export
         private bool applyProgramNumberChange()
         {
             //verif num
-            try 
+            try
             {
                 programNumber = Int32.Parse(textBoxProgramNumber.Text);
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                    MessageBox.Show("Numéro de programme saisi invalide : " + ex.Message);
-                    return false;
+                MessageBox.Show("Numéro de programme saisi invalide : " + ex.Message);
+                return false;
             }
-            if(programNumber < 1)
+            if (programNumber < 1)
             {
                 MessageBox.Show("Numéro de programme saisi invalide : " + "la valeur saisie doit être positive.");
             }

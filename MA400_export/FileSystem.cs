@@ -1,7 +1,6 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
 using ACadSharp.IO;
-using ACadSharp.Objects;
 using CSMath;
 using System;
 using System.Collections.Generic;
@@ -9,11 +8,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 /***
@@ -44,20 +38,20 @@ namespace MA400_export
       * The <c>FileSystem</c> Class is used to handle the files inputs and outputs 
       * </summary>
       */
-     public class FileSystem
-     {
+    public class FileSystem
+    {
 
         //the cad document
         public CadDocument Doc = null;
 
         //whether a document or program is open
-        public bool open {  get; private set; }
+        public bool open { get; private set; }
 
         //The list of studs in the document, adjusted to the origion coordinates
-        public BindingList<Stud> Studs {  get; private set; }
+        public BindingList<Stud> Studs { get; private set; }
 
         //a copy of the above list used as remnant
-        private BindingList<Stud> StudsTMP = null ;
+        private BindingList<Stud> StudsTMP = null;
 
 
         //generatueur de fichier de sortie dédié
@@ -66,13 +60,13 @@ namespace MA400_export
         //information de layout de la pièce courante
         //attention l'accès doit se faire uniquement après initialisation (ouverture du fichier) 
         //USE WITH CAUTION
-        public Layout_Info layout { get; set;  }
+        public Layout_Info layout { get; set; }
 
         private bool rotated = false;
 
-         /**
-          * <summary>create the file systeme with a new document</summary>
-          */
+        /**
+         * <summary>create the file systeme with a new document</summary>
+         */
         public FileSystem()
         {
             Doc = new CadDocument();
@@ -157,7 +151,7 @@ namespace MA400_export
                             if (candidate.Radius == Constants.StudRadius3 || candidate.Radius == Constants.StudRadius4)
                             {
                                 Circle stud = ApplyTransform(candidate, layout.offset, layout.dimension, layout.scale);
-                                Studs.Add(new Stud(stud) );
+                                Studs.Add(new Stud(stud));
                             }
                             break;
                         }
@@ -167,7 +161,7 @@ namespace MA400_export
                 }
 
             }
-            
+
             return true;
 
         }
@@ -228,8 +222,8 @@ namespace MA400_export
 
             }
 
-            
-            
+
+
 
             return true;
 
@@ -243,10 +237,10 @@ namespace MA400_export
         public double NormalizeRadians(double angle)
         {
             double TwoPI = Math.PI * 2;
-            return ( (angle % TwoPI) + TwoPI) % TwoPI;
+            return ((angle % TwoPI) + TwoPI) % TwoPI;
         }
 
-        
+
 
         /*_____________________________________FRAME_____________________________________*/
 
@@ -257,10 +251,10 @@ namespace MA400_export
         {
 
             //si la distance entre le point et le centre du cercle est inférieure au rayon
-            if ( ( (circle.Center.X - point.X) * (circle.Center.X - point.X)
-                + (circle.Center.Y - point.Y) * (circle.Center.Y - point.Y) ) //disante au carré
-                < (circle.Radius * circle.Radius) ) // rayon au carré
-            { 
+            if (((circle.Center.X - point.X) * (circle.Center.X - point.X)
+                + (circle.Center.Y - point.Y) * (circle.Center.Y - point.Y)) //disante au carré
+                < (circle.Radius * circle.Radius)) // rayon au carré
+            {
                 return true;
             }
             return false;
@@ -273,7 +267,7 @@ namespace MA400_export
         public void TryFrame(PointF CursorPosition, out Circle c)
         {
             c = new Circle();
-                c.Center = new XYZ(-1, -1, 0);
+            c.Center = new XYZ(-1, -1, 0);
 
             if (!open)
             {
@@ -281,14 +275,14 @@ namespace MA400_export
                 return;
             }
 
-            foreach(var entity in Doc.Entities)
+            foreach (var entity in Doc.Entities)
             {
                 if (entity.ObjectType == ObjectType.CIRCLE)
                 {
                     Circle candidate = ApplyTransform((Circle)entity);
                     if (IsInsideCircle(CursorPosition, candidate))
                     {
-                        c.Center = new XYZ( candidate.Center.X, candidate.Center.Y , 0);
+                        c.Center = new XYZ(candidate.Center.X, candidate.Center.Y, 0);
                         c.Radius = candidate.Radius;
                         return;
                     }
@@ -310,7 +304,7 @@ namespace MA400_export
             var type = e.ObjectType;
             switch (type)
             {
-                 
+
                 case ObjectType.LINE:
                     {
                         Line l = (Line)e.Clone();
@@ -321,7 +315,7 @@ namespace MA400_export
                     }
                 case ObjectType.CIRCLE:
                     {
-                        Circle c  = (Circle)e.Clone();
+                        Circle c = (Circle)e.Clone();
                         c.Center = new XYZ(c.Center.X, -c.Center.Y, c.Center.Z);
                         FlippedEntities.Add(c);
                         break;
@@ -336,18 +330,18 @@ namespace MA400_export
                         double TwoPI = 2 * Math.PI;
                         //(may not be needed to normalize)
                         a.StartAngle = NormalizeRadians(TwoPI - ((Arc)e).EndAngle);
-                        a.EndAngle   = NormalizeRadians(TwoPI - ((Arc)e).StartAngle);
+                        a.EndAngle = NormalizeRadians(TwoPI - ((Arc)e).StartAngle);
 
                         FlippedEntities.Add(a);
                         break;
                     }
-                    //TODO polyline
+                //TODO polyline
                 default:
                     break;
 
             }
         }
-        
+
         /**
          * <summary>flip all of the document's entities on the X axis</summary>
          */
@@ -399,7 +393,7 @@ namespace MA400_export
 
                         //delta à 90
                         a.StartAngle = NormalizeRadians(Math.PI - ((Arc)e).EndAngle);
-                        a.EndAngle   = NormalizeRadians(Math.PI - ((Arc)e).StartAngle);
+                        a.EndAngle = NormalizeRadians(Math.PI - ((Arc)e).StartAngle);
 
                         FlippedEntities.Add(a);
                         break;
@@ -445,7 +439,7 @@ namespace MA400_export
                     double y = layout.dimension.Height - s.circle.Center.Y;
                     rotated.Center = new XYZ(x, y, s.circle.Center.Z);
 
-                    newStuds.Add(new Stud(rotated) );
+                    newStuds.Add(new Stud(rotated));
                 }
             }
             else
@@ -498,9 +492,9 @@ namespace MA400_export
                 oldStuds.Add(s);
             }
 
-            
 
-            SaveToFile(tmpPath  + @"\dxftmp.ddxf");
+
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
 
             //ré open le fichier tmp en ddxf
             OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
@@ -583,7 +577,7 @@ namespace MA400_export
             }
 
 
-            
+
 
             //save dans un fichier temporaire pour l'affichage / traitement
             SaveToFile(tmpPath + @"\dxftmp.ddxf");
@@ -654,7 +648,7 @@ namespace MA400_export
             //flip the part so that the inner part faces upward
             FlipEntitiesX();
 
-            
+
 
             //save dans un fichier temporaire pour l'affichage / traitement
             SaveToFile(tmpPath + @"\dxftmp.ddxf");
@@ -675,7 +669,7 @@ namespace MA400_export
             ScanDxfEntities();
         }
 
-        
+
 
         /*_____________________________________PRODFILE_____________________________________*/
 
@@ -723,7 +717,7 @@ namespace MA400_export
             // ==>>
             ReadNC(ProgramNumber);
 
-            
+
 
 
             SaveToFile(tmpPath + @"\dxftmp.ddxf");
@@ -736,7 +730,7 @@ namespace MA400_export
         public void OpenProdFileLayout(Layout_Info layout)
         {
             this.layout = layout;
-            
+
         }
 
 
@@ -751,7 +745,7 @@ namespace MA400_export
         private Entity ParseGPHEntities(string[] file, ref int num_line)
         {
 
-            
+
 
             int EntitieType = int.Parse(file[num_line]);
             switch (EntitieType)
@@ -762,11 +756,11 @@ namespace MA400_export
                         Circle c = new Circle();
                         double centerX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double centerY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        c.Center       = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), layout.offset, layout.dimension, new Scale(true, false));
+                        c.Center = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), layout.offset, layout.dimension, new Scale(true, false));
 
                         ++num_line;
-                        double radius  = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        c.Radius       = radius;
+                        double radius = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        c.Radius = radius;
                         num_line += 6;
 
                         return c;
@@ -778,28 +772,28 @@ namespace MA400_export
                         Line l = new Line();
                         double startX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double startY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.StartPoint  = Util.AdjustPointGPH(new CSMath.XYZ(startX, startY, 0), layout.offset, layout.dimension, new Scale(true, false) );
-                        double endX   = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        double endY   = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        l.EndPoint    = Util.AdjustPointGPH(new CSMath.XYZ(endX, endY, 0), layout.offset, layout.dimension, new Scale(true, false));
+                        l.StartPoint = Util.AdjustPointGPH(new CSMath.XYZ(startX, startY, 0), layout.offset, layout.dimension, new Scale(true, false));
+                        double endX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        double endY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        l.EndPoint = Util.AdjustPointGPH(new CSMath.XYZ(endX, endY, 0), layout.offset, layout.dimension, new Scale(true, false));
                         num_line += 6;
 
 
                         return l;
                     }
-                    //arc
+                //arc
                 case 3:
                     {
                         Arc a = new Arc();
                         double centerX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double centerY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        a.Center       = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), layout.offset, layout.dimension, new Scale(true, false));
+                        a.Center = Util.AdjustPointGPH(new CSMath.XYZ(centerX, centerY, 0), layout.offset, layout.dimension, new Scale(true, false));
 
                         ++num_line;
-                        double radius  = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
-                        a.Radius       = radius;
-                        a.StartAngle   = (Double.Parse(file[++num_line], CultureInfo.InvariantCulture)) * Math.PI / 180;
-                        a.EndAngle     = (Double.Parse(file[++num_line], CultureInfo.InvariantCulture)) * Math.PI / 180; ;
+                        double radius = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
+                        a.Radius = radius;
+                        a.StartAngle = (Double.Parse(file[++num_line], CultureInfo.InvariantCulture)) * Math.PI / 180;
+                        a.EndAngle = (Double.Parse(file[++num_line], CultureInfo.InvariantCulture)) * Math.PI / 180; ;
                         num_line += 4;
 
                         return a;
@@ -874,7 +868,7 @@ namespace MA400_export
                                 float.Parse(file[1], CultureInfo.InvariantCulture));
 
 
-            layout.dimension = new RectangleF( float.Parse(file[0], CultureInfo.InvariantCulture), 
+            layout.dimension = new RectangleF(float.Parse(file[0], CultureInfo.InvariantCulture),
                                         float.Parse(file[1], CultureInfo.InvariantCulture),
                                         float.Parse(file[2], CultureInfo.InvariantCulture),
                                         float.Parse(file[3], CultureInfo.InvariantCulture));
@@ -906,7 +900,7 @@ namespace MA400_export
                 stud.Radius = Constants.StudRadius3;//toujours 3 (default)
                 stud.Color = ACadSharp.Color.Green;
 
-                Studs.Add( new Stud(stud) );
+                Studs.Add(new Stud(stud));
             }
             else
             {
@@ -1004,7 +998,7 @@ namespace MA400_export
                 {
                     save.Entities.Add((Entity)entity.Clone());
                 }
-                catch(ArgumentException)
+                catch (ArgumentException)
                 {
                     //MessageBox.Show(entity.ToString());
                 }
@@ -1024,18 +1018,18 @@ namespace MA400_export
         /**
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          */
-        public void GenerateProdFiles( BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact) 
+        public void GenerateProdFiles(BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)
         {
-            Gen = new ProdFileGenerator( Studs, Doc.Entities,Dimension, Offset, Data, Scalefact, rotated);
+            Gen = new ProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotated);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 
         /**
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          */
-        public void GenerateProdFiles( BindingList<Stud> Studs,GeneratorData Data, Layout_Info layout)
+        public void GenerateProdFiles(BindingList<Stud> Studs, GeneratorData Data, Layout_Info layout)
         {
-            Gen = new ProdFileGenerator( Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotated);
+            Gen = new ProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotated);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 
