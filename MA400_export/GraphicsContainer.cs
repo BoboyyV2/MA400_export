@@ -17,9 +17,15 @@ namespace MA400_export
         /**
          * <summary>the actual graphics</summary>
          */
-        public Graphics graphics { get; set; }
+
+        //the background conataining the reference and possibly the part
+        public Graphics BackGround { get; set; }
+
+        //the foreground containing the studs and the frame
+        public Graphics ForeGround { get; set; }
 
         DXFImporter.Canvas canvas = null;
+
         private bool open { get; set; }
 
         private float line_thickness = 0.4f;
@@ -29,18 +35,13 @@ namespace MA400_export
 
         private Circle FramedCircle;
 
-        public GraphicsContainer(Graphics graphics)
-        {
-            this.graphics = graphics;
-            open = false;
-            layout = new Layout_Info();
-            FramedCircle = null;
-
-        }
+        
 
         public GraphicsContainer()
         {
-            this.graphics = null;
+            this.BackGround = null;
+            this.ForeGround = null;
+
             open = false;
             layout = new Layout_Info();
             FramedCircle = null;
@@ -87,8 +88,8 @@ namespace MA400_export
             shape.Width = 2 * radius - pen.Width / 2;
             shape.Height = 2 * radius - pen.Width / 2;
 
-            graphics.FillEllipse(drawBrush, shape);
-            graphics.DrawEllipse(pen, shape);
+            BackGround.FillEllipse(drawBrush, shape);
+            BackGround.DrawEllipse(pen, shape);
 
         }
 
@@ -106,7 +107,7 @@ namespace MA400_export
             shape.Height = 2 * StudRadius;
 
             SolidBrush drawBrush = new SolidBrush(Color.LimeGreen);
-            graphics.FillEllipse(drawBrush, shape);
+            ForeGround.FillEllipse(drawBrush, shape);
 
         }
 
@@ -135,7 +136,7 @@ namespace MA400_export
             shape.Height = 2 * StudRadius;
 
             SolidBrush drawBrush = new SolidBrush(Color.Cyan);
-            graphics.FillEllipse(drawBrush, shape);
+            ForeGround.FillEllipse(drawBrush, shape);
 
         }
 
@@ -183,21 +184,21 @@ namespace MA400_export
             Pen dashPen = new Pen(Color.Green, 1);
             dashPen.DashPattern = dashValues;
 
-            graphics.DrawLine(dashPen, Origin, Ytarget);
+            BackGround.DrawLine(dashPen, Origin, Ytarget);
 
             //the tip
-            graphics.DrawLine(Pens.Green, Ytarget.X, Ytarget.Y + 1, Ytarget.X - delta, Ytarget.Y - delta + 1);
-            graphics.DrawLine(Pens.Green, Ytarget.X, Ytarget.Y + 1, Ytarget.X + delta, Ytarget.Y - delta + 1);
+            BackGround.DrawLine(Pens.Green, Ytarget.X, Ytarget.Y + 1, Ytarget.X - delta, Ytarget.Y - delta + 1);
+            BackGround.DrawLine(Pens.Green, Ytarget.X, Ytarget.Y + 1, Ytarget.X + delta, Ytarget.Y - delta + 1);
 
-            graphics.DrawString("y", drawFont, drawBrush, Ytarget.X - 6, Ytarget.Y);
+            BackGround.DrawString("y", drawFont, drawBrush, Ytarget.X - 6, Ytarget.Y);
 
             //x arrow
-            graphics.DrawLine(dashPen, Origin, Xtarget);
+            BackGround.DrawLine(dashPen, Origin, Xtarget);
 
             //the tip
-            graphics.DrawLine(Pens.Green, Xtarget.X + 1, Xtarget.Y, Xtarget.X - delta + 1, Xtarget.Y + delta);
-            graphics.DrawLine(Pens.Green, Xtarget.X + 1, Xtarget.Y, Xtarget.X - delta + 1, Xtarget.Y - delta);
-            graphics.DrawString("x", drawFont, drawBrush, Xtarget.X, Xtarget.Y - 9);
+            BackGround.DrawLine(Pens.Green, Xtarget.X + 1, Xtarget.Y, Xtarget.X - delta + 1, Xtarget.Y + delta);
+            BackGround.DrawLine(Pens.Green, Xtarget.X + 1, Xtarget.Y, Xtarget.X - delta + 1, Xtarget.Y - delta);
+            BackGround.DrawString("x", drawFont, drawBrush, Xtarget.X, Xtarget.Y - 9);
 
             //draw the scale indicator
             PointF ScaleStart = PointF.Empty;
@@ -208,17 +209,17 @@ namespace MA400_export
             ScaleEnd.X = 200;
             ScaleEnd.Y = 25;
 
-            graphics.DrawLine(Pens.Purple, ScaleStart, ScaleEnd);
+            BackGround.DrawLine(Pens.Purple, ScaleStart, ScaleEnd);
 
             //draw tips
-            graphics.DrawLine(Pens.Purple, ScaleStart.X, ScaleStart.Y, ScaleStart.X + 5, ScaleStart.Y - 5);
-            graphics.DrawLine(Pens.Purple, ScaleStart.X, ScaleStart.Y, ScaleStart.X + 5, ScaleStart.Y + 5);
-            graphics.DrawLine(Pens.Purple, ScaleEnd.X, ScaleEnd.Y, ScaleEnd.X - 5, ScaleEnd.Y - 5);
-            graphics.DrawLine(Pens.Purple, ScaleEnd.X, ScaleEnd.Y, ScaleEnd.X - 5, ScaleEnd.Y + 5);
+            BackGround.DrawLine(Pens.Purple, ScaleStart.X, ScaleStart.Y, ScaleStart.X + 5, ScaleStart.Y - 5);
+            BackGround.DrawLine(Pens.Purple, ScaleStart.X, ScaleStart.Y, ScaleStart.X + 5, ScaleStart.Y + 5);
+            BackGround.DrawLine(Pens.Purple, ScaleEnd.X, ScaleEnd.Y, ScaleEnd.X - 5, ScaleEnd.Y - 5);
+            BackGround.DrawLine(Pens.Purple, ScaleEnd.X, ScaleEnd.Y, ScaleEnd.X - 5, ScaleEnd.Y + 5);
 
             drawFont = new Font("Arial", 10);
             drawBrush = new SolidBrush(Color.Purple);
-            graphics.DrawString("10cm = 100u", drawFont, drawBrush, ScaleStart.X + 9, ScaleStart.Y - 18);
+            BackGround.DrawString("10cm = 100u", drawFont, drawBrush, ScaleStart.X + 9, ScaleStart.Y - 18);
 
 
 
@@ -236,10 +237,10 @@ namespace MA400_export
             Pen dashPen = new Pen(Color.Red, 0.8f);
             dashPen.DashPattern = dashValues;
 
-            graphics.DrawLine(dashPen, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2);
-            graphics.DrawLine(dashPen, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2);
-            graphics.DrawLine(dashPen, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2);
-            graphics.DrawLine(dashPen, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2);
+            BackGround.DrawLine(dashPen, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2);
+            BackGround.DrawLine(dashPen, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2);
+            BackGround.DrawLine(dashPen, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.Y - dashPen.Width / 2, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2);
+            BackGround.DrawLine(dashPen, Constants.WorkZoneLimits_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2, Constants.Origin_Coord.X - dashPen.Width / 2, Constants.Origin_Coord.Y - dashPen.Width / 2);
 
 
         }
@@ -279,7 +280,7 @@ namespace MA400_export
         {
             if (open)
             {
-                canvas.Draw(graphics);
+                canvas.Draw(BackGround);
             }
         }
 
@@ -353,20 +354,20 @@ namespace MA400_export
             //draw
 
             //topleft
-            graphics.DrawLine(pen, topleft.X, topleft.Y, topleft.X, topleft.Y + (float)circle.Radius / 1.2f);
-            graphics.DrawLine(pen, topleft.X, topleft.Y, topleft.X + (float)circle.Radius / 1.2f, topleft.Y);
+            ForeGround.DrawLine(pen, topleft.X, topleft.Y, topleft.X, topleft.Y + (float)circle.Radius / 1.2f);
+            ForeGround.DrawLine(pen, topleft.X, topleft.Y, topleft.X + (float)circle.Radius / 1.2f, topleft.Y);
 
             //botleft
-            graphics.DrawLine(pen, bottomleft.X, bottomleft.Y, bottomleft.X, bottomleft.Y - (float)circle.Radius / 1.2f);
-            graphics.DrawLine(pen, bottomleft.X, bottomleft.Y, bottomleft.X + (float)circle.Radius / 1.2f, bottomleft.Y);
+            ForeGround.DrawLine(pen, bottomleft.X, bottomleft.Y, bottomleft.X, bottomleft.Y - (float)circle.Radius / 1.2f);
+            ForeGround.DrawLine(pen, bottomleft.X, bottomleft.Y, bottomleft.X + (float)circle.Radius / 1.2f, bottomleft.Y);
 
             //topright
-            graphics.DrawLine(pen, topright.X, topright.Y, topright.X, topright.Y + (float)circle.Radius / 1.2f);
-            graphics.DrawLine(pen, topright.X, topright.Y, topright.X - (float)circle.Radius / 1.2f, topright.Y);
+            ForeGround.DrawLine(pen, topright.X, topright.Y, topright.X, topright.Y + (float)circle.Radius / 1.2f);
+            ForeGround.DrawLine(pen, topright.X, topright.Y, topright.X - (float)circle.Radius / 1.2f, topright.Y);
 
             //botright
-            graphics.DrawLine(pen, bottomright.X, bottomright.Y, bottomright.X, bottomright.Y - (float)circle.Radius / 1.2f);
-            graphics.DrawLine(pen, bottomright.X, bottomright.Y, bottomright.X - (float)circle.Radius / 1.2f, bottomright.Y);
+            ForeGround.DrawLine(pen, bottomright.X, bottomright.Y, bottomright.X, bottomright.Y - (float)circle.Radius / 1.2f);
+            ForeGround.DrawLine(pen, bottomright.X, bottomright.Y, bottomright.X - (float)circle.Radius / 1.2f, bottomright.Y);
 
         }
 
@@ -381,29 +382,35 @@ namespace MA400_export
                 DrawFrameOverCircle(FramedCircle);
             }
         }
+
         /**
-         * <summary>Paint everything onto the graphics</summary>
+         * <summary>Paint everything onto the background graphics</summary>
+         * <remarks>This draws the basic form of the workzone including but not restricted to : <br></br>
+            the background, the rectangular coordinate system, the scale, the workzone, the landmarks and the part</remarks>
          */
-        public void Paint(IEnumerable<Stud> Studs, IEnumerable<Stud> SelectedStuds, PointF offset)
+        public void PaintBack(IEnumerable<Stud> Studs, IEnumerable<Stud> SelectedStuds, PointF offset)
         {
-            //draw the basic from of the workzone
-            //including but not restricted to :
-            //the background, the rectangular coordinate system, the scale
-            //the workzone, the landmarks
-
-            graphics.Clear(Color.Black);
-
+            BackGround.Clear(Color.Black);
 
             Draw_CoordSystem();
             Draw_WorkZoneLimits();
             Draw_ReferenceCircles();
-            //affichage du dxf
 
+            //affichage du dxf
             DrawDXF();//check if open
 
+        }
+
+        /**
+         * <summary>Paint everything onto the foreground graphics</summary>
+         * <remarks>This include the Studs(selected and not selected aswell as the frame over the framed circle.<br></br>
+         * In the future this will also draw the welding head of the machine</remarks>
+         */
+        public void PaintFront(IEnumerable<Stud> Studs, IEnumerable<Stud> SelectedStuds, PointF offset)
+        {
+            
             Draw_Studs(Studs);
             Draw_Selected_Studs(SelectedStuds);
-
 
             DrawFramedCircle();
 

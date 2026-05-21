@@ -106,11 +106,21 @@ namespace MA400_export
             //the background, the rectangular coordinate system, the scale
             //the workzone, the landmarks
 
-            gc.graphics = e.Graphics;
-            gc.graphics.ScaleTransform(_Zoom, _Zoom);
-            gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
+            gc.BackGround = e.Graphics;
+            gc.BackGround.ScaleTransform(_Zoom, _Zoom);
+            gc.BackGround.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.Paint(fs.Studs, getSelectedStuds(), gc.layout.offset);
+            gc.PaintBack(fs.Studs, getSelectedStuds(), gc.layout.offset);
+
+        }
+
+        private void DisplayPanel_Paint(object sender, PaintEventArgs e)
+        {
+            gc.ForeGround = e.Graphics;
+            gc.ForeGround.ScaleTransform(_Zoom, _Zoom);
+            gc.ForeGround.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
+
+            gc.PaintFront(fs.Studs, getSelectedStuds(), gc.layout.offset);
 
         }
 
@@ -1168,6 +1178,8 @@ namespace MA400_export
             WorkZone.Size = new Size(this.ClientSize.Width - Constants.Client_panel_delta_width, this.ClientSize.Height - Constants.Client_panel_delta_height);
 
         }
+
+       
 
         /*___________________________________________|___________________________________________*/
 
