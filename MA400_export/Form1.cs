@@ -311,6 +311,7 @@ namespace MA400_export
             {
                 Properties.Settings.Default.OutputPath = Constants.Outputpath;
                 Properties.Settings.Default.Save();
+                WorkZone.CreateGraphics();
 
             }
         }
@@ -805,7 +806,7 @@ namespace MA400_export
 
 
         /**
-         * <summary>
+         * <summary>should only refresh
          * Handle the behavior when clicking somwhere on the WorkZone using the add mode and left click.<br></br>
          * Add a stud at the clicked coordinates if possible, show an error if it isn't.
          * </summary>
@@ -827,7 +828,9 @@ namespace MA400_export
             }
 
             AddStud(circle);
-            this.WorkZone.Refresh();
+            //should only refresh the pixel inside the rectangle
+            this.WorkZone.Invalidate(new Rectangle((int)(offseted_p.X - radius + Constants.Origin_Coord.X), (int)(offseted_p.Y - radius + Constants.Origin_Coord.Y),
+                                                    (int)(offseted_p.X + radius + Constants.Origin_Coord.X), (int)(offseted_p.Y + radius + Constants.Origin_Coord.Y)));
         }
 
         /**
@@ -857,7 +860,10 @@ namespace MA400_export
             }
 
             AddStud(circle);
-            this.WorkZone.Refresh();
+            
+            //should only refresh the pixel inside the rectangle
+            this.WorkZone.Invalidate(new Rectangle( (int)(offseted_p.X - radius + Constants.Origin_Coord.X), (int)(offseted_p.Y - radius + Constants.Origin_Coord.Y),
+                                                    (int)(offseted_p.X + radius + Constants.Origin_Coord.X), (int)(offseted_p.Y + radius + Constants.Origin_Coord.Y) ) );
         }
 
 
@@ -887,7 +893,9 @@ namespace MA400_export
             {
                 MessageBox.Show("aucun goujon trouvé à cette position.");
             }
-            this.WorkZone.Refresh();
+            //should only refresh the pixel inside the rectangle
+            this.WorkZone.Invalidate(new Rectangle((int)(p_rm.X - Constants.StudRadius4 + Constants.Origin_Coord.X), (int)(p_rm.Y - Constants.StudRadius4 + Constants.Origin_Coord.Y),
+                                                    (int)(p_rm.X + Constants.StudRadius4 + Constants.Origin_Coord.X), (int)(p_rm.Y + Constants.StudRadius4 + Constants.Origin_Coord.Y)));
         }
 
 
@@ -1100,7 +1108,9 @@ namespace MA400_export
             StudList_Display.DataSource = fs.Studs;
 
 
-            this.WorkZone.Invalidate();
+            this.WorkZone.Invalidate(new Rectangle( (int)Constants.Origin_Coord.X, (int)Constants.Origin_Coord.Y,
+                                                    (int)(Constants.Origin_Coord.X + Constants.WorkZoneLimits_Coord.X) ,
+                                                    (int)(Constants.Origin_Coord.Y + Constants.WorkZoneLimits_Coord.Y) ) );
         }
 
         /**
