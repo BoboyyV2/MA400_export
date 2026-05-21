@@ -99,7 +99,7 @@ namespace MA400_export
          */
         public void Draw_Stud(Circle stud)
         {
-            float StudRadius = (float)stud.Radius;
+            float StudRadius = (float)stud.Radius + 0.1f;
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
@@ -128,7 +128,7 @@ namespace MA400_export
          */
         public void Draw_Selected_Stud(Circle stud)
         {
-            float StudRadius = (float)stud.Radius + 0.3f;
+            float StudRadius = (float)stud.Radius + 0.1f;
             RectangleF shape = new RectangleF();
             shape.X = (float)stud.Center.X - StudRadius + Constants.Origin_Coord.X;
             shape.Y = (float)stud.Center.Y - StudRadius + Constants.Origin_Coord.Y;
@@ -388,7 +388,7 @@ namespace MA400_export
          * <remarks>This draws the basic form of the workzone including but not restricted to : <br></br>
             the background, the rectangular coordinate system, the scale, the workzone, the landmarks and the part</remarks>
          */
-        public void PaintBack(IEnumerable<Stud> Studs, IEnumerable<Stud> SelectedStuds, PointF offset)
+        public void PaintBack()
         {
             BackGround.Clear(Color.Black);
 
@@ -406,7 +406,7 @@ namespace MA400_export
          * <remarks>This include the Studs(selected and not selected aswell as the frame over the framed circle.<br></br>
          * In the future this will also draw the welding head of the machine</remarks>
          */
-        public void PaintFront(IEnumerable<Stud> Studs, IEnumerable<Stud> SelectedStuds, PointF offset)
+        public void PaintFront(IEnumerable<Stud> Studs, IEnumerable<Stud> SelectedStuds)
         {
             
             Draw_Studs(Studs);

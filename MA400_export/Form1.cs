@@ -110,7 +110,7 @@ namespace MA400_export
             gc.BackGround.ScaleTransform(_Zoom, _Zoom);
             gc.BackGround.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.PaintBack(fs.Studs, getSelectedStuds(), gc.layout.offset);
+            gc.PaintBack();
 
         }
 
@@ -120,7 +120,7 @@ namespace MA400_export
             gc.ForeGround.ScaleTransform(_Zoom, _Zoom);
             gc.ForeGround.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
 
-            gc.PaintFront(fs.Studs, getSelectedStuds(), gc.layout.offset);
+            gc.PaintFront(fs.Studs, getSelectedStuds());
 
         }
 
@@ -221,7 +221,7 @@ namespace MA400_export
                 gc.FrameCircle(c);
                 DisplayHoveredCircleCoord(c);
             }
-            WorkZone.Invalidate();
+            DisplayPanel.Invalidate();
 
         }
 
@@ -308,6 +308,7 @@ namespace MA400_export
                 //reframe a circle if needed
                 TryFrame();
 
+                DisplayPanel.Invalidate();
                 WorkZone.Invalidate();
             }
         }
@@ -353,7 +354,7 @@ namespace MA400_export
             StudList_Display.Focus();
 
             //refresh the graphics
-            WorkZone.Invalidate();
+            DisplayPanel.Invalidate();
         }
 
         /**
@@ -381,7 +382,7 @@ namespace MA400_export
             StudList_Display.Focus();
 
             //refresh the graphics
-            WorkZone.Invalidate();
+            DisplayPanel.Invalidate();
         }
 
         /**
@@ -617,7 +618,7 @@ namespace MA400_export
             StudList_Display.EndUpdate();
 
             //refresh the graphics
-            WorkZone.Invalidate();
+            DisplayPanel.Invalidate();
 
         }
 
@@ -646,7 +647,7 @@ namespace MA400_export
             StudList_Display.EndUpdate();
 
             //refresh the graphics
-            WorkZone.Invalidate();
+            DisplayPanel.Invalidate();
 
         }
 
@@ -839,7 +840,7 @@ namespace MA400_export
 
             AddStud(circle);
             //should only refresh the pixel inside the rectangle
-            this.WorkZone.Invalidate(new Rectangle((int)(offseted_p.X - radius + Constants.Origin_Coord.X), (int)(offseted_p.Y - radius + Constants.Origin_Coord.Y),
+            DisplayPanel.Invalidate(new Rectangle((int)(offseted_p.X - radius + Constants.Origin_Coord.X), (int)(offseted_p.Y - radius + Constants.Origin_Coord.Y),
                                                     (int)(offseted_p.X + radius + Constants.Origin_Coord.X), (int)(offseted_p.Y + radius + Constants.Origin_Coord.Y)));
         }
 
@@ -872,7 +873,7 @@ namespace MA400_export
             AddStud(circle);
             
             //should only refresh the pixel inside the rectangle
-            this.WorkZone.Invalidate(new Rectangle( (int)(offseted_p.X - radius + Constants.Origin_Coord.X), (int)(offseted_p.Y - radius + Constants.Origin_Coord.Y),
+            DisplayPanel.Invalidate(new Rectangle( (int)(offseted_p.X - radius + Constants.Origin_Coord.X), (int)(offseted_p.Y - radius + Constants.Origin_Coord.Y),
                                                     (int)(offseted_p.X + radius + Constants.Origin_Coord.X), (int)(offseted_p.Y + radius + Constants.Origin_Coord.Y) ) );
         }
 
@@ -904,7 +905,7 @@ namespace MA400_export
                 MessageBox.Show("aucun goujon trouvé à cette position.");
             }
             //should only refresh the pixel inside the rectangle
-            this.WorkZone.Invalidate(new Rectangle((int)(p_rm.X - Constants.StudRadius4 + Constants.Origin_Coord.X), (int)(p_rm.Y - Constants.StudRadius4 + Constants.Origin_Coord.Y),
+            DisplayPanel.Invalidate(new Rectangle((int)(p_rm.X - Constants.StudRadius4 + Constants.Origin_Coord.X), (int)(p_rm.Y - Constants.StudRadius4 + Constants.Origin_Coord.Y),
                                                     (int)(p_rm.X + Constants.StudRadius4 + Constants.Origin_Coord.X), (int)(p_rm.Y + Constants.StudRadius4 + Constants.Origin_Coord.Y)));
         }
 
@@ -959,6 +960,7 @@ namespace MA400_export
                         break;
                 }
             }
+            DisplayPanel.Invalidate ();
 
         }
 
@@ -1129,7 +1131,7 @@ namespace MA400_export
         private void StudList_Display_SelectedIndexChanged(object sender, EventArgs e)
         {
             //refresh the graphics
-            WorkZone.Invalidate();
+            DisplayPanel.Invalidate();
         }
 
         /**
@@ -1179,7 +1181,9 @@ namespace MA400_export
 
         }
 
-       
+        
+
+
 
         /*___________________________________________|___________________________________________*/
 

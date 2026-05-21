@@ -83,8 +83,7 @@ namespace MA400_export
             this.labelHoveredCircle = new System.Windows.Forms.Label();
             this.labelHoveredCircleX = new System.Windows.Forms.Label();
             this.labelHoveredCircleY = new System.Windows.Forms.Label();
-            this.DisplayPanel = new System.Windows.Forms.Panel();
-            this.WorkZone.SuspendLayout();
+            this.DisplayPanel = new TransparentPanel();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -94,10 +93,9 @@ namespace MA400_export
             // 
             this.WorkZone.AutoSize = true;
             this.WorkZone.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.WorkZone.Controls.Add(this.DisplayPanel);
             this.WorkZone.Location = new System.Drawing.Point(1, 52);
             this.WorkZone.Name = "WorkZone";
-            this.WorkZone.Size = new System.Drawing.Size(803, 603);
+            this.WorkZone.Size = new System.Drawing.Size(800, 600);
             this.WorkZone.TabIndex = 10;
             this.WorkZone.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkZone_Paint);
             this.WorkZone.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Click);
@@ -513,17 +511,22 @@ namespace MA400_export
             // DisplayPanel
             // 
             this.DisplayPanel.BackColor = System.Drawing.Color.Transparent;
-            this.DisplayPanel.Location = new System.Drawing.Point(0, 0);
+            this.DisplayPanel.Location = new System.Drawing.Point(1, 52);
             this.DisplayPanel.Name = "DisplayPanel";
             this.DisplayPanel.Size = new System.Drawing.Size(800, 600);
             this.DisplayPanel.TabIndex = 27;
             this.DisplayPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.DisplayPanel_Paint);
+            this.DisplayPanel.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Zoom);
+            this.DisplayPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Click);
+            this.DisplayPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorkZone_MouseMove);
+
             // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 681);
+            this.Controls.Add(this.DisplayPanel);
             this.Controls.Add(this.labelHoveredCircle);
             this.Controls.Add(this.labelHoveredCircleX);
             this.Controls.Add(this.labelHoveredCircleY);
@@ -553,7 +556,6 @@ namespace MA400_export
             this.Text = "MA400_Export";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
-            this.WorkZone.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
@@ -611,7 +613,7 @@ namespace MA400_export
         private Label labelHoveredCircle;
         private Label labelHoveredCircleX;
         private Label labelHoveredCircleY;
-        private Panel DisplayPanel;
+        private TransparentPanel DisplayPanel;
     }
 }
 

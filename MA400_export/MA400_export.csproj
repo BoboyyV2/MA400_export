@@ -160,6 +160,9 @@
     <Compile Include="Scale.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Stud.cs" />
+    <Compile Include="TransparentPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UserSettings.cs">
       <SubType>Form</SubType>
     </Compile>
