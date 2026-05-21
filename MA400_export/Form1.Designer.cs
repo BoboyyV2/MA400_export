@@ -38,7 +38,7 @@ namespace MA400_export
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MA400_export));
-            this.WorkZone = new System.Windows.Forms.Panel();
+            this.WorkZone = new DoubleBufferedPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -571,7 +571,7 @@ namespace MA400_export
         private System.Windows.Forms.Button buttonRemoveStud;
         private System.Windows.Forms.Button buttonAddStud;
         private System.Windows.Forms.OpenFileDialog openFileDialogOpen;
-        private System.Windows.Forms.Panel WorkZone;
+        private DoubleBufferedPanel WorkZone;
         private System.Windows.Forms.Label YCoord_Display;
         private System.Windows.Forms.Label XCoord_Display;
         private System.Windows.Forms.ToolStrip toolStrip2;

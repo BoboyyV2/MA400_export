@@ -132,6 +132,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FormGenerateInfo.cs">
       <SubType>Form</SubType>
     </Compile>
