@@ -317,14 +317,27 @@ namespace MA400_export
             }
 
             //selection machine
-            using (MachineSelection ms= new MachineSelection())
+            bool selected = false;
+            
+            
+            while (!selected)
             {
-                if (ms.ShowDialog() == DialogResult.OK)
+                using (MachineSelection ms = new MachineSelection())
                 {
-                    machine = ms.getMachine();
-                    
-                }
+                    if (ms.ShowDialog() == DialogResult.OK)
+                    {
+                        machine = ms.getMachine();
+                        if (machine != Machine.None)
+                        {
+                            selected = true;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erreur lors de la séléction de la machine, réouverture de la séléction");
+                    }
 
+                }
             }
 
         }
