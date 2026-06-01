@@ -127,7 +127,8 @@
             this.Controls.Add(this.OutputPathLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "UserSettings";
-            this.Text = "UserSettings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Paramètres";
             this.ResumeLayout(false);
             this.PerformLayout();
 

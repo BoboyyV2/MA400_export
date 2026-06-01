@@ -225,7 +225,7 @@ namespace MA400_export
             string machineName;
             switch (Data.machine)
             {
-                case Machine.MA400S:
+                case Machine.KTS850:
                     machineName = "MA-400-S";
                     break;
                 default:

@@ -29,8 +29,9 @@ namespace MA400_export
 
     public enum Machine
     {
-        MA400S,
-        Other
+        KTS850,
+        Small,
+        None
     }
 
     /**
@@ -839,7 +840,7 @@ namespace MA400_export
 
             //fill the data struct
             data.ProgramNumber = ProgramNumber;
-            data.machine = Machine.MA400S;
+            data.machine = Machine.KTS850;
             data.Company = file[0];
             data.PartDesignation = file[1];
             data.PartNumber = file[2];

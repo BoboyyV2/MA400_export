@@ -48,6 +48,8 @@ namespace MA400_export
 
         private double currentFramedCircleHash = -1.0;
 
+        public Machine machine;
+
         public MA400_export()
         {
             InitializeComponent();
@@ -311,9 +313,20 @@ namespace MA400_export
             {
                 Properties.Settings.Default.OutputPath = Constants.Outputpath;
                 Properties.Settings.Default.Save();
-                WorkZone.CreateGraphics();
 
             }
+
+            //selection machine
+            using (MachineSelection ms= new MachineSelection())
+            {
+                if (ms.ShowDialog() == DialogResult.OK)
+                {
+                    machine = ms.getMachine();
+                    
+                }
+
+            }
+
         }
 
 
