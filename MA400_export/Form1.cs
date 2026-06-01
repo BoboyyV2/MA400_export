@@ -318,8 +318,7 @@ namespace MA400_export
 
             //selection machine
             bool selected = false;
-            
-            
+            //boucle jusqu'a ce qu'on choisisse
             while (!selected)
             {
                 using (MachineSelection ms = new MachineSelection())
@@ -1193,6 +1192,26 @@ namespace MA400_export
         {
             WorkZone.Size = new Size(this.ClientSize.Width - Constants.Client_panel_delta_width, this.ClientSize.Height - Constants.Client_panel_delta_height);
 
+        }
+
+        private void imprimerToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //ouvre le menu print
+            using (PrintDialog printer = new PrintDialog())
+            {
+                printer.ShowDialog();
+                //c'est tout
+            }
+        }
+
+        private void afficherLaperçuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //ouvre l'aperçu d'impression
+            using (PrintPreviewDialog preview = new PrintPreviewDialog())
+            {
+                preview.ShowDialog();
+                //c'est tout
+            }
         }
 
         /*___________________________________________|___________________________________________*/

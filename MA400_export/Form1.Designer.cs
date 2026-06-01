@@ -38,7 +38,7 @@ namespace MA400_export
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MA400_export));
-            this.WorkZone = new DoubleBufferedPanel();
+            this.WorkZone = new DoubleBufferedPanel();//I BEG VS ARRETE DE RAJOUTER MA_400 DEVANT
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,6 +83,13 @@ namespace MA400_export
             this.labelHoveredCircle = new System.Windows.Forms.Label();
             this.labelHoveredCircleX = new System.Windows.Forms.Label();
             this.labelHoveredCircleY = new System.Windows.Forms.Label();
+            this.printDialog1 = new System.Windows.Forms.PrintDialog();
+            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
+            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
+            this.imprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.afficherLaperçuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imprimerToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -123,6 +130,8 @@ namespace MA400_export
             this.toolStripSeparator,
             this.enregistrerToolStripMenuItem,
             this.enregistrersousToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.imprimerToolStripMenuItem,
             this.toolStripSeparator1,
             this.quitterToolStripMenuItem});
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
@@ -208,7 +217,7 @@ namespace MA400_export
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
@@ -506,6 +515,48 @@ namespace MA400_export
             this.labelHoveredCircleY.Size = new System.Drawing.Size(0, 13);
             this.labelHoveredCircleY.TabIndex = 24;
             // 
+            // printDialog1
+            // 
+            this.printDialog1.UseEXDialog = true;
+            // 
+            // printPreviewDialog1
+            // 
+            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
+            this.printPreviewDialog1.Enabled = true;
+            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
+            this.printPreviewDialog1.Name = "printPreviewDialog1";
+            this.printPreviewDialog1.Visible = false;
+            // 
+            // imprimerToolStripMenuItem
+            // 
+            this.imprimerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.imprimerToolStripMenuItem1,
+            this.afficherLaperçuToolStripMenuItem});
+            this.imprimerToolStripMenuItem.Name = "imprimerToolStripMenuItem";
+            this.imprimerToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.imprimerToolStripMenuItem.Text = "&Imprimer";
+            // 
+            // afficherLaperçuToolStripMenuItem
+            // 
+            this.afficherLaperçuToolStripMenuItem.Name = "afficherLaperçuToolStripMenuItem";
+            this.afficherLaperçuToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.afficherLaperçuToolStripMenuItem.Text = "Afficher l\'aperçu";
+            this.afficherLaperçuToolStripMenuItem.Click += new System.EventHandler(this.afficherLaperçuToolStripMenuItem_Click);
+            // 
+            // imprimerToolStripMenuItem1
+            // 
+            this.imprimerToolStripMenuItem1.Name = "imprimerToolStripMenuItem1";
+            this.imprimerToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.imprimerToolStripMenuItem1.Text = "Imprimer";
+            this.imprimerToolStripMenuItem1.Click += new System.EventHandler(this.imprimerToolStripMenuItem1_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(222, 6);
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -597,6 +648,13 @@ namespace MA400_export
         private Label labelHoveredCircle;
         private Label labelHoveredCircleX;
         private Label labelHoveredCircleY;
+        private PrintDialog printDialog1;
+        private System.Drawing.Printing.PrintDocument printDocument1;
+        private PrintPreviewDialog printPreviewDialog1;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem imprimerToolStripMenuItem;
+        private ToolStripMenuItem imprimerToolStripMenuItem1;
+        private ToolStripMenuItem afficherLaperçuToolStripMenuItem;
     }
 }
 

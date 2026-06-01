@@ -1,4 +1,5 @@
 using ACadSharp.Entities;
+using CSMath;
 using DXFImporter;
 using MA400_export;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -207,6 +208,25 @@ namespace UnitTestProject
             Circle result = fs.ApplyTransform(stud, offset, dim, scale);
 
             Assert.AreEqual(Constants.StudRadius4, result.Radius, 0.001);
+        }
+
+
+        // -------------------------------------------------------------------------
+        // Tests de Rotate
+        // -------------------------------------------------------------------------
+        [TestMethod]
+        public void RotatePointAroundOrigin_90()
+        {
+            XYZ p1 = new XYZ(25,5,0);
+
+            FileSystem fs = new FileSystem();
+            XYZ p2 = fs.RotatePointAroundOrigin(p1,90);
+
+            Assert.AreEqual(p2.X, -5);
+            Assert.AreEqual(p2.Y, 25);
+            Assert.AreEqual(p2.Z, 0);
+
+
         }
 
     }

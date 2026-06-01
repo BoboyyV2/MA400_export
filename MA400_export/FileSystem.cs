@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+using DXFImporter;
 
 /***
  * This app use two personnalized file extension : ddxf and sdxf
@@ -293,6 +294,75 @@ namespace MA400_export
             }
 
         }
+        /*_____________________________________ROTATE_____________________________________*/
+
+        public XYZ RotatePointAroundOrigin(XYZ point, double angle)
+        {
+            double x = Math.Round(
+                            point.X * Math.Cos( Trigo.DegreesToRadians(angle) ) - point.Y * Math.Sin( Trigo.DegreesToRadians(angle) ), 
+                            5) ;
+            double y = Math.Round(
+                            point.Y * Math.Cos( Trigo.DegreesToRadians(angle) ) + point.X * Math.Sin( Trigo.DegreesToRadians(angle) ),
+                            5);
+
+            return new XYZ(x, y, 0);
+        }
+
+        /**
+         * <summary>Rotate a single entity from the document</summary>
+         * <param name="e">the entity to rotate</param>
+         */
+        private void RotateEntity(Entity e, double angle)
+        {
+            switch (e.ObjectType) {
+                case ObjectType.LINE:
+                    {
+                        ACadSharp.Entities.Line l = (ACadSharp.Entities.Line)e;
+                        l.StartPoint = RotatePointAroundOrigin(l.StartPoint, angle);
+                        l.EndPoint = RotatePointAroundOrigin(l.EndPoint, angle);
+                        break;
+                    }
+                case ObjectType.CIRCLE:
+                    {
+                        ACadSharp.Entities.Circle c = (ACadSharp.Entities.Circle)e;
+                        c.Center = RotatePointAroundOrigin(c.Center, angle);
+                        break;
+                    }
+                case ObjectType.ARC:
+                    {
+                        ACadSharp.Entities.Arc a = (ACadSharp.Entities.Arc)e;
+                        a.Center = RotatePointAroundOrigin(a.Center, angle);
+                        //angle rotation
+                        a.StartAngle -= angle; //as we are in reverse we substract it 
+                        a.EndAngle -= angle;
+                        break;
+                    }
+                default:
+                    MessageBox.Show("Entité non prise en charge trouvée lors de la rotation : " + e.ToString());
+                    return ;
+
+            }
+        }
+        /**
+         * <summary>Rotate the current part by the specified number of degrees clockwise</summary>
+         * <param name="angle">the angle in degrees</param>
+         */
+        public void Rotate(double angle)
+        {
+            //clockwise because we are using a negative y scale
+
+            //rotate the entities
+            foreach(var entity in Doc.Entities)
+            {
+                RotateEntity(entity, angle);
+            }
+            //rotate the studs
+            foreach(Stud stud in Studs)
+            {
+                //RotateStud(stud);
+            }
+            //prepare for a refresh
+        }
 
         /*_____________________________________FLIP_____________________________________*/
 
@@ -308,7 +378,7 @@ namespace MA400_export
 
                 case ObjectType.LINE:
                     {
-                        Line l = (Line)e.Clone();
+                        ACadSharp.Entities.Line l = (ACadSharp.Entities.Line)e.Clone();
                         l.StartPoint = new XYZ(l.StartPoint.X, -l.StartPoint.Y, l.StartPoint.Z);
                         l.EndPoint = new XYZ(l.EndPoint.X, -l.EndPoint.Y, l.EndPoint.Z);
                         FlippedEntities.Add(l);
@@ -370,7 +440,7 @@ namespace MA400_export
 
                 case ObjectType.LINE:
                     {
-                        Line l = (Line)e.Clone();
+                        ACadSharp.Entities.Line l = (ACadSharp.Entities.Line)e.Clone();
                         l.StartPoint = new XYZ(-l.StartPoint.X, l.StartPoint.Y, l.StartPoint.Z);
                         l.EndPoint = new XYZ(-l.EndPoint.X, l.EndPoint.Y, l.EndPoint.Z);
                         FlippedEntities.Add(l);
@@ -770,7 +840,7 @@ namespace MA400_export
                 //ligne
                 case 4:
                     {
-                        Line l = new Line();
+                        ACadSharp.Entities.Line l = new ACadSharp.Entities.Line();
                         double startX = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         double startY = Double.Parse(file[++num_line], CultureInfo.InvariantCulture);
                         l.StartPoint = Util.AdjustPointGPH(new CSMath.XYZ(startX, startY, 0), layout.offset, layout.dimension, new Scale(true, false));
