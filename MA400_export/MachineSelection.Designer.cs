@@ -40,6 +40,7 @@
             this.comboBoxSelect.Name = "comboBoxSelect";
             this.comboBoxSelect.Size = new System.Drawing.Size(208, 21);
             this.comboBoxSelect.TabIndex = 0;
+            this.comboBoxSelect.Text = "KTS-850 CNC";
             // 
             // description
             // 

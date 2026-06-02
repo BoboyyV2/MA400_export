@@ -1161,7 +1161,7 @@ namespace MA400_export
         }
 
         /**
-         * <summary>Rotate the part when the rotate 180° button is clicked</summary>
+         * <summary>Rotate the part when the rotate 180° whe the button is clicked</summary>
          */
         private void rotateToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1173,13 +1173,29 @@ namespace MA400_export
             fs.RotatePart180();
             gc.reset();
             gc.OpenCanvas();
-            fs.OpenFlipFileLayout(gc.layout, 180);
+            fs.OpenRotatedFileLayout(gc.layout, 180);
             DisplayWhenOpen(true);
             WorkZone.Invalidate();
 
-
         }
 
+        /**
+         * <summary>Rotate the part when the rotate 90° clockwise when the button is clicked</summary>
+         */
+        private void Rotate90ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!fs.open)
+            {
+                MessageBox.Show("aucun fichier ou programme ouvert.");
+                return;
+            }
+            fs.RotatePart90();
+            gc.reset();
+            gc.OpenCanvas();
+            fs.OpenRotatedFileLayout(gc.layout, 90);
+            DisplayWhenOpen(true);
+            WorkZone.Invalidate();
+        }
 
 
         /*___________________________________________PANEL_RESIZE___________________________________________*/
@@ -1213,6 +1229,8 @@ namespace MA400_export
                 //c'est tout
             }
         }
+
+        
 
         /*___________________________________________|___________________________________________*/
 

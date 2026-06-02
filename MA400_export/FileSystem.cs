@@ -243,15 +243,14 @@ namespace MA400_export
         }
 
         /**
-         * <summary>remove the offset of the studs stored in the temporary collection</summary>
+         * <summary>Normalize an angle in degrees</summary>
          */
-        public void RemoveStudTMPOffset()
+        private double NormalizeAngle(double angle)
         {
-            foreach (Stud stud in StudsTMP)
-            {
-                stud.circle.Center = new XYZ(stud.circle.Center.X - layout.offset.X, stud.circle.Center.Y - layout.offset.Y, 0);
-            }
+            return ((angle % 360) + 360) % 360;
         }
+
+        
 
         /*_____________________________________FRAME_____________________________________*/
 
@@ -304,37 +303,59 @@ namespace MA400_export
 
         }
         /*_____________________________________ROTATE_____________________________________*/
+        //Due to the way DXFImporter displays the files (flip on the Y axis) we have the need to counteract it
+        //The solution is to rotated counterclockwise in the data so that the rotation on the display is clockwise
+        //It also means the the calculation are heavyly modified, I will try my best to documentate it.
 
+
+        /**
+         * <summary>remove the offset of the studs stored in the temporary collection</summary>
+         */
+        public void RemoveStudTMPOffset()
+        {
+            foreach (Stud stud in StudsTMP)
+            {
+                stud.circle.Center = new XYZ(stud.circle.Center.X + layout.dimension.Width, stud.circle.Center.Y, 0);
+            }
+        }
+
+        /**
+         * <summary>rotate a point around the origin by angle degrees clockwise</summary>
+         */
         public XYZ RotatePointAroundOrigin(XYZ point, double angle)
         {
             double x = Math.Round(
-                            point.X * Math.Cos( Trigo.DegreesToRadians(angle) ) - point.Y * Math.Sin( Trigo.DegreesToRadians(angle) ), 
-                            5) ;
+                            point.X * Math.Cos(Trigo.DegreesToRadians(angle)) - point.Y * Math.Sin(Trigo.DegreesToRadians(angle)),
+                            5);
             double y = Math.Round(
-                            point.Y * Math.Cos( Trigo.DegreesToRadians(angle) ) + point.X * Math.Sin( Trigo.DegreesToRadians(angle) ),
+                            point.Y * Math.Cos(Trigo.DegreesToRadians(angle)) + point.X * Math.Sin(Trigo.DegreesToRadians(angle)),
                             5);
 
             return new XYZ(x, y, 0);
         }
 
         /**
+         * <summary>rotate a point around the origin by angle degrees clockwise</summary>
+         */
+        public XYZ RotatePointAroundReference(XYZ target, PointF reference, double angle)
+        {
+            XYZ pointToOrigin = new XYZ(target.X - reference.X, target.Y - reference.Y, 0);
+            
+            return RotatePointAroundOrigin(pointToOrigin, angle);
+        }
+
+        /**
          * <summary>Rotate a stud by angle degrees clockwise, accounting for offset</summary>
-         * <remarks>Since this function add the offset, it needs to be removed once updated</remarks>
+         * <remarks>Since this function add the offset, it needs to be removed once updated.</remarks>
          */
         private void RotateStud(Stud stud, double angle)
         {
             //the offseted position of the stud
             XYZ offsetedCenter = new XYZ(stud.circle.Center.X + layout.offset.X, stud.circle.Center.Y + layout.offset.Y, 0);
-            stud.circle.Center = RotatePointAroundOrigin(offsetedCenter, angle);
+            stud.circle.Center = RotatePointAroundReference(offsetedCenter, layout.offset, angle);
         }
 
-        /**
-         * <summary>Normalize an angle in degrees</summary>
-         */
-        private double NormalizeAngle(double angle)
-        {
-            return ( ( angle % 360 ) + 360 ) % 360;
-        }
+        
 
         /**
          * <summary>Rotate a single entity from the document</summary>
@@ -346,20 +367,20 @@ namespace MA400_export
                 case ObjectType.LINE:
                     {
                         ACadSharp.Entities.Line l = (ACadSharp.Entities.Line)e;
-                        l.StartPoint = RotatePointAroundOrigin(l.StartPoint, angle);
-                        l.EndPoint = RotatePointAroundOrigin(l.EndPoint, angle);
+                        l.StartPoint = RotatePointAroundReference(l.StartPoint, layout.offset, -angle);
+                        l.EndPoint = RotatePointAroundReference(l.EndPoint, layout.offset, - angle);
                         break;
                     }
                 case ObjectType.CIRCLE:
                     {
                         ACadSharp.Entities.Circle c = (ACadSharp.Entities.Circle)e;
-                        c.Center = RotatePointAroundOrigin(c.Center, angle);
+                        c.Center = RotatePointAroundReference(c.Center, layout.offset, - angle);
                         break;
                     }
                 case ObjectType.ARC:
                     {
                         ACadSharp.Entities.Arc a = (ACadSharp.Entities.Arc)e;
-                        a.Center = RotatePointAroundOrigin(a.Center, angle);
+                        a.Center = RotatePointAroundReference(a.Center, layout.offset, - angle);
                         //angle rotation
                         //angle are in radians for calculation
                         a.StartAngle = NormalizeRadians( a.StartAngle - Trigo.DegreesToRadians(angle) ); //as we are in reverse we substract it 
@@ -396,11 +417,10 @@ namespace MA400_export
         }
 
         /**
-         * <summary>rotate the part at a 180 degrees angle.<br></br>
+         * <summary>rotate the part by angle degrees clockwise.<br></br>
          * This function must be used along with the OpenFlipFileLayout() function </summary>
-         * <remarks>this operation can be done a second time to cancel the effects.</remarks>
          */
-        public void RotatePart180()
+        public void RotatePart(double angle)
         {
             //reset without a new document our new studlist
             open = false;
@@ -425,7 +445,7 @@ namespace MA400_export
                 MessageBox.Show("Erreur lors de la rotation");
             }
 
-            Rotate(180);
+            Rotate(angle);
 
             //save les studs dans une liste temporaire
             BindingList<Stud> oldStuds = new BindingList<Stud>();
@@ -442,13 +462,32 @@ namespace MA400_export
             //save the rotated studs => used in OpenFlipFileLayout()
             StudsTMP = oldStuds;
 
+        }
 
+        /**
+         * <summary>rotate the part at a 180 degrees angle.<br></br>
+         * This function must be used along with the OpenFlipFileLayout() function </summary>
+         * <remarks>this operation can be done a second time to cancel the effects.</remarks>
+         */
+        public void RotatePart180()
+        {
+            RotatePart(180);
+        }
+
+        /**
+         * <summary>rotate the part at a 180 degrees angle.<br></br>
+         * This function must be used along with the OpenFlipFileLayout() function </summary>
+         * <remarks>this operation can be done a second time to cancel the effects.</remarks>
+         */
+        public void RotatePart90()
+        {
+            RotatePart(90);
         }
 
         /**
          * <summary>Get the layout of a part when it is being rotated</summary>
          */
-        public void OpenFlipFileLayout(Layout_Info layout, double angle)
+        public void OpenRotatedFileLayout(Layout_Info layout, double angle)
         {
             //set the new layout
             this.layout = layout;
