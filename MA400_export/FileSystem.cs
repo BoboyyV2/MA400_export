@@ -242,7 +242,16 @@ namespace MA400_export
             return ((angle % TwoPI) + TwoPI) % TwoPI;
         }
 
-
+        /**
+         * <summary>remove the offset of the studs stored in the temporary collection</summary>
+         */
+        public void RemoveStudTMPOffset()
+        {
+            foreach (Stud stud in StudsTMP)
+            {
+                stud.circle.Center = new XYZ(stud.circle.Center.X - layout.offset.X, stud.circle.Center.Y - layout.offset.Y, 0);
+            }
+        }
 
         /*_____________________________________FRAME_____________________________________*/
 
@@ -309,6 +318,25 @@ namespace MA400_export
         }
 
         /**
+         * <summary>Rotate a stud by angle degrees clockwise, accounting for offset</summary>
+         * <remarks>Since this function add the offset, it needs to be removed once updated</remarks>
+         */
+        private void RotateStud(Stud stud, double angle)
+        {
+            //the offseted position of the stud
+            XYZ offsetedCenter = new XYZ(stud.circle.Center.X + layout.offset.X, stud.circle.Center.Y + layout.offset.Y, 0);
+            stud.circle.Center = RotatePointAroundOrigin(offsetedCenter, angle);
+        }
+
+        /**
+         * <summary>Normalize an angle in degrees</summary>
+         */
+        private double NormalizeAngle(double angle)
+        {
+            return ( ( angle % 360 ) + 360 ) % 360;
+        }
+
+        /**
          * <summary>Rotate a single entity from the document</summary>
          * <param name="e">the entity to rotate</param>
          */
@@ -333,8 +361,9 @@ namespace MA400_export
                         ACadSharp.Entities.Arc a = (ACadSharp.Entities.Arc)e;
                         a.Center = RotatePointAroundOrigin(a.Center, angle);
                         //angle rotation
-                        a.StartAngle -= angle; //as we are in reverse we substract it 
-                        a.EndAngle -= angle;
+                        //angle are in radians for calculation
+                        a.StartAngle = NormalizeRadians( a.StartAngle - Trigo.DegreesToRadians(angle) ); //as we are in reverse we substract it 
+                        a.EndAngle = NormalizeRadians(a.EndAngle - Trigo.DegreesToRadians(angle) );
                         break;
                     }
                 default:
@@ -343,6 +372,7 @@ namespace MA400_export
 
             }
         }
+
         /**
          * <summary>Rotate the current part by the specified number of degrees clockwise</summary>
          * <param name="angle">the angle in degrees</param>
@@ -357,11 +387,85 @@ namespace MA400_export
                 RotateEntity(entity, angle);
             }
             //rotate the studs
+            StudsTMP = new BindingList<Stud>();
             foreach(Stud stud in Studs)
             {
-                //RotateStud(stud);
+                RotateStud(stud, angle);
             }
             //prepare for a refresh
+        }
+
+        /**
+         * <summary>rotate the part at a 180 degrees angle.<br></br>
+         * This function must be used along with the OpenFlipFileLayout() function </summary>
+         * <remarks>this operation can be done a second time to cancel the effects.</remarks>
+         */
+        public void RotatePart180()
+        {
+            //reset without a new document our new studlist
+            open = false;
+            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+
+            //save dans un fichier temporaire pour l'affichage / traitement
+            try
+            {
+                Directory.CreateDirectory(tmpPath);
+                Util.SetPermissions(tmpPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de la rotation");
+            }
+
+            Rotate(180);
+
+            //save les studs dans une liste temporaire
+            BindingList<Stud> oldStuds = new BindingList<Stud>();
+            foreach (Stud s in Studs)
+            {
+                oldStuds.Add(s);
+            }
+
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+
+            //ré open le fichier tmp en ddxf
+            OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
+
+            //save the rotated studs => used in OpenFlipFileLayout()
+            StudsTMP = oldStuds;
+
+
+        }
+
+        /**
+         * <summary>Get the layout of a part when it is being rotated</summary>
+         */
+        public void OpenFlipFileLayout(Layout_Info layout, double angle)
+        {
+            //set the new layout
+            this.layout = layout;
+
+            RemoveStudTMPOffset();
+
+            //no addrange defined 
+            //fill the local stud list with the temporary one then clear and void the temporary list
+            foreach (Stud stud in StudsTMP)
+            {
+                Studs.Add(stud);
+            }
+            StudsTMP.Clear();
+            StudsTMP = null;
+
+            //inverse la valeur 
+            rotated = !rotated;
         }
 
         /*_____________________________________FLIP_____________________________________*/
@@ -492,113 +596,10 @@ namespace MA400_export
             Doc.Entities.AddRange(FlippedEntities);
         }
 
-        /**
-         * <summary>rotate each stud on the part 180°</summary>
-         * <remarks>require the layout to be up to date</remarks>
-         * <returns>the list of rotated studs</returns>
-         */
-        private BindingList<Stud> GetRotatedStuds()
-        {
-            BindingList<Stud> newStuds = new BindingList<Stud>();
-
-            if (StudsTMP != null)
-            {
-                foreach (Stud s in StudsTMP)
-                {
-                    Circle rotated = (Circle)s.circle.Clone();
-                    double x = layout.dimension.Width - s.circle.Center.X;
-                    double y = layout.dimension.Height - s.circle.Center.Y;
-                    rotated.Center = new XYZ(x, y, s.circle.Center.Z);
-
-                    newStuds.Add(new Stud(rotated));
-                }
-            }
-            else
-            {
-                MessageBox.Show("Erreur interne lors de la rotation des goujons");
-            }
-
-            return newStuds;
-        }
+        
 
 
-        /**
-         * <summary>rotate the part at 180 degrees by fliping it back on the X axis then on the Y axis making sure the part stays on the same face.<br></br>
-         * This function must be used along with the OpenFlipFileLayout() function </summary>
-         * <remarks>this opération can be done a second time to cancel the effects.</remarks>
-         */
-        public void RotatePart180()
-        {
-            //reset without a new document our new studlist
-            open = false;
-            layout = new Layout_Info();//must be initialized later on before scanning the entities
-            string tmpPath = Constants.Outputpath + Constants.tmpPath;
-
-            //save dans un fichier temporaire pour l'affichage / traitement
-            try
-            {
-                Directory.CreateDirectory(tmpPath);
-                Util.SetPermissions(tmpPath);
-            }
-            catch (DirectoryNotFoundException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            catch
-            {
-                MessageBox.Show("Erreur lors de la rotation");
-            }
-
-            FlipEntitiesX();
-            FlipEntitiesY();
-
-            //save les studs dans une liste temporaire
-            BindingList<Stud> oldStuds = new BindingList<Stud>();
-            foreach (Stud s in Studs)
-            {
-                oldStuds.Add(s);
-            }
-
-
-
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
-
-            //ré open le fichier tmp en ddxf
-            OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
-
-            //stock les stud non flipped => utilisés dans OpenFlipFileLayout()
-            StudsTMP = oldStuds;
-
-
-        }
-
-        /**
-         * <summary>Get the layout of a part when it is being rotated</summary>
-         */
-        public void OpenFlipFileLayout(Layout_Info layout)
-        {
-            //set the layout
-            this.layout = layout;
-
-            //rotate the studs according to the updated layout
-            StudsTMP = GetRotatedStuds();
-
-            //no addrange defined 
-            //fill the local stud list with the temporary one then clear and void the temporary list
-            foreach (Stud stud in StudsTMP)
-            {
-                Studs.Add(stud);
-            }
-            StudsTMP.Clear();
-            StudsTMP = null;
-
-            //inverse la valeur 
-            rotated = !rotated;
-        }
+        
 
 
         /*_____________________________________DDXF_____________________________________*/

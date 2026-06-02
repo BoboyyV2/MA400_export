@@ -1173,7 +1173,7 @@ namespace MA400_export
             fs.RotatePart180();
             gc.reset();
             gc.OpenCanvas();
-            fs.OpenFlipFileLayout(gc.layout);
+            fs.OpenFlipFileLayout(gc.layout, 180);
             DisplayWhenOpen(true);
             WorkZone.Invalidate();
 

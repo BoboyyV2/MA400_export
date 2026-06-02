@@ -1,4 +1,5 @@
 ﻿using ACadSharp.Entities;
+using System;
 
 namespace MA400_export
 {
@@ -27,6 +28,12 @@ namespace MA400_export
             return string.Format("G : X = {0}; Y = {1}; D = {2}",
                                   circle.Center.X.ToString("0.0"), circle.Center.Y.ToString("0.0"), circle.Radius * 2);
 
+        }
+
+        internal Stud Clone()
+        {
+            Circle c = (Circle)this.circle.Clone();
+            return new Stud(c);
         }
     }
 }
