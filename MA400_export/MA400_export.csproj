@@ -157,6 +157,12 @@
       <DependentUpon>MachineSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="NotificationHelper.cs" />
+    <Compile Include="printForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="printForm.Designer.cs">
+      <DependentUpon>printForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProdFileGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramNumberOpen.cs">
@@ -185,6 +191,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MachineSelection.resx">
       <DependentUpon>MachineSelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="printForm.resx">
+      <DependentUpon>printForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgramNumberOpen.resx">
       <DependentUpon>ProgramNumberOpen.cs</DependentUpon>

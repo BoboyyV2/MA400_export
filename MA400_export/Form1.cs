@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
 using System.Security;
@@ -50,10 +51,13 @@ namespace MA400_export
 
         public Machine machine;
 
+        //the print utilities
+        private printForm printform;
         public MA400_export()
         {
             InitializeComponent();
             StudList_Display.DataSource = fs.Studs;
+            printform = new printForm(ref fs);
             //this.CreateGraphics();
         }
 
@@ -1210,11 +1214,25 @@ namespace MA400_export
 
         }
 
+
+        /*___________________________________________PRINT___________________________________________*/
+        private void createPreview()
+        {
+            using (Bitmap bmp = new Bitmap(800, 600))
+            {
+                WorkZone.DrawToBitmap(bmp, new Rectangle(0, 0, 800, 600));
+                printform.setImage(bmp);
+
+            }
+            //this.printDocument1
+        }
+
         private void imprimerToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //ouvre le menu print
             using (PrintDialog printer = new PrintDialog())
             {
+                createPreview();
                 printer.ShowDialog();
                 //c'est tout
             }
@@ -1225,7 +1243,9 @@ namespace MA400_export
             //ouvre l'aperçu d'impression
             using (PrintPreviewDialog preview = new PrintPreviewDialog())
             {
-                preview.ShowDialog();
+                createPreview();
+                printform.ShowDialog();
+                //preview.ShowDialog();
                 //c'est tout
             }
         }
