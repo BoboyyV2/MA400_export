@@ -3,10 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Security;
+using System.Web;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 
 namespace MA400_export
@@ -53,12 +57,12 @@ namespace MA400_export
 
         //the print utilities
         private printForm printform;
+
         public MA400_export()
         {
             InitializeComponent();
             StudList_Display.DataSource = fs.Studs;
             printform = new printForm(ref fs);
-            //this.CreateGraphics();
         }
 
         /**
@@ -1229,28 +1233,59 @@ namespace MA400_export
 
         private void imprimerToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            //ouvre le menu print
-            using (PrintDialog printer = new PrintDialog())
-            {
-                createPreview();
-                printer.ShowDialog();
-                //c'est tout
-            }
+            createPreview();
+            printform.Print();
+            /*
+            printDialog1.AllowSelection = true;
+            printDialog1.AllowSomePages = true;
+            printDialog1.Document = printDocument1;
+
+            printform.ShowDialog();
+
+            System.Windows.Forms.Panel panel = new System.Windows.Forms.Panel();
+            printform.Controls.Add(panel);
+            Graphics grp = panel.CreateGraphics();
+            Size formSize = printform.ClientSize;
+            printBitmap = new Bitmap(formSize.Width, formSize.Height, grp);
+            grp = Graphics.FromImage(printBitmap);
+            System.Drawing.Point panelLocation = PointToScreen(panel.Location);
+            grp.CopyFromScreen(panelLocation.X, panelLocation.Y, 0, 0, formSize);
+            printDialog1.Document = printDocument1;
+            printDialog1.ShowDialog();
+            */
+
         }
 
         private void afficherLaperçuToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //ouvre l'aperçu d'impression
-            using (PrintPreviewDialog preview = new PrintPreviewDialog())
+            
+            createPreview();
+
+            //force the use of the constructor by invoking it
+            var createControlMethod = printform.GetType().GetMethod("CreateControl", BindingFlags.Instance | BindingFlags.NonPublic);
+            createControlMethod.Invoke(printform, new object[] { true });
+
+            using (Bitmap bitmap = new Bitmap(printform.Width, printform.Height))
             {
-                createPreview();
-                printform.ShowDialog();
-                //preview.ShowDialog();
-                //c'est tout
+                printform.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
             }
+                
+
+            printform.Preview();
+            
+            
         }
 
-        
+
+       
+
+        private void imprimerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            printform.Show();
+        }
+
+
 
         /*___________________________________________|___________________________________________*/
 
