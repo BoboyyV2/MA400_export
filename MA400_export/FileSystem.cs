@@ -308,16 +308,7 @@ namespace MA400_export
         //It also means the the calculation are heavyly modified, I will try my best to documentate it.
 
 
-        /**
-         * <summary>remove the offset of the studs stored in the temporary collection</summary>
-         */
-        public void RemoveStudTMPOffset()
-        {
-            foreach (Stud stud in StudsTMP)
-            {
-                stud.circle.Center = new XYZ(stud.circle.Center.X + layout.dimension.Width, stud.circle.Center.Y, 0);
-            }
-        }
+        
 
         /**
          * <summary>rotate a point around the origin by angle degrees clockwise</summary>
@@ -335,27 +326,56 @@ namespace MA400_export
         }
 
         /**
-         * <summary>rotate a point around the origin by angle degrees clockwise</summary>
+         * <summary>rotate a point around the center by angle degrees clockwise</summary>
          */
-        public XYZ RotatePointAroundReference(XYZ target, PointF reference, double angle)
+        public XYZ RotatePointAroundCenter(XYZ target, PointF center, double angle, PointF newCenter)
         {
-            XYZ pointToOrigin = new XYZ(target.X - reference.X, target.Y - reference.Y, 0);
+            XYZ pointToOrigin = new XYZ(target.X - center.X, target.Y - center.Y, 0);
             
-            return RotatePointAroundOrigin(pointToOrigin, angle);
+            pointToOrigin = RotatePointAroundOrigin(pointToOrigin, angle);
+            //recalculate center
+
+            return new XYZ(pointToOrigin.X + newCenter.X, pointToOrigin.Y + newCenter.Y, 0);
+        }
+
+        private PointF computeCenterOnRotation(PointF center, double angle)
+        {
+            //the center is the center of the layout, we need to compute the new center after rotation to be able to rotate the studs around it
+            double Xmin;
+            double Xmax;
+            double Ymin;
+            double Ymax;
+            //rotate the dimension around the center to get the new limits of the new layout
+            XYZ tl = RotatePointAroundCenter(new XYZ(layout.dimension.Left, layout.dimension.Top, 0), center, angle, new PointF(0, 0) );
+            XYZ tr = RotatePointAroundCenter(new XYZ(layout.dimension.Right, layout.dimension.Top, 0), center, angle, new PointF(0, 0));
+            XYZ bl = RotatePointAroundCenter(new XYZ(layout.dimension.Left, layout.dimension.Bottom, 0), center, angle, new PointF(0, 0));
+            XYZ br = RotatePointAroundCenter(new XYZ(layout.dimension.Right, layout.dimension.Bottom, 0), center, angle, new PointF(0, 0) );
+
+            //compute the new center
+            Xmin = Math.Min(Math.Min(tl.X, tr.X), Math.Min(bl.X, br.X));
+            Xmax = Math.Max(Math.Max(tl.X, tr.X), Math.Max(bl.X, br.X));
+            Ymin = Math.Min(Math.Min(tl.Y, tr.Y), Math.Min(bl.Y, br.Y));
+            Ymax = Math.Max(Math.Max(tl.Y, tr.Y), Math.Max(bl.Y, br.Y));
+
+            double newCenterX = (Xmax - Xmin) / 2;
+            double newCenterY = (Ymax - Ymin) / 2;
+            return new PointF((float)newCenterX, (float)newCenterY);
         }
 
         /**
          * <summary>Rotate a stud by angle degrees clockwise, accounting for offset</summary>
          * <remarks>Since this function add the offset, it needs to be removed once updated.</remarks>
          */
-        private void RotateStud(Stud stud, double angle)
+        private void RotateStud(Stud stud, double angle, PointF center, PointF newCenter)
         {
             //the offseted position of the stud
-            XYZ offsetedCenter = new XYZ(stud.circle.Center.X + layout.offset.X, stud.circle.Center.Y + layout.offset.Y, 0);
-            stud.circle.Center = RotatePointAroundReference(offsetedCenter, layout.offset, angle);
+            stud.circle.Center = RotatePointAroundCenter(stud.circle.Center, center, angle, newCenter);
         }
 
-        
+        private XYZ BringToOrigin(XYZ point)
+        {
+            return new XYZ(point.X - layout.offset.X, point.Y - layout.offset.Y, point.Y);
+        }
 
         /**
          * <summary>Rotate a single entity from the document</summary>
@@ -367,20 +387,20 @@ namespace MA400_export
                 case ObjectType.LINE:
                     {
                         ACadSharp.Entities.Line l = (ACadSharp.Entities.Line)e;
-                        l.StartPoint = RotatePointAroundReference(l.StartPoint, layout.offset, -angle);
-                        l.EndPoint = RotatePointAroundReference(l.EndPoint, layout.offset, - angle);
+                        l.StartPoint = RotatePointAroundOrigin( BringToOrigin(l.StartPoint), -angle);
+                        l.EndPoint = RotatePointAroundOrigin( BringToOrigin(l.EndPoint), - angle);
                         break;
                     }
                 case ObjectType.CIRCLE:
                     {
                         ACadSharp.Entities.Circle c = (ACadSharp.Entities.Circle)e;
-                        c.Center = RotatePointAroundReference(c.Center, layout.offset, - angle);
+                        c.Center = RotatePointAroundOrigin( BringToOrigin(c.Center), - angle);
                         break;
                     }
                 case ObjectType.ARC:
                     {
                         ACadSharp.Entities.Arc a = (ACadSharp.Entities.Arc)e;
-                        a.Center = RotatePointAroundReference(a.Center, layout.offset, - angle);
+                        a.Center = RotatePointAroundOrigin( BringToOrigin(a.Center), - angle);
                         //angle rotation
                         //angle are in radians for calculation
                         a.StartAngle = NormalizeRadians( a.StartAngle - Trigo.DegreesToRadians(angle) ); //as we are in reverse we substract it 
@@ -409,9 +429,11 @@ namespace MA400_export
             }
             //rotate the studs
             StudsTMP = new BindingList<Stud>();
+            PointF center = new PointF(layout.dimension.Width / 2, layout.dimension.Height / 2);
+            PointF newCenter = computeCenterOnRotation(center, angle);
             foreach(Stud stud in Studs)
             {
-                RotateStud(stud, angle);
+                RotateStud(stud, angle, center, newCenter);
             }
             //prepare for a refresh
         }
@@ -492,7 +514,6 @@ namespace MA400_export
             //set the new layout
             this.layout = layout;
 
-            RemoveStudTMPOffset();
 
             //no addrange defined 
             //fill the local stud list with the temporary one then clear and void the temporary list
