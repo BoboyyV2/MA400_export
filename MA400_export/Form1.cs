@@ -56,13 +56,11 @@ namespace MA400_export
         public Machine machine;
 
         //the print utilities
-        private printForm printform;
 
         public MA400_export()
         {
             InitializeComponent();
             StudList_Display.DataSource = fs.Studs;
-            printform = new printForm(ref fs);
         }
 
         /**
@@ -1221,44 +1219,24 @@ namespace MA400_export
 
         /*___________________________________________PRINT___________________________________________*/
 
-        //aperçu avant impression
-        private void BtnApercu_Click(object sender, EventArgs e)
-        {
-
-            
-        }
-
-        // ── Impression directe ─────────────────────────────────────────────
-        private void BtnImprimer_Click(object sender, EventArgs e)
-        {
-            var helper = new PrintHelper(gc, fs.Studs, _Zoom, Origin_Offset);
-            helper.Print(this);
-        }
-        private void createPreview()
-        {
-            using (Bitmap bmp = new Bitmap(800, 600))
-            {
-                WorkZone.DrawToBitmap(bmp, new Rectangle(0, 0, 800, 600));
-                printform.setImage(bmp);
-
-            }
-            //this.printDocument1
-        }
-
-        
-
-        
-
+        /**
+         * <summary>Print the document when the print menu item is clicked</summary>
+         * <remarks>Uses the PrintHelper class to handle the printing logic.</remarks>
+         */
         private void imprimerToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             var helper = new PrintHelper(gc, fs.Studs, _Zoom, Origin_Offset);
             helper.Print(this);
         }
 
+        /**
+         * <summary>Show the print preview when the print preview menu item is clicked</summary>
+         * <remarks>Uses the PrintHelper class to handle the printing logic.</remarks>
+         */
         private void afficherLaperçuToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             var helper = new PrintHelper(gc, fs.Studs, _Zoom, Origin_Offset);
-            helper.ShowPreview(this);//this = fenêtre parente (owner)
+            helper.ShowPreview(this);//this = fenetre parente (owner)
         }
 
 

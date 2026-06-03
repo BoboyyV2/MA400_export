@@ -13,23 +13,27 @@ namespace MA400_export
      * Gere l'impression du document (pièce + liste des goujons)
      * sans afficher de Form à l'écran.
      *
-     * Utilisation depuis Form1 :
+     * Utilisation depuis le main mainform :
      *     var helper = new PrintHelper(gc, fs.Studs, _Zoom, Origin_Offset);
      *     helper.ShowPreview(this);          // aperçu avant impression
      *     // OU
      *     helper.Print();                    // impression directe
      * </summary>
-    */
+     */
     public class PrintHelper
     {
         //vue principale
         private readonly GraphicsContainer _gc;
         private readonly IEnumerable<Stud> _studs;
+
+        //zoom non utilisé pour l'instant
+        //je n'arrive pas à l'intégrer.
         private readonly float _zoom;
+
         private readonly PointF _originOffset;
 
         //dimensions du bitmap de la pièce
-        // On prend la taille "native" du workzone (750 mm + offset de 50 px)
+        //on prend la taille  du workzone 
         private const int PIECE_BITMAP_W = 800;
         private const int PIECE_BITMAP_H = 600;
 
@@ -53,7 +57,7 @@ namespace MA400_export
         
 
         /*
-         * <summary>Ouvre la boîte d'aperçu avant impression.</summary>
+         * <summary>Ouvre la boite d'aperçu avant impression.</summary>
         */
         public void ShowPreview(IWin32Window owner = null)
         {
@@ -68,6 +72,7 @@ namespace MA400_export
 
         /*
          * <summary>Imprime directement (avec boîte de dialogue imprimante).</summary>
+         * 
          */
         public void Print(IWin32Window owner = null)
         {
@@ -83,9 +88,9 @@ namespace MA400_export
 
         /* 
          * <summary>
-         * Crée un Bitmap de la pièce en réutilisant exactement la meme
+         * crée un Bitmap de la pièce en réutilisant exactement la meme
          * logique que le Paint() du panneau principal, mais dans un
-         * Graphics off-screen => aucun Form n'est affiché.
+         * Graphics offscreen rien n'est affiché.
          * </summary>
          */
         private Bitmap RenderPieceBitmap(int width, int height)
@@ -101,7 +106,7 @@ namespace MA400_export
 
                 //paint la pièce 
                 _gc.Paint(_studs,
-                          Enumerable.Empty<Stud>(), // pas de sélection à l'impression
+                          Enumerable.Empty<Stud>(), //pas de sélection à l'impression, c'est plus clean
                           _originOffset);
 
                 //reset 
@@ -111,9 +116,11 @@ namespace MA400_export
             return bmp;
         }
 
-        // Handler
-        // tout le dessin de la page se fait ici
-
+        
+        /*
+         * <summary>Print EventHandler : dessine la page à imprimer.</summary>
+         * <remarks>tout le dessin de la page se fait ici</remarks>
+         */
         private void OnPrintPage(object sender, PrintPageEventArgs e)
         {
             Graphics g     = e.Graphics;
@@ -145,8 +152,10 @@ namespace MA400_export
         }
 
         //zone de la pièce
-        
 
+        /*
+         * <summary>Gère le dessin de la zone pièce : titre + rendu de la pièce</summary>
+         */
         private void DrawPieceArea(Graphics g, Rectangle area)
         {
             //titre
@@ -175,7 +184,10 @@ namespace MA400_export
         }
 
         //zone liste des goujons
-
+        /*
+         * <summary>Gère le dessin de la listte des goujons : titre + rendu</summary>
+         * <remarks>On accepte jusqu'a 52 goujon, au delà l'affichage casse, mais c'est déjà pas mal :)</remarks>
+         */
         private void DrawStudList(Graphics g, Rectangle area)
         {
             var studList = _studs.ToList();
@@ -256,7 +268,9 @@ namespace MA400_export
 
         
         //utilitaire : ajustement avec conservation du ratio
-
+        /**
+         * <summary>utility function to keep the ratio</summary>
+         */
         private static Rectangle FitKeepAspect(Size source, Rectangle dest)
         {
             if (source.Width == 0 || source.Height == 0)
