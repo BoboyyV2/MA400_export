@@ -44,11 +44,11 @@ namespace MA400_export
         private RectangleF Dimension;
         private PointF Offset;
         private Scale Scalefact;
-        private bool Rotated;
+        private double Rotation;
 
 
 
-        public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, bool Rotated)//should work but C# and ref being themselves 
+        public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, double  Rotation)//should work but C# and ref being themselves 
         {
             this.Studs = Studs;
             this.Entities = Entities;
@@ -56,7 +56,7 @@ namespace MA400_export
             this.Offset = Offset;
             this.Data = Data;
             this.Scalefact = Scalefact;
-            this.Rotated = Rotated;
+            this.Rotation = Rotation;
 
         }
 
@@ -737,15 +737,8 @@ namespace MA400_export
                 sw.WriteLine(magicnumber);
                 sw.WriteLine(magicnumber);
                 sw.WriteLine(magicnumber);
-                int rotation_value = 0;
-                if (Rotated)
-                {
-                    rotation_value = 180;
-                }
-                {
-
-                }
-                sw.WriteLine(rotation_value);
+                
+                sw.WriteLine(FormatValue(Rotation));
 
             }
         }

@@ -55,6 +55,8 @@ namespace MA400_export
 
         public Machine machine;
 
+        //name of the opened file without the extension, used for the name of the output files
+        public string fileName = "";
         //the print utilities
 
         public MA400_export()
@@ -689,6 +691,7 @@ namespace MA400_export
             bool open = false;
             string filename = this.openFileDialogOpen.FileName;
             string extension = Path.GetExtension(filename);
+            fileName = Path.GetFileNameWithoutExtension(filename);
 
             switch (extension)
             {
@@ -1062,8 +1065,8 @@ namespace MA400_export
         {
             if (savepath.Length == 0)
             {
-                //pas encore de sauvegarde, on ouvre un menu
-                saveFileDialogSave.ShowDialog();
+                //pas encore de sauvegarde, on forward au menu
+                enregistrersousToolStripMenuItem_Click(sender, e);
                 return;
             }
             fs.SaveToFile(fs.Studs, savepath);
@@ -1075,6 +1078,7 @@ namespace MA400_export
          */
         private void enregistrersousToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            saveFileDialogSave.FileName = fileName;
             saveFileDialogSave.ShowDialog();
         }
 
@@ -1095,6 +1099,7 @@ namespace MA400_export
         {
             Application.Exit();
         }
+
 
         /**
          * <summary>Open a program via an existing program number</summary>
@@ -1131,7 +1136,6 @@ namespace MA400_export
                 gc.reset();
             }
 
-
             //clear the current list
             //EmptyStuds();not handled by the form anymore
 
@@ -1143,6 +1147,7 @@ namespace MA400_export
                                                     (int)(Constants.Origin_Coord.X + Constants.WorkZoneLimits_Coord.X) ,
                                                     (int)(Constants.Origin_Coord.Y + Constants.WorkZoneLimits_Coord.Y) ) );
         }
+
 
         /**
          * <summary>force the display to refresh whenever we change the selection in the studlist</summary>
@@ -1203,6 +1208,11 @@ namespace MA400_export
             WorkZone.Invalidate();
         }
 
+
+        /**
+         * <summary>Handle the behavior when the rotation button is clicked.<br></br>
+         * Call the getRotationValue form to get the rotation angle then rotate the part.</summary>
+         */
         private void rotationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             

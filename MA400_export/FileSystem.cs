@@ -31,7 +31,7 @@ namespace MA400_export
     public enum Machine
     {
         KTS850,
-        Small,
+        PTS300,
         None
     }
 
@@ -64,7 +64,8 @@ namespace MA400_export
         //USE WITH CAUTION
         public Layout_Info layout { get; set; }
 
-        private bool rotated = false;
+        //rotation variable
+        private double rotation = 0;
         private XYZ tl;
         private XYZ tr;
         private XYZ bl;
@@ -229,9 +230,6 @@ namespace MA400_export
 
             }
 
-
-
-
             return true;
 
         }
@@ -249,6 +247,7 @@ namespace MA400_export
 
         /**
          * <summary>Normalize an angle in degrees</summary>
+         * <param name="angle">angle given in degrees</param>
          */
         private double NormalizeAngle(double angle)
         {
@@ -308,12 +307,9 @@ namespace MA400_export
 
         }
         /*_____________________________________ROTATE_____________________________________*/
-        //Due to the way DXFImporter displays the files (flip on the Y axis) we have the need to counteract it
-        //The solution is to rotated counterclockwise in the data so that the rotation on the display is clockwise
-        //It also means the the calculation are heavyly modified, I will try my best to documentate it.
-
-
-        
+        //Due to the difference both in system and in utility the studs and the entity don't use the same coordinate system
+        //this means we cannot rotate them together out of the box
+        //the choice was made to rotate them both separatly using different method
 
         /**
          * <summary>rotate a point around the origin by angle degrees clockwise</summary>
@@ -356,6 +352,10 @@ namespace MA400_export
             return new XYZ(pointToOrigin.X + newCenter.X, pointToOrigin.Y + newCenter.Y, 0);
         }
 
+        /**
+         * <summary>Compute the new center of the part whenever it is rotated</summary>
+         * <remarks>it is used to accurately place the studs on the display and not fuck over the coordinates</remarks>
+         */
         private PointF computeCenterOnRotation(PointF center, double angle)
         {
             //the center is the center of the layout, we need to compute the new center after rotation to be able to rotate the studs around it
@@ -364,8 +364,6 @@ namespace MA400_export
             double Ymin;
             double Ymax;
 
-            //DEBUG
-            //MessageBox.Show(layout.dimension.ToString());
 
             //rotate the dimension around the center to get the new limits of the new layout
             tl = RotatePointAroundCenter(tl, center, angle);
@@ -394,6 +392,9 @@ namespace MA400_export
             stud.circle.Center = RotatePointAroundCenterAndAdjust(stud.circle.Center, center, angle, newCenter);
         }
 
+        /**
+         * <summary>Bring a point closer to the origin, in way that his delta to the topleftmost point of the part is equal to the delta to the origin.</summary>
+         */
         private XYZ BringToOrigin(XYZ point)
         {
             return new XYZ(point.X - layout.offset.X, point.Y - layout.offset.Y, point.Y);
@@ -449,10 +450,12 @@ namespace MA400_export
             {
                 RotateEntity(entity, angle);
             }
+
             //rotate the studs
             StudsTMP = new BindingList<Stud>();
             PointF center = new PointF(layout.dimension.Width / 2, layout.dimension.Height / 2);
             PointF newCenter = computeCenterOnRotation(center, angle);
+
             foreach(Stud stud in Studs)
             {
                 RotateStud(stud, angle, center, newCenter);
@@ -489,9 +492,10 @@ namespace MA400_export
                 MessageBox.Show("Erreur lors de la rotation");
             }
 
+            //rotate the whole part
             Rotate(angle);
 
-            //save les studs dans une liste temporaire
+            //save les studs dans une liste temporaire avant de reset pour l'affichage
             BindingList<Stud> oldStuds = new BindingList<Stud>();
             foreach (Stud s in Studs)
             {
@@ -547,7 +551,7 @@ namespace MA400_export
             StudsTMP = null;
 
             //inverse la valeur 
-            rotated = !rotated;
+            rotation = NormalizeAngle(rotation + angle);
         }
 
         /*_____________________________________FLIP_____________________________________*/
@@ -887,10 +891,10 @@ namespace MA400_export
             return data;
         }
 
+
         public void OpenProdFileLayout(Layout_Info layout)
         {
             this.layout = layout;
-
         }
 
 
@@ -905,9 +909,18 @@ namespace MA400_export
         private Entity ParseGPHEntities(string[] file, ref int num_line)
         {
 
-
-
-            int EntitieType = int.Parse(file[num_line]);
+            int EntitieType
+            try 
+            {
+                EntitieType = int.Parse(file[num_line]);
+            }
+            catch(Exception e)
+            {
+                //failed, gph ill formed
+                MessageBox.Show("Fichier GPH mal formé" + e.Message);
+                num_line += 10;
+                return null;
+            }
             switch (EntitieType)
             {
                 //cercle
@@ -1180,7 +1193,7 @@ namespace MA400_export
          */
         public void GenerateProdFiles(BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)
         {
-            Gen = new ProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotated);
+            Gen = new ProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 
@@ -1189,7 +1202,7 @@ namespace MA400_export
          */
         public void GenerateProdFiles(BindingList<Stud> Studs, GeneratorData Data, Layout_Info layout)
         {
-            Gen = new ProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotated);
+            Gen = new ProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
             Gen.GenerateProductionFiles(Data.ProgramNumber);
         }
 
