@@ -141,6 +141,12 @@
     <Compile Include="FormGenerateInfo.Designer.cs">
       <DependentUpon>FormGenerateInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="getRotationValue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="getRotationValue.Designer.cs">
+      <DependentUpon>getRotationValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="GraphicsContainer.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Form1.cs">
@@ -183,6 +189,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormGenerateInfo.resx">
       <DependentUpon>FormGenerateInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="getRotationValue.resx">
+      <DependentUpon>getRotationValue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MachineSelection.resx">
       <DependentUpon>MachineSelection.cs</DependentUpon>

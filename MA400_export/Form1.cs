@@ -1203,6 +1203,32 @@ namespace MA400_export
             WorkZone.Invalidate();
         }
 
+        private void rotationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            if (!fs.open)
+            {
+                MessageBox.Show("aucun fichier ou programme ouvert.");
+                return;
+            }
+
+            using (getRotationValue rotationForm = new getRotationValue())
+            {
+                if (rotationForm.ShowDialog() == DialogResult.OK)
+                {   
+                    double rotationValue = rotationForm.Value;
+                    fs.RotatePart(rotationValue);
+                    gc.reset();
+                    gc.OpenCanvas();
+                    fs.OpenRotatedFileLayout(gc.layout, rotationValue);
+                    DisplayWhenOpen(true);
+                    WorkZone.Invalidate();
+                }
+                
+            }
+            
+        }
+
 
         /*___________________________________________PANEL_RESIZE___________________________________________*/
 
@@ -1238,6 +1264,8 @@ namespace MA400_export
             var helper = new PrintHelper(gc, fs.Studs, _Zoom, Origin_Offset);
             helper.ShowPreview(this);//this = fenetre parente (owner)
         }
+
+        
 
 
 
