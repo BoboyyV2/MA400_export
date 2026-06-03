@@ -65,6 +65,11 @@ namespace MA400_export
         public Layout_Info layout { get; set; }
 
         private bool rotated = false;
+        private XYZ tl;
+        private XYZ tr;
+        private XYZ bl;
+        private XYZ br;
+
 
         /**
          * <summary>create the file systeme with a new document</summary>
@@ -328,10 +333,23 @@ namespace MA400_export
         /**
          * <summary>rotate a point around the center by angle degrees clockwise</summary>
          */
-        public XYZ RotatePointAroundCenter(XYZ target, PointF center, double angle, PointF newCenter)
+        public XYZ RotatePointAroundCenter(XYZ target, PointF center, double angle)
         {
             XYZ pointToOrigin = new XYZ(target.X - center.X, target.Y - center.Y, 0);
             
+            pointToOrigin = RotatePointAroundOrigin(pointToOrigin, angle);
+            //recalculate center
+
+            return new XYZ(pointToOrigin.X + center.X, pointToOrigin.Y + center.Y, 0);
+        }
+
+        /**
+         * <summary>rotate a point around the center by angle degrees clockwise and adjust it's position</summary>
+         */
+        public XYZ RotatePointAroundCenterAndAdjust(XYZ target, PointF center, double angle, PointF newCenter)
+        {
+            XYZ pointToOrigin = new XYZ(target.X - center.X, target.Y - center.Y, 0);
+
             pointToOrigin = RotatePointAroundOrigin(pointToOrigin, angle);
             //recalculate center
 
@@ -345,11 +363,15 @@ namespace MA400_export
             double Xmax;
             double Ymin;
             double Ymax;
+
+            //DEBUG
+            //MessageBox.Show(layout.dimension.ToString());
+
             //rotate the dimension around the center to get the new limits of the new layout
-            XYZ tl = RotatePointAroundCenter(new XYZ(layout.dimension.Left, layout.dimension.Top, 0), center, angle, new PointF(0, 0) );
-            XYZ tr = RotatePointAroundCenter(new XYZ(layout.dimension.Right, layout.dimension.Top, 0), center, angle, new PointF(0, 0));
-            XYZ bl = RotatePointAroundCenter(new XYZ(layout.dimension.Left, layout.dimension.Bottom, 0), center, angle, new PointF(0, 0));
-            XYZ br = RotatePointAroundCenter(new XYZ(layout.dimension.Right, layout.dimension.Bottom, 0), center, angle, new PointF(0, 0) );
+            tl = RotatePointAroundCenter(tl, center, angle);
+            tr = RotatePointAroundCenter(tr, center, angle);
+            bl = RotatePointAroundCenter(bl, center, angle);
+            br = RotatePointAroundCenter(br, center, angle);
 
             //compute the new center
             Xmin = Math.Min(Math.Min(tl.X, tr.X), Math.Min(bl.X, br.X));
@@ -369,7 +391,7 @@ namespace MA400_export
         private void RotateStud(Stud stud, double angle, PointF center, PointF newCenter)
         {
             //the offseted position of the stud
-            stud.circle.Center = RotatePointAroundCenter(stud.circle.Center, center, angle, newCenter);
+            stud.circle.Center = RotatePointAroundCenterAndAdjust(stud.circle.Center, center, angle, newCenter);
         }
 
         private XYZ BringToOrigin(XYZ point)
@@ -797,7 +819,13 @@ namespace MA400_export
          */
         public void OpenDxfFileLayout(Layout_Info layout)
         {
+            //init the layout
             this.layout = layout;
+            tl = new XYZ(0, 0, 0);
+            tr = new XYZ(layout.dimension.Width, 0, 0);
+            bl = new XYZ(0, layout.dimension.Height, 0);
+            br = new XYZ(layout.dimension.Width, layout.dimension.Height, 0);
+
             ScanDxfEntities();
         }
 
