@@ -131,7 +131,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AreFileGenerator.cs" />
+    <Compile Include="AREProdFileGenerator.cs" />
+    <Compile Include="CNCProdFileGenerator.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DoubleBufferedPanel.cs">
       <SubType>Component</SubType>

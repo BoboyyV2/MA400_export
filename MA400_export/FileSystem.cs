@@ -909,7 +909,7 @@ namespace MA400_export
         private Entity ParseGPHEntities(string[] file, ref int num_line)
         {
 
-            int EntitieType
+            int EntitieType;
             try 
             {
                 EntitieType = int.Parse(file[num_line]);
@@ -1191,19 +1191,41 @@ namespace MA400_export
         /**
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          */
-        public void GenerateProdFiles(BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)
+        public void GenerateProdFiles(BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, Machine machine)
         {
-            Gen = new ProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
-            Gen.GenerateProductionFiles(Data.ProgramNumber);
+            switch (machine)
+            {
+                case Machine.KTS850:
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
+                    break;
+                case Machine.PTS300:
+                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
+                    break;
+                default:
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
+                    break;
+            }
+            Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
         }
 
         /**
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          */
-        public void GenerateProdFiles(BindingList<Stud> Studs, GeneratorData Data, Layout_Info layout)
+        public void GenerateProdFiles(BindingList<Stud> Studs, GeneratorData Data, Layout_Info layout, Machine machine)
         {
-            Gen = new ProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
-            Gen.GenerateProductionFiles(Data.ProgramNumber);
+            switch (machine)
+            {
+                case Machine.KTS850:
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
+                    break;
+                case Machine.PTS300:
+                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
+                    break;
+                default:
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
+                    break;
+            }
+            Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
         }
 
         /*______________________________________________*/
