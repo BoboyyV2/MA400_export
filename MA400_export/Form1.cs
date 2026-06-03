@@ -1220,6 +1220,20 @@ namespace MA400_export
 
 
         /*___________________________________________PRINT___________________________________________*/
+
+        //aperçu avant impression
+        private void BtnApercu_Click(object sender, EventArgs e)
+        {
+
+            
+        }
+
+        // ── Impression directe ─────────────────────────────────────────────
+        private void BtnImprimer_Click(object sender, EventArgs e)
+        {
+            var helper = new PrintHelper(gc, fs.Studs, _Zoom, Origin_Offset);
+            helper.Print(this);
+        }
         private void createPreview()
         {
             using (Bitmap bmp = new Bitmap(800, 600))
@@ -1231,58 +1245,20 @@ namespace MA400_export
             //this.printDocument1
         }
 
+        
+
+        
+
         private void imprimerToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            createPreview();
-            printform.Print();
-            /*
-            printDialog1.AllowSelection = true;
-            printDialog1.AllowSomePages = true;
-            printDialog1.Document = printDocument1;
-
-            printform.ShowDialog();
-
-            System.Windows.Forms.Panel panel = new System.Windows.Forms.Panel();
-            printform.Controls.Add(panel);
-            Graphics grp = panel.CreateGraphics();
-            Size formSize = printform.ClientSize;
-            printBitmap = new Bitmap(formSize.Width, formSize.Height, grp);
-            grp = Graphics.FromImage(printBitmap);
-            System.Drawing.Point panelLocation = PointToScreen(panel.Location);
-            grp.CopyFromScreen(panelLocation.X, panelLocation.Y, 0, 0, formSize);
-            printDialog1.Document = printDocument1;
-            printDialog1.ShowDialog();
-            */
-
+            var helper = new PrintHelper(gc, fs.Studs, _Zoom, Origin_Offset);
+            helper.Print(this);
         }
 
-        private void afficherLaperçuToolStripMenuItem_Click(object sender, EventArgs e)
+        private void afficherLaperçuToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            //ouvre l'aperçu d'impression
-            
-            createPreview();
-
-            //force the use of the constructor by invoking it
-            var createControlMethod = printform.GetType().GetMethod("CreateControl", BindingFlags.Instance | BindingFlags.NonPublic);
-            createControlMethod.Invoke(printform, new object[] { true });
-
-            using (Bitmap bitmap = new Bitmap(printform.Width, printform.Height))
-            {
-                printform.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
-            }
-                
-
-            printform.Preview();
-            
-            
-        }
-
-
-       
-
-        private void imprimerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            printform.Show();
+            var helper = new PrintHelper(gc, fs.Studs, _Zoom, Origin_Offset);
+            helper.ShowPreview(this);//this = fenêtre parente (owner)
         }
 
 
