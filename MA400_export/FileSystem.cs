@@ -473,7 +473,7 @@ namespace MA400_export
         {
             //reset without a new document our new studlist
             open = false;
-            string tmpPath = Constants.exePath + Constants.tmpPath;
+            string tmpPath = Constants.MainPath + Constants.tmpPath;
 
             //save dans un fichier temporaire pour l'affichage / traitement
             try
@@ -700,7 +700,7 @@ namespace MA400_export
         public bool OpenDDxfFile(string path)
         {
             reset();
-            string tmpPath = Constants.exePath + Constants.tmpPath;
+            string tmpPath = Constants.MainPath + Constants.tmpPath;
 
             try
             {
@@ -770,7 +770,7 @@ namespace MA400_export
         public bool OpenDxfFile(string path)
         {
             reset();
-            string tmpPath = Constants.exePath + Constants.tmpPath;
+            string tmpPath = Constants.MainPath + Constants.tmpPath;
 
             try
             {
@@ -847,7 +847,7 @@ namespace MA400_export
         */
         public GeneratorData OpenCNCProdFile(int ProgramNumber)
         {
-            string tmpPath = Constants.exePath + Constants.tmpPath;
+            string tmpPath = Constants.MainPath + Constants.tmpPath;
             try
             {
                 Directory.CreateDirectory(tmpPath);
@@ -1333,14 +1333,18 @@ namespace MA400_export
         /*_____________________________________PTS_300_PARAMETERS_____________________________________*/
 
 
-        public void CreatePts300Parameters()
+        /**
+         * <summary>create the default parameters for the PTS300 machine</summary>
+         */
+        private void setDefaultPTS300Parameters()
         {
 
-            string paramPath = Constants.exePath + Constants.paramPath;
+            string defaultParamPath = Constants.MainPath + Constants.paramPath + @"\default";
+
             try
             {
-                Directory.CreateDirectory(paramPath);
-                Util.SetPermissions(paramPath);
+                Directory.CreateDirectory(defaultParamPath);
+                Util.SetPermissions(defaultParamPath);
             }
             catch (DirectoryNotFoundException e)
             {
@@ -1352,38 +1356,72 @@ namespace MA400_export
             }
             catch
             {
-                MessageBox.Show("Erreur lors de l'ouverture d'un fichier");
+                MessageBox.Show("Erreur lors de la creation/recuperation des paramètres de la machine PTS300");
             }
-            //try to read the parameters from a file if it exist, if not create default parameters and save them in a file for later use
-            try
+
+            //TODO make sure the file is always present in the default folder and contains the default parameters.
+
+            if (!File.Exists(defaultParamPath + @"\PTS_300_PARAM.txt"))
             {
-                ReadPts300Parameters();
+                MessageBox.Show("Le fichier de paramètres par défaut pour la machine PTS300 est manquant, veuillez le créer et le placer dans le dossier de paramètres par défaut.");
+                return;
             }
-            catch (FileNotFoundException)
-            {
-                createDefaultPts300Parameters();
-            }
-            catch (DirectoryNotFoundException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            catch
-            {
-                MessageBox.Show("Erreur lors de la création des paramètres de la machine PTS300");
-            }
-        }
-        private void createDefaultPts300Parameters()
-        {
-            //TODO create default parameters for the PTS300 machine
+            ReadPTS300Parameters(defaultParamPath + @"\PTS_300_PARAM.txt");
+
         }
 
-        private void ReadPts300Parameters()
+
+        /**
+         * <summary>read the parameters of the PTS300 machine from a file and store them in the application for later use.</summary>
+         */
+        private void ReadPTS300Parameters(string filename)
         {
-            //TODO read the parameters for the PTS300 machine from a file
+            string paramPath = Constants.MainPath + Constants.paramPath + filename;
+            string[] file;
+            try
+            {
+                 file = File.ReadAllLines(paramPath);
+                //TODO read the parameters from the file and store them in the application for later use
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("echec de l'ouverture des paramètres de la machine PTS300: " + e.Message + Environment.NewLine + "vous pouvez reinitialiser les paramètres");
+                return;
+            }
+
+            for (int numline = 0; numline < file.Length; numline++)
+            {
+                try
+                {
+                    PTS_300_PARAM[numline] = Convert.ToInt32(file[numline]);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("echec de la lecture d'un paramètre" + e.Message + Environment.NewLine + "valeur de paramètre invalide : " + file[numline]);
+                    return;
+                }
+            }
+
+        }
+
+        public void writePTS300Parameters()
+        {
+            string paramPath = Constants.MainPath + Constants.paramPath + @"PTS_300_PARAM.txt";
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(paramPath))
+                {
+                    for (int i = 0; i < PTS_300_PARAM.Length; i++)
+                    {
+                        sw.WriteLine(PTS_300_PARAM[i]);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("echec de l'écriture des paramètres de la machine PTS300: " + e.Message);
+                return;
+            }
         }
 
         /*______________________________________________*/

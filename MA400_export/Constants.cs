@@ -28,11 +28,11 @@ namespace MA400_export
         public static PointF WorkZoneLimits_Coord { get; private set; } = new PointF(800.0f, 800.0f);
 
         //path auto-calculé vers le dossier d'output
-        public static string Outputpath { get; private set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MA400_export\";//location dans document 
+        public static string Outputpath { get; private set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MA400_export\output";//location dans document 
 
         //This will give us the path of the executable file:
         //C:\Program Files\MyApplication in most cases.
-        public static string exePath { get; private set; } = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ;
+        public static string MainPath { get; private set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\MA400_export" ;
         public static string DatenPath { get; private set; } = @"\Daten\2\";
 
         public static string CncPath { get; private set; } = @"\Cnc\2\";
