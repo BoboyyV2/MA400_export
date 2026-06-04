@@ -59,8 +59,9 @@ namespace MA400_export
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.VueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rotateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.Rotate90ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.rotationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.StudList_Display = new System.Windows.Forms.ListBox();
             this.StudsMenuLabel = new System.Windows.Forms.Label();
@@ -89,7 +90,7 @@ namespace MA400_export
             this.labelHoveredCircle = new System.Windows.Forms.Label();
             this.labelHoveredCircleX = new System.Windows.Forms.Label();
             this.labelHoveredCircleY = new System.Windows.Forms.Label();
-            this.rotationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ouvrirUnProgramAreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -127,6 +128,7 @@ namespace MA400_export
             this.fichierToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ouvrirToolStripMenuItem,
             this.ouvrirprogramToolStripMenuItem,
+            this.ouvrirUnProgramAreToolStripMenuItem,
             this.toolStripSeparator,
             this.enregistrerToolStripMenuItem,
             this.enregistrersousToolStripMenuItem,
@@ -152,7 +154,7 @@ namespace MA400_export
             // 
             this.ouvrirprogramToolStripMenuItem.Name = "ouvrirprogramToolStripMenuItem";
             this.ouvrirprogramToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.ouvrirprogramToolStripMenuItem.Text = "&Ouvrir un program";
+            this.ouvrirprogramToolStripMenuItem.Text = "&Ouvrir un program CNC";
             this.ouvrirprogramToolStripMenuItem.Click += new System.EventHandler(this.ouvrirprogramToolStripMenuItem_Click);
             // 
             // toolStripSeparator
@@ -263,21 +265,28 @@ namespace MA400_export
             // rotateToolStripMenuItem
             // 
             this.rotateToolStripMenuItem.Name = "rotateToolStripMenuItem";
-            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.rotateToolStripMenuItem.Text = "&Tourner à 180°";
             this.rotateToolStripMenuItem.Click += new System.EventHandler(this.rotateToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // Rotate90ToolStripMenuItem
             // 
             this.Rotate90ToolStripMenuItem.Name = "Rotate90ToolStripMenuItem";
-            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.Rotate90ToolStripMenuItem.Text = "&Tourner à 90°";
             this.Rotate90ToolStripMenuItem.Click += new System.EventHandler(this.Rotate90ToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(147, 6);
+            // 
+            // rotationToolStripMenuItem
+            // 
+            this.rotationToolStripMenuItem.Name = "rotationToolStripMenuItem";
+            this.rotationToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.rotationToolStripMenuItem.Text = "&Rotation";
+            this.rotationToolStripMenuItem.Click += new System.EventHandler(this.rotationToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -552,12 +561,12 @@ namespace MA400_export
             this.labelHoveredCircleY.Size = new System.Drawing.Size(0, 13);
             this.labelHoveredCircleY.TabIndex = 24;
             // 
-            // rotationToolStripMenuItem
+            // ouvrirUnProgramAreToolStripMenuItem
             // 
-            this.rotationToolStripMenuItem.Name = "rotationToolStripMenuItem";
-            this.rotationToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.rotationToolStripMenuItem.Text = "&Rotation";
-            this.rotationToolStripMenuItem.Click += new System.EventHandler(this.rotationToolStripMenuItem_Click);
+            this.ouvrirUnProgramAreToolStripMenuItem.Name = "ouvrirUnProgramAreToolStripMenuItem";
+            this.ouvrirUnProgramAreToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.ouvrirUnProgramAreToolStripMenuItem.Text = "&Ouvrir un program are";
+            this.ouvrirUnProgramAreToolStripMenuItem.Click += new System.EventHandler(this.ouvrirUnProgramAreToolStripMenuItem_Click);
             // 
             // MA400_export
             // 
@@ -656,6 +665,7 @@ namespace MA400_export
         private ToolStripMenuItem imprimerToolStripMenuItem1;
         private ToolStripMenuItem afficherLaperçuToolStripMenuItem;
         private ToolStripMenuItem rotationToolStripMenuItem;
+        private ToolStripMenuItem ouvrirUnProgramAreToolStripMenuItem;
     }
 }
 

@@ -71,6 +71,8 @@ namespace MA400_export
         private XYZ bl;
         private XYZ br;
 
+        public int[] PTS_300_PARAM = new int[100];
+
 
         /**
          * <summary>create the file systeme with a new document</summary>
@@ -471,7 +473,7 @@ namespace MA400_export
         {
             //reset without a new document our new studlist
             open = false;
-            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+            string tmpPath = Constants.exePath + Constants.tmpPath;
 
             //save dans un fichier temporaire pour l'affichage / traitement
             try
@@ -698,7 +700,7 @@ namespace MA400_export
         public bool OpenDDxfFile(string path)
         {
             reset();
-            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+            string tmpPath = Constants.exePath + Constants.tmpPath;
 
             try
             {
@@ -768,7 +770,7 @@ namespace MA400_export
         public bool OpenDxfFile(string path)
         {
             reset();
-            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+            string tmpPath = Constants.exePath + Constants.tmpPath;
 
             try
             {
@@ -837,14 +839,15 @@ namespace MA400_export
 
         /*_____________________________________PRODFILE_____________________________________*/
 
+        /*_____________________________________CNC_PROGRAM_____________________________________*/
+
 
         /**
-        * <summary>attempt to open a program's file via it's program number and import it into the application</summary>
+        * <summary>attempt to open a CNC program's files via it's program number and import it into the application</summary>
         */
-        public GeneratorData OpenProdFile(int ProgramNumber)
+        public GeneratorData OpenCNCProdFile(int ProgramNumber)
         {
-            //string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
-            string tmpPath = Constants.Outputpath + Constants.tmpPath;
+            string tmpPath = Constants.exePath + Constants.tmpPath;
             try
             {
                 Directory.CreateDirectory(tmpPath);
@@ -870,15 +873,9 @@ namespace MA400_export
             //si on a les fichiers =>
             reset();
 
-
             ReadLAY(ProgramNumber);
-
             ReadGPH(ProgramNumber);
             ReadDAT(ProgramNumber, ref data);
-            //get offset, scale & dimsension
-            //scale always 1;1 ?
-            //offset et dimension dans .LAY donc : 
-            // ==>>
             ReadNC(ProgramNumber);
 
 
@@ -1099,6 +1096,110 @@ namespace MA400_export
             }
         }
 
+        /*_____________________________________ARE_PROGRAM_____________________________________*/
+        /**
+        * <summary>attempt to open an ARE program's file via it's name and import it into the application</summary>
+        */
+        public void OpenAREProdFile(string filename)
+        {
+            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+            try
+            {
+                Directory.CreateDirectory(tmpPath);
+                Util.SetPermissions(tmpPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier");
+            }
+
+            /*___________________________________*/
+
+            //si on a les fichiers =>
+            reset();
+
+            ReadARE(filename); 
+
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+
+            open = true;
+
+        }
+
+        /*_____________________________________ARE_____________________________________*/
+
+        private void ReadARE(string filename)
+        {
+
+            string AREPath = Properties.Settings.Default.OutputPath + Constants.DatenPath + filename + ".ARE";
+
+            string[] file = File.ReadAllLines(AREPath);
+
+            int numline = 0;
+
+            ReadAREParam(file, ref numline);
+
+            ReadAREStuds(file, ref numline);
+        }
+
+        /**
+         * <summary>Reads the parameters from the ARE file</summary>
+         */
+        private void ReadAREParam(string[] file, ref int numline)
+        {
+            //TODO read the parameters of the ARE file
+
+        }
+
+
+        /**
+         * <summary>Reads the stud information from the ARE file and add them to the collection</summary>
+         */
+        private void ReadAREStuds(string[] file, ref int numline)
+        {
+            int nbStuds = 0;
+            double X = 0, Y = 0;
+            while (numline < file.Length)
+            {
+                //X
+                try
+                {
+                    X = Convert.ToDouble(file[numline++], CultureInfo.InvariantCulture);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Fichier ARE mal formé, lecture de la position X d'un goujon impossible, passage au suivant" + e.Message);
+                    numline += 2;
+                    continue;
+                }
+                //Y
+                try
+                {
+                    Y = Convert.ToDouble(file[numline++], CultureInfo.InvariantCulture);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Fichier ARE mal formé, lecture de la position Y d'un goujon impossible, passage au suivant" + e.Message);
+                    numline += 1;
+                    continue;
+                }
+
+                //ajout du goujon à la liste
+                nbStuds++;
+                Studs.Add(new Stud(new Circle() { Center = new XYZ(X, Y, 0), Radius = Constants.StudRadius3, Color = ACadSharp.Color.Green }));
+            }
+
+        }
+
+
         /*_____________________________________SAVE_____________________________________*/
 
 
@@ -1226,6 +1327,63 @@ namespace MA400_export
                     break;
             }
             Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
+        }
+
+
+        /*_____________________________________PTS_300_PARAMETERS_____________________________________*/
+
+
+        public void CreatePts300Parameters()
+        {
+
+            string paramPath = Constants.exePath + Constants.paramPath;
+            try
+            {
+                Directory.CreateDirectory(paramPath);
+                Util.SetPermissions(paramPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier");
+            }
+            //try to read the parameters from a file if it exist, if not create default parameters and save them in a file for later use
+            try
+            {
+                ReadPts300Parameters();
+            }
+            catch (FileNotFoundException)
+            {
+                createDefaultPts300Parameters();
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de la création des paramètres de la machine PTS300");
+            }
+        }
+        private void createDefaultPts300Parameters()
+        {
+            //TODO create default parameters for the PTS300 machine
+        }
+
+        private void ReadPts300Parameters()
+        {
+            //TODO read the parameters for the PTS300 machine from a file
         }
 
         /*______________________________________________*/

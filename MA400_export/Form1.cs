@@ -1102,7 +1102,7 @@ namespace MA400_export
 
 
         /**
-         * <summary>Open a program via an existing program number</summary>
+         * <summary>Open a CNCprogram via an existing program number</summary>
          */
         private void ouvrirprogramToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1112,7 +1112,7 @@ namespace MA400_export
                 {
                     int ProgramNumber = programNumberWindow.ProgramNumber;
                     reset();
-                    data = fs.OpenProdFile(ProgramNumber);
+                    data = fs.OpenCNCProdFile(ProgramNumber);
 
                     IsNew = false;
 
@@ -1124,6 +1124,35 @@ namespace MA400_export
 
             }
 
+        }
+
+        /**
+         * <summary>Open an are program via an program name</summary>
+         */
+        private void ouvrirUnProgramAreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO, savoir comment ils sont stockés
+            //faire l'equivalent 
+
+            /*
+            using (ProgramNumberOpen programNumberWindow = new ProgramNumberOpen())
+            {
+                if (programNumberWindow.ShowDialog() == DialogResult.OK)
+                {
+                    int ProgramNumber = programNumberWindow.ProgramNumber;
+                    reset();
+                    data = fs.OpenAREProdFile(ProgramNumber);
+
+                    IsNew = false;
+
+                    gc.OpenCanvas();
+                    fs.OpenProdFileLayout(gc.layout);
+
+                    DisplayWhenOpen(true);
+                }
+
+            }
+            */
         }
 
         /**
