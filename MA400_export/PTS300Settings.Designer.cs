@@ -30,6 +30,7 @@ namespace MA400_export
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Parametre = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Commentaire = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,24 +54,22 @@ namespace MA400_export
             this.dataGridView1.Size = new System.Drawing.Size(560, 387);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView1_RowPostPaint);
-
             // 
             // Parametre
             // 
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Parametre.DefaultCellStyle = dataGridViewCellStyle5;
             this.Parametre.HeaderText = "Paramètre";
             this.Parametre.Name = "Parametre";
-            this.Parametre.SortMode = DataGridViewColumnSortMode.NotSortable;
-            this.Parametre.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            this.Parametre.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Parametre.Width = 165;
-
             // 
             // Commentaire
             // 
             this.Commentaire.HeaderText = "commentaire";
             this.Commentaire.Name = "Commentaire";
-            this.Commentaire.SortMode = DataGridViewColumnSortMode.NotSortable;
+            this.Commentaire.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Commentaire.Width = 335;
-
             // 
             // buttonDefault
             // 
@@ -80,6 +79,7 @@ namespace MA400_export
             this.buttonDefault.TabIndex = 2;
             this.buttonDefault.Text = "&Valeurs par défault";
             this.buttonDefault.UseVisualStyleBackColor = true;
+            this.buttonDefault.Click += new System.EventHandler(this.buttonDefault_Click);
             // 
             // buttonSave
             // 
@@ -89,6 +89,7 @@ namespace MA400_export
             this.buttonSave.TabIndex = 3;
             this.buttonSave.Text = "&Sauvegarder";
             this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // buttonCancel
             // 
@@ -98,6 +99,7 @@ namespace MA400_export
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "&Annuler";
             this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonReset
             // 
@@ -107,6 +109,7 @@ namespace MA400_export
             this.buttonReset.TabIndex = 5;
             this.buttonReset.Text = "&Réinitialiser";
             this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
             // buttonOK
             // 
@@ -116,6 +119,7 @@ namespace MA400_export
             this.buttonOK.TabIndex = 6;
             this.buttonOK.Text = "&Ok";
             this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // PTS300Settings
             // 

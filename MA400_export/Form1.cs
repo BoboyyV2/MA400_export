@@ -1241,6 +1241,7 @@ namespace MA400_export
             //ouvre les options
             using (PTS300Settings settingsWindow = new PTS300Settings(ref fs.GetPTS300Parameters(), ref fs.GetPTS300Comments()))
             {
+                settingsWindow.mainParent = this;
                 settingsWindow.ShowDialog();
                 //c'est tout
             }
