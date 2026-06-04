@@ -94,8 +94,8 @@ namespace MA400_export
          */
         public void GetDefaultPTS300Parameters()
         {
-
-            string defaultParamPath = Constants.MainPath + Constants.paramPath + @"\default\PTS_300_PARAM.txt";
+            string paramPath = Constants.MainPath + Constants.paramPath;
+            string defaultParamPath = paramPath + @"default\PTS_300_PARAM.txt";
 
             //TODO make sure the file is always present in the default folder and contains the default parameters.
 
@@ -103,15 +103,17 @@ namespace MA400_export
             {
                 MessageBox.Show("Le fichier de paramètres par défaut pour la machine PTS300 est manquant, création des paramètres par défaut.");
                 GenerateDefaultPTS300Parameters();
+                ReadPTS300Parameters(defaultParamPath);
+                writePTS300Parameters();
                 return;
             }
-            ReadPTS300Parameters(defaultParamPath + @"\PTS_300_PARAM.txt");
+            ReadPTS300Parameters(paramPath + @"PTS_300_PARAM.txt");
 
         }
 
         public void GenerateDefaultPTS300Parameters()
         {
-            string defaultParamPath = Constants.MainPath + Constants.paramPath + @"default\PTS_300_PARAM.txt";
+            string defaultParamPath = Constants.MainPath + Constants.paramPath + @"\default\";
             //create the folder if it doesn't exist
             try
             {
@@ -136,7 +138,7 @@ namespace MA400_export
                 Application.Exit();
                 return;
             }
-            using (StreamWriter sw = new StreamWriter(defaultParamPath))
+            using (StreamWriter sw = File.CreateText(defaultParamPath + "PTS_300_PARAM.txt"))
             {
                 writeHeaderParam(sw);
                 writeMiddleParam(sw);
@@ -189,14 +191,14 @@ namespace MA400_export
 
         /**
          * <summary>read the parameters of the PTS300 machine from a file and store them in the application for later use.</summary>
+         * <param name="filePath">The full path to the parameter file</param>
          */
-        public void ReadPTS300Parameters(string filename)
+        public void ReadPTS300Parameters(string filePath)
         {
-            string paramPath = Constants.MainPath + Constants.paramPath + filename;
             string[] file;
             try
             {
-                file = File.ReadAllLines(paramPath);
+                file = File.ReadAllLines(filePath);
                 //TODO read the parameters from the file and store them in the application for later use
             }
             catch (Exception e)

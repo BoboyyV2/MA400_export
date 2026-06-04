@@ -1334,7 +1334,7 @@ namespace MA400_export
         {
             string ParamPath = Constants.MainPath + Constants.paramPath;
             AREProdFileGenerator AREGen = (AREProdFileGenerator)Gen;
-            if (File.Exists(ParamPath + @"\PTS_300_PARAM.txt"))
+            if (File.Exists(ParamPath + @"PTS_300_PARAM.txt"))
             {
                 AREGen.ReadPTS300Parameters(ParamPath + @"\PTS_300_PARAM.txt");
             }
