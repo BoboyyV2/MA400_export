@@ -40,7 +40,8 @@ namespace MA400_export
         protected BindingList<Stud> Studs;//can't use ref or pointer it 
         protected CadObjectCollection<Entity> Entities;//same shee
 
-        protected GeneratorData Data;
+        //no longer stored here
+        //protected GeneratorData Data;
 
         protected RectangleF Dimension;
         protected PointF Offset;
@@ -50,13 +51,13 @@ namespace MA400_export
 
 
 
-        public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation)//should work but C# and ref being themselves 
+        public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, Scale Scalefact, double Rotation)//should work but C# and ref being themselves 
         {
             this.Studs = Studs;
             this.Entities = Entities;
             this.Dimension = Dimension;
             this.Offset = Offset;
-            this.Data = Data;
+            //this.Data = Data;
             this.Scalefact = Scalefact;
             this.Rotation = Rotation;
 
@@ -152,8 +153,19 @@ namespace MA400_export
 
         /*_____________________________________EXPORT_____________________________________*/
 
-        public abstract void GenerateProductionFiles(string name);
-
+        /**
+         * <summary>Generates the production files for the given name and data.</summary>
+         * <param name="name">The name of the files to generate.</param>
+         * <param name="Data">The GeneratorData containing the data to write in the files.</param>
+         */
+        public abstract void GenerateProductionFiles(string name, GeneratorData Data);
+        public void UpdateData(BindingList<Stud> studs, RectangleF dimension, PointF offset, Scale scalefact)
+        {
+            this.Studs = studs;
+            this.Dimension = dimension;
+            this.Offset = offset;
+            this.Scalefact = scalefact;
+        }
     }
 
 }

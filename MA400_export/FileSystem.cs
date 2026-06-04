@@ -838,6 +838,22 @@ namespace MA400_export
 
         /*_____________________________________PRODFILE_____________________________________*/
 
+        internal void setGenerator(Machine machine )
+        {
+            switch (machine)
+            {
+                case Machine.KTS850:
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, layout.scale, rotation);
+                    break;
+                case Machine.PTS300:
+                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, layout.scale, rotation);
+                    break;
+                default:
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, layout.scale, rotation);
+                    break;
+            }
+        }
+
         /*_____________________________________CNC_PROGRAM_____________________________________*/
 
 
@@ -1290,42 +1306,23 @@ namespace MA400_export
 
         /**
          * <summary>Generates the productoin files necessary to the driver to function</summary>
+         * <remarks>Machine related information are managed by the generator type</remarks>
          */
-        public void GenerateProdFiles(BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, Machine machine)
+        public void GenerateProdFiles(BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)
         {
-            switch (machine)
-            {
-                case Machine.KTS850:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
-                    break;
-                case Machine.PTS300:
-                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
-                    break;
-                default:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
-                    break;
-            }
-            Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
+            Gen.UpdateData( Studs, Dimension, Offset, Scalefact);
+            Gen.GenerateProductionFiles(Data.ProgramNumber.ToString(), Data);
         }
 
         /**
          * <summary>Generates the productoin files necessary to the driver to function</summary>
+         * <remarks>Machine related information are managed by the generator type</remarks>
          */
-        public void GenerateProdFiles(BindingList<Stud> Studs, GeneratorData Data, Layout_Info layout, Machine machine)
+        public void GenerateProdFiles(BindingList<Stud> Studs, GeneratorData Data, Layout_Info layout)
         {
-            switch (machine)
-            {
-                case Machine.KTS850:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
-                    break;
-                case Machine.PTS300:
-                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
-                    break;
-                default:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
-                    break;
-            }
-            Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
+            Gen.UpdateData(Studs, layout.dimension, layout.offset, layout.scale);
+
+            Gen.GenerateProductionFiles(Data.ProgramNumber.ToString(),Data);
         }
 
         /*_____________________________________PTS_300_PARAMETERS_____________________________________*/
@@ -1346,6 +1343,8 @@ namespace MA400_export
                 AREGen.GetDefaultPTS300Parameters();
             }
         }
+
+        
 
         /*______________________________________________*/
 

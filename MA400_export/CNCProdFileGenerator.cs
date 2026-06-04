@@ -17,8 +17,8 @@ namespace MA400_export
     {
 
         public CNCProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension,
-                                    PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation)
-                                    : base (Studs,Entities,Dimension, Offset,Data,Scalefact,Rotation)
+                                    PointF Offset, Scale Scalefact, double Rotation)
+                                    : base (Studs,Entities,Dimension, Offset,Scalefact,Rotation)
         {
            
         }
@@ -26,8 +26,9 @@ namespace MA400_export
         /**
         * <summary>Generate the files necessary for the machine to work and save them to the \daten and \cnc folder</summary>
         * <param name="fileID">The ProgramNumber of the files to write.</param>
+        * <param name="Data">The GeneratorData containing the data to write in the files</param>
         */
-        public override void GenerateProductionFiles(string name)
+        public override void GenerateProductionFiles(string name, GeneratorData Data)
         {
             string Daten = Properties.Settings.Default.OutputPath + Constants.DatenPath;
             string Cnc = Properties.Settings.Default.OutputPath + Constants.CncPath;
@@ -58,7 +59,7 @@ namespace MA400_export
             GenerateAN4(Daten + name);
             GenerateBOL(Daten + name);
             GenerateBST(Daten + name);
-            GenerateDAT(Daten + name);
+            GenerateDAT(Daten + name, Data);
             GenerateDUP(Daten + name);
             GenerateGPH(Daten + name);
             GenerateLAY(Daten + name);
@@ -68,7 +69,7 @@ namespace MA400_export
             GenerateVER(Daten + name);
 
             //Cnc
-            GenerateCNC(Cnc + name);
+            GenerateCNC(Cnc + name, Data);
         }
 
 
@@ -78,8 +79,9 @@ namespace MA400_export
         /**
             * <summary>write the header of the CNC file into the file connected to sw.</summary>
             * <param name="sw">The StreamWriter connected to the outputf file.</param>
+            * <param name="Data">The GeneratorData containing the data to write in the header</param>
             */
-        private void GenerateCNCHeader(StreamWriter sw)
+        private void GenerateCNCHeader(StreamWriter sw, GeneratorData Data)
         {
             /*
             N1 (P0151)
@@ -205,12 +207,13 @@ namespace MA400_export
         /**
             * <summary>write the CNC file at the path specified by path</summary>
             * <param name="path">The path where to write the file.</param>
+            * <param name="Data">The GeneratorData containing the data to write in the file</param>
             */
-        private void GenerateCNC(string path)
+        private void GenerateCNC(string path, GeneratorData Data)
         {
             using (StreamWriter sw = File.CreateText(path + ".CNC"))
             {
-                GenerateCNCHeader(sw);
+                GenerateCNCHeader(sw, Data);
                 GenerateCNCInit(sw);
                 int N = 17; //pour start à 19 
                 bool first = false;
@@ -318,8 +321,9 @@ namespace MA400_export
         /**
             * <summary>write the DAT file at the path specified by path</summary>
             * <param name="path">The path where to write the file.</param>
+            * <param name="Data">The GeneratorData containing the data to write in the file</param>
             */
-        private void GenerateDAT(string path)
+        private void GenerateDAT(string path, GeneratorData Data)
         {
             using (StreamWriter sw = File.CreateText(path + ".DAT"))
             {

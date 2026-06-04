@@ -15,8 +15,8 @@ namespace MA400_export
     public class AREProdFileGenerator : ProdFileGenerator
     {
         public AREProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension,
-                                    PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation)
-                                    : base(Studs, Entities, Dimension, Offset, Data, Scalefact, Rotation)
+                                    PointF Offset, Scale Scalefact, double Rotation)
+                                    : base(Studs, Entities, Dimension, Offset, Scalefact, Rotation)
         {
 
         }
@@ -24,8 +24,9 @@ namespace MA400_export
         /**
         * <summary>Generate the files necessary for the machine to work and save them to the \daten and \cnc folder</summary>
         * <param name="fileID">The ProgramNumber of the files to write.</param>
+        * <param name="Data">The GeneratorData containing the data to write in the files</param>
         */
-        public override void GenerateProductionFiles(string name)
+        public override void GenerateProductionFiles(string name, GeneratorData Data)
         {
             string are = Properties.Settings.Default.OutputPath + Constants.ArePath;
 
@@ -110,9 +111,31 @@ namespace MA400_export
 
         public void GenerateDefaultPTS300Parameters()
         {
-            // Implementation for generating default parameters
             string defaultParamPath = Constants.MainPath + Constants.paramPath + @"default\PTS_300_PARAM.txt";
-
+            //create the folder if it doesn't exist
+            try
+            {
+                Directory.CreateDirectory(defaultParamPath);
+                Util.SetPermissions(defaultParamPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show("Dossier des paramètres par défaut introuvable" + e.Message);
+                Application.Exit();
+                return ;
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("Impossible d'acceder au dossier des paramètres par défaut " + e.Message);
+                Application.Exit();
+                return;
+            }
+            catch
+            {
+                MessageBox.Show("Échec de creation du fichier de paramètre par défaut");
+                Application.Exit();
+                return;
+            }
             using (StreamWriter sw = new StreamWriter(defaultParamPath))
             {
                 writeHeaderParam(sw);
