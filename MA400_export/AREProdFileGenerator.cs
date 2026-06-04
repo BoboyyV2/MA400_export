@@ -4,26 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MA400_export
 {
     public class AREProdFileGenerator : ProdFileGenerator
     {
         public AREProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension,
-                                    PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation)
-                                    : base(Studs, Entities, Dimension, Offset, Data, Scalefact, Rotation)
+                                    PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation, ref int[] parameters)
+                                    : base(Studs, Entities, Dimension, Offset, Data, Scalefact, Rotation, ref parameters)
         {
-            this.Studs = Studs;
-            this.Entities = Entities;
-            this.Dimension = Dimension;
-            this.Offset = Offset;
-            this.Data = Data;
-            this.Scalefact = Scalefact;
-            this.Rotation = Rotation;
-
+            
         }
 
         /**
@@ -32,7 +27,59 @@ namespace MA400_export
         */
         public override void GenerateProductionFiles(string name)
         {
-            //TODO: implement the file generation for ARE
+            string are = Properties.Settings.Default.OutputPath + Constants.ArePath;
+
+
+            try
+            {
+                Directory.CreateDirectory(are);
+                Util.SetPermissions(are);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show("Erreur lors de la generation des fichiers" + e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show("Erreur lors de la generation des fichiers" + e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de la generation des fichiers");
+            }
+            string filepath = are + name + ".are";
+            using (StreamWriter sw = File.CreateText(filepath))
+            {
+                WriteParameters(sw);
+                writeStuds(sw);
+            }
+
+        }
+
+        private void WriteParameters(StreamWriter fw)
+        {
+            for(int i = 0; i < parameters.Length; i++)
+            {
+                fw.WriteLine(parameters[i]);
+            }
+        }
+
+        private void writeStuds(StreamWriter fw)
+        {
+            List<Stud> SortedStuds = Util.SortStuds(Studs);
+            int numberOfLineToFill = 900;
+
+            foreach (Stud stud in SortedStuds)
+            {
+                fw.WriteLine(stud.circle.Center.X);
+                fw.WriteLine(stud.circle.Center.Y);
+                numberOfLineToFill -=2;
+            }
+            // Fill the remaining lines with default values if necessary
+            for (int i = 0; i < numberOfLineToFill; i++)
+            {
+                fw.WriteLine(0);
+            }
         }
     }
 }

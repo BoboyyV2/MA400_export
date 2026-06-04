@@ -37,6 +37,8 @@ namespace MA400_export
 
         public static string CncPath { get; private set; } = @"\Cnc\2\";
 
+        public static string ArePath { get; private set; } = @"\are\";
+
         public static string tmpPath { get; private set; } = @"\tmp\";
 
         public static string paramPath { get; private set; } = @"\param\";

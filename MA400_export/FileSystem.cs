@@ -1297,13 +1297,13 @@ namespace MA400_export
             switch (machine)
             {
                 case Machine.KTS850:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation, ref PTS_300_PARAM);
                     break;
                 case Machine.PTS300:
-                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
+                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation, ref PTS_300_PARAM);
                     break;
                 default:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation, ref PTS_300_PARAM);
                     break;
             }
             Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
@@ -1317,13 +1317,13 @@ namespace MA400_export
             switch (machine)
             {
                 case Machine.KTS850:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation, ref PTS_300_PARAM);
                     break;
                 case Machine.PTS300:
-                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
+                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation, ref PTS_300_PARAM);
                     break;
                 default:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation, ref PTS_300_PARAM);
                     break;
             }
             Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
@@ -1334,34 +1334,34 @@ namespace MA400_export
 
 
         /**
-         * <summary>create the default parameters for the PTS300 machine</summary>
+         * <summary>Retrieves the parameters for the PTS300 machine, if no parameters are found, default values are used</summary>
          */
-        private void setDefaultPTS300Parameters()
+        public void GetParametersPTS300()
+        {
+            string ParamPath = Constants.MainPath + Constants.paramPath;
+
+            if (File.Exists(ParamPath+@"\PTS_300_PARAM.txt"))
+            {
+                ReadPTS300Parameters(ParamPath + @"\PTS_300_PARAM.txt");
+            }
+            else
+            {
+                GetDefaultPTS300Parameters();
+            }
+        }
+
+        /**
+         * <summary>Get the default parameters for the PTS300 machine from the default file, it should come with the app on installation</summary>
+         * <remarks>if the default file is not found, all parameters will be set to 0 and a message will be displayed</remarks>
+         */
+        private void GetDefaultPTS300Parameters()
         {
 
-            string defaultParamPath = Constants.MainPath + Constants.paramPath + @"\default";
-
-            try
-            {
-                Directory.CreateDirectory(defaultParamPath);
-                Util.SetPermissions(defaultParamPath);
-            }
-            catch (DirectoryNotFoundException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            catch
-            {
-                MessageBox.Show("Erreur lors de la creation/recuperation des paramètres de la machine PTS300");
-            }
+            string defaultParamPath = Constants.MainPath + Constants.paramPath + @"\default\PTS_300_PARAM.txt""";
 
             //TODO make sure the file is always present in the default folder and contains the default parameters.
 
-            if (!File.Exists(defaultParamPath + @"\PTS_300_PARAM.txt"))
+            if (!File.Exists(defaultParamPath))
             {
                 MessageBox.Show("Le fichier de paramètres par défaut pour la machine PTS300 est manquant, veuillez le créer et le placer dans le dossier de paramètres par défaut.");
                 return;

@@ -66,6 +66,61 @@ namespace MA400_export
         }
 
         /**
+         * <summary>Set some utilities on app launch</summary>
+         */
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.OutputPath.Length < 1)
+            {
+                Properties.Settings.Default.OutputPath = Constants.Outputpath;
+                Properties.Settings.Default.Save();
+
+            }
+
+            //selection machine
+            bool selected = false;
+            //boucle jusqu'a ce qu'on choisisse
+            while (!selected)
+            {
+                using (MachineSelection ms = new MachineSelection())
+                {
+                    if (ms.ShowDialog() == DialogResult.OK)
+                    {
+                        machine = ms.getMachine();
+                        if (machine != Machine.None)
+                        {
+                            selected = true;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erreur lors de la séléction de la machine, réouverture de la séléction");
+                    }
+
+                }
+            }
+
+            switch (machine)
+            {
+                case Machine.KTS850:
+                    {
+
+                        break;
+                    }
+                case Machine.PTS300:
+                    {
+                        paramètresPTS300ToolStripMenuItem.Visible = true;
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+
+        }
+
+        /**
          * <summary>reset to a state where no part is loaded</summary>
          */
         private void reset()
@@ -234,6 +289,8 @@ namespace MA400_export
             TryFrame();
         }
 
+
+        /*_________________________________________ZOOM_________________________________________*/
         /**
          * <summary>function used to compute the zoom offset </summary>
          */
@@ -312,44 +369,10 @@ namespace MA400_export
             }
         }
 
-        /**
-         * <summary>Set some utilities on app launch</summary>
-         */
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            if (Properties.Settings.Default.OutputPath.Length < 1)
-            {
-                Properties.Settings.Default.OutputPath = Constants.Outputpath;
-                Properties.Settings.Default.Save();
-
-            }
-
-            //selection machine
-            bool selected = false;
-            //boucle jusqu'a ce qu'on choisisse
-            while (!selected)
-            {
-                using (MachineSelection ms = new MachineSelection())
-                {
-                    if (ms.ShowDialog() == DialogResult.OK)
-                    {
-                        machine = ms.getMachine();
-                        if (machine != Machine.None)
-                        {
-                            selected = true;
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Erreur lors de la séléction de la machine, réouverture de la séléction");
-                    }
-
-                }
-            }
-
-        }
+        
 
 
+        /*___________________________________________STUDS_EDITING___________________________________________*/
 
         /**
          * <summary>let you select the previous stud if there is one</summary>
@@ -595,6 +618,15 @@ namespace MA400_export
         }
 
         /**
+         * <summary>force the display to refresh whenever we change the selection in the studlist</summary>
+         */
+        private void StudList_Display_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //refresh the graphics
+            WorkZone.Invalidate();
+        }
+
+        /**
          * <summary>Attempt to add a stud at the position given in the dedicated textbox when clicking the add button</summary>
          * <remarks>show an error if it is not possible</remarks>
          */
@@ -673,83 +705,7 @@ namespace MA400_export
 
         }
 
-        /**
-         * <summary>Show a fileopen menu made to open dxf files</summary>
-         */
-        private void ouvrirToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialogOpen.ShowDialog();
-
-        }
-
-        /**
-         * <summary>Open a dxf or ddxf file and import it once it has been correctly selected via a fileopen menu</summary>
-         */
-        private void openFileDialogOpen_FileOk(object sender, CancelEventArgs e)
-        {
-            reset();
-            bool open = false;
-            string filename = this.openFileDialogOpen.FileName;
-            string extension = Path.GetExtension(filename);
-            fileName = Path.GetFileNameWithoutExtension(filename);
-
-            switch (extension)
-            {
-                //fichier dxf classique
-                case ".dxf":
-                    try
-                    {
-                        open = this.fs.OpenDxfFile(filename);
-                    }
-                    catch (SecurityException ex)
-                    {
-                        MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
-                        $"Details:\r\n{ex.StackTrace}");
-                        return;
-                    }
-
-                    if (!open)
-                    {
-                        MessageBox.Show("Echec de l'ouverture du fichier.");
-                    }
-
-                    gc.OpenCanvas();
-                    fs.OpenDxfFileLayout(gc.layout);
-
-                    break;
-
-                //fichier dxf modifié par nos soins
-                case ".ddxf":
-                    try
-                    {
-                        open = this.fs.OpenDDxfFile(filename);
-                    }
-                    catch (SecurityException ex)
-                    {
-                        MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
-                        $"Details:\r\n{ex.StackTrace}");
-                        return;
-                    }
-
-                    if (!open)
-                    {
-                        MessageBox.Show("Echec de l'ouverture du fichier.");
-                    }
-
-                    gc.OpenCanvas();
-                    fs.OpenDdxfFileLayout(gc.layout, filename);
-
-                    break;
-
-                default:
-                    MessageBox.Show("Extention de fichier invalide." + Environment.NewLine +
-                                    "Doit être .dxf ou .ddxf");
-                    return;
-            }
-
-
-            DisplayWhenOpen(open);
-        }
+        
 
 
         /**
@@ -986,6 +942,7 @@ namespace MA400_export
 
         }
 
+        /*___________________________________________GENERATE_PROD_FILES___________________________________________*/
 
 
         /**
@@ -1022,8 +979,9 @@ namespace MA400_export
             return false;
         }
 
+
         /**
-         * <summary>Attempt to generate the files for the MA400 driver to function.</summary>
+         * <summary>Attempt to generate the files.</summary>
          */
         private void GenerateOutput()
         {
@@ -1033,6 +991,7 @@ namespace MA400_export
                 return;
             }
 
+            //diff machine faite dans FormGenerateInfo & avec la méthode GenerateProdFiles, pas besoin de la faire ici aussi
             if (GetFormData())
             {
                 fs.GenerateProdFiles(fs.Studs, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale, machine); // en dernier, une fois que tout est bien rempli
@@ -1056,6 +1015,85 @@ namespace MA400_export
             GenerateOutput();
         }
 
+        /*___________________________________________FILE_MENU___________________________________________*/
+
+        /**
+         * <summary>Show a fileopen menu made to open dxf files</summary>
+         */
+        private void ouvrirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialogOpen.ShowDialog();
+
+        }
+
+        /**
+         * <summary>Open a dxf or ddxf file and import it once it has been correctly selected via a fileopen menu</summary>
+         */
+        private void openFileDialogOpen_FileOk(object sender, CancelEventArgs e)
+        {
+            reset();
+            bool open = false;
+            string filename = this.openFileDialogOpen.FileName;
+            string extension = Path.GetExtension(filename);
+            fileName = Path.GetFileNameWithoutExtension(filename);
+
+            switch (extension)
+            {
+                //fichier dxf classique
+                case ".dxf":
+                    try
+                    {
+                        open = this.fs.OpenDxfFile(filename);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
+                        $"Details:\r\n{ex.StackTrace}");
+                        return;
+                    }
+
+                    if (!open)
+                    {
+                        MessageBox.Show("Echec de l'ouverture du fichier.");
+                    }
+
+                    gc.OpenCanvas();
+                    fs.OpenDxfFileLayout(gc.layout);
+
+                    break;
+
+                //fichier dxf modifié par nos soins
+                case ".ddxf":
+                    try
+                    {
+                        open = this.fs.OpenDDxfFile(filename);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        MessageBox.Show($"Security error.\r\nError message: {ex.Message}\r\n" +
+                        $"Details:\r\n{ex.StackTrace}");
+                        return;
+                    }
+
+                    if (!open)
+                    {
+                        MessageBox.Show("Echec de l'ouverture du fichier.");
+                    }
+
+                    gc.OpenCanvas();
+                    fs.OpenDdxfFileLayout(gc.layout, filename);
+
+                    break;
+
+                default:
+                    MessageBox.Show("Extention de fichier invalide." + Environment.NewLine +
+                                    "Doit être .dxf ou .ddxf");
+                    return;
+            }
+
+
+            DisplayWhenOpen(open);
+        }
 
         /**
          * <summary>Open a SaveFileDialog menu to Save the part<br></br>
@@ -1178,14 +1216,10 @@ namespace MA400_export
         }
 
 
-        /**
-         * <summary>force the display to refresh whenever we change the selection in the studlist</summary>
-         */
-        private void StudList_Display_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //refresh the graphics
-            WorkZone.Invalidate();
-        }
+        
+
+        /*___________________________________________SETTINGS___________________________________________*/
+
 
         /**
          * <summary>Show the options form when the option button is clicked</summary>
@@ -1199,6 +1233,19 @@ namespace MA400_export
                 //c'est tout
             }
         }
+
+        private void paramètresPTS300ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //ouvre les options
+            using (PTS300Settings settingsWindow = new PTS300Settings())
+            {
+                settingsWindow.ShowDialog();
+                //c'est tout
+            }
+        }
+
+        /*___________________________________________ROTATE___________________________________________*/
+
 
         /**
          * <summary>Rotate the part when the rotate 180° whe the button is clicked</summary>
@@ -1305,6 +1352,8 @@ namespace MA400_export
         }
 
         
+
+
 
 
 
