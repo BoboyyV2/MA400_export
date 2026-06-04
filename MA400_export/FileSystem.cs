@@ -1344,20 +1344,41 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Retrieves the parameters for the PTS300 machine</summary>
+         * <returns>A reference to the array of parameters</returns>
+         */
         public ref int[] GetPTS300Parameters()
         {
             return ref Gen.PTS_300_PARAM;
         }
 
-        public ref int[] GetPTS300DefaultParameters()
+        /**
+         * <summary>Retrieves the comments for the PTS300 machine parameters</summary>
+         * <returns>A reference to the array of comments</returns>
+         */
+        public ref string[] GetPTS300Comments()
         {
-            //TODO
-            return ref Gen.PTS_300_PARAM;
+            return ref Gen.PTS_300_COMMENTS;
         }
 
+        /**
+         * <summary>Retrieves the default parameters for the PTS300 machine</summary>
+         * <returns>A reference to the array of parameters</returns>
+         */
+        public ref int[] GetPTS300DefaultParameters()
+        {
+            //TODO : fill the default parameters array with the default values for the PTS300 machine
+            return ref Gen.PTS_300_PARAM;
+        }
+        
+        /**
+         * <summary>Retrieves the default comments for the PTS300 machine parameters</summary>
+         * <returns>A reference to the array of comments</returns>
+         */
         public ref string[] GetPTS300DefaultComments()
         {
-            //TODO
+            //TODO : fill the default comments array with the default comments for the PTS300 machine parameters
             return ref Gen.PTS_300_COMMENTS;
         }
 
