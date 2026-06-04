@@ -90,7 +90,7 @@ namespace MA400_export
 
         /**
          * <summary>Get the default parameters for the PTS300 machine from the default file, it should come with the app on installation</summary>
-         * <remarks>if the default file is not found, all parameters will be set to 0 and a message will be displayed</remarks>
+         * <remarks>if the default file is not found, it will be generated from scratch</remarks>
          */
         public void GetDefaultPTS300Parameters()
         {
@@ -103,11 +103,10 @@ namespace MA400_export
             {
                 MessageBox.Show("Le fichier de paramètres par défaut pour la machine PTS300 est manquant, création des paramètres par défaut.");
                 GenerateDefaultPTS300Parameters();
-                ReadPTS300Parameters(defaultParamPath);
-                writePTS300Parameters();
-                return;
             }
-            ReadPTS300Parameters(paramPath + @"PTS_300_PARAM.txt");
+            //read the default file to get the default parameters
+            ReadPTS300Parameters(defaultParamPath);
+            writePTS300Parameters();
 
         }
 
@@ -195,28 +194,43 @@ namespace MA400_export
          */
         public void ReadPTS300Parameters(string filePath)
         {
+
             string[] file;
             try
             {
                 file = File.ReadAllLines(filePath);
-                //TODO read the parameters from the file and store them in the application for later use
             }
+
             catch (Exception e)
             {
                 MessageBox.Show("echec de l'ouverture des paramètres de la machine PTS300: " + e.Message + Environment.NewLine + "vous pouvez reinitialiser les paramètres");
                 return;
             }
 
-            for (int numline = 0; numline < file.Length; numline++)
+            //récupère les valeurs des paramètres du fichier, si une valeur n'est pas un entier valide, affiche un message d'erreur et arrête la lecture des paramètres
+            for (int lineIndex = 0; lineIndex < 100; lineIndex++)
             {
                 try
                 {
-                    PTS_300_PARAM[numline] = Convert.ToInt32(file[numline]);
+                    PTS_300_PARAM[lineIndex] = Convert.ToInt32(file[lineIndex]);
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("echec de la lecture d'un paramètre" + e.Message + Environment.NewLine + "valeur de paramètre invalide : " + file[numline]);
+                    MessageBox.Show("echec de la lecture d'un paramètre" + e.Message + Environment.NewLine + "valeur de paramètre invalide : " + file[lineIndex]);
                     return;
+                }
+            }
+
+            //récupère les commentaires des paramètres du fichier, si il y en a
+            for (int lineIndex = 0; lineIndex < 100; lineIndex++)
+            {
+                if (lineIndex + 100 < file.Length)
+                {
+                    PTS_300_COMMENTS[lineIndex] = file[lineIndex + 100];
+                }
+                else
+                {
+                    PTS_300_COMMENTS[lineIndex] = "";
                 }
             }
 

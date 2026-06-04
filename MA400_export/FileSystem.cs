@@ -1344,7 +1344,15 @@ namespace MA400_export
             }
         }
 
-        
+        public ref int[] GetPTS300Parameters()
+        {
+            return ref Gen.PTS_300_PARAM;
+        }
+
+        public ref string[] GetPTS300Comments()
+        {
+            return ref Gen.PTS_300_COMMENTS;
+        }
 
         /*______________________________________________*/
 

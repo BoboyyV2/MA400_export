@@ -1239,7 +1239,7 @@ namespace MA400_export
         private void paramètresPTS300ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //ouvre les options
-            using (PTS300Settings settingsWindow = new PTS300Settings())
+            using (PTS300Settings settingsWindow = new PTS300Settings(ref fs.GetPTS300Parameters(), ref fs.GetPTS300Comments()))
             {
                 settingsWindow.ShowDialog();
                 //c'est tout

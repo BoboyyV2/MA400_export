@@ -48,7 +48,7 @@ namespace MA400_export
         protected Scale Scalefact;
         protected double Rotation;
         public int[] PTS_300_PARAM = new int[100];
-
+        public string[] PTS_300_COMMENTS = new string[100];
 
 
         public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, Scale Scalefact, double Rotation)//should work but C# and ref being themselves 
@@ -57,7 +57,6 @@ namespace MA400_export
             this.Entities = Entities;
             this.Dimension = Dimension;
             this.Offset = Offset;
-            //this.Data = Data;
             this.Scalefact = Scalefact;
             this.Rotation = Rotation;
 
