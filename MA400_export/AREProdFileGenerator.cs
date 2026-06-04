@@ -18,7 +18,7 @@ namespace MA400_export
                                     PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation)
                                     : base(Studs, Entities, Dimension, Offset, Data, Scalefact, Rotation)
         {
-            
+
         }
 
         /**
@@ -58,7 +58,7 @@ namespace MA400_export
 
         private void WriteParameters(StreamWriter fw)
         {
-            for(int i = 0; i < PTS_300_PARAM.Length; i++)
+            for (int i = 0; i < PTS_300_PARAM.Length; i++)
             {
                 fw.WriteLine(PTS_300_PARAM[i]);
             }
@@ -73,7 +73,7 @@ namespace MA400_export
             {
                 fw.WriteLine(stud.circle.Center.X);
                 fw.WriteLine(stud.circle.Center.Y);
-                numberOfLineToFill -=2;
+                numberOfLineToFill -= 2;
             }
             // Fill the remaining lines with default values if necessary
             for (int i = 0; i < numberOfLineToFill; i++)
@@ -85,13 +85,13 @@ namespace MA400_export
         /*_____________________________________PTS_300_PARAMETERS_____________________________________*/
 
 
-        
+
 
         /**
          * <summary>Get the default parameters for the PTS300 machine from the default file, it should come with the app on installation</summary>
          * <remarks>if the default file is not found, all parameters will be set to 0 and a message will be displayed</remarks>
          */
-        private void GetDefaultPTS300Parameters()
+        public void GetDefaultPTS300Parameters()
         {
 
             string defaultParamPath = Constants.MainPath + Constants.paramPath + @"\default\PTS_300_PARAM.txt";
@@ -131,7 +131,7 @@ namespace MA400_export
             sw.WriteLine(1);    //static
             sw.WriteLine(33);   //static
             sw.WriteLine(515);  //static
-            sw.WriteLine(515);  //static
+            sw.WriteLine(0);    //static ?? diff tableau & fichier
             sw.WriteLine(1);    //unknown
             WriteLine0(sw, 12);
             sw.WriteLine(5000); //static
@@ -158,7 +158,7 @@ namespace MA400_export
         private void writeTailParam(StreamWriter sw)
         {
             sw.WriteLine(109);    //unknown
-            sw.WriteLine(109);    //unknown
+            sw.WriteLine(110);    //unknown
             WriteLine0(sw, 18);
             //fin
 
@@ -217,5 +217,8 @@ namespace MA400_export
             }
         }
 
-        
+
+
+        /*____________________________________________________________________________________________________*/
+    }
 }
