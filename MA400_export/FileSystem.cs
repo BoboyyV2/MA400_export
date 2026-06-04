@@ -71,7 +71,6 @@ namespace MA400_export
         private XYZ bl;
         private XYZ br;
 
-        public int[] PTS_300_PARAM = new int[100];
 
 
         /**
@@ -1297,13 +1296,13 @@ namespace MA400_export
             switch (machine)
             {
                 case Machine.KTS850:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation, ref PTS_300_PARAM);
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
                     break;
                 case Machine.PTS300:
-                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation, ref PTS_300_PARAM);
+                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
                     break;
                 default:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation, ref PTS_300_PARAM);
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, Dimension, Offset, Data, Scalefact, rotation);
                     break;
             }
             Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
@@ -1317,110 +1316,34 @@ namespace MA400_export
             switch (machine)
             {
                 case Machine.KTS850:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation, ref PTS_300_PARAM);
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
                     break;
                 case Machine.PTS300:
-                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation, ref PTS_300_PARAM);
+                    Gen = new AREProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
                     break;
                 default:
-                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation, ref PTS_300_PARAM);
+                    Gen = new CNCProdFileGenerator(Studs, Doc.Entities, layout.dimension, layout.offset, Data, layout.scale, rotation);
                     break;
             }
             Gen.GenerateProductionFiles(Data.ProgramNumber.ToString());
         }
 
-
         /*_____________________________________PTS_300_PARAMETERS_____________________________________*/
 
-
         /**
-         * <summary>Retrieves the parameters for the PTS300 machine, if no parameters are found, default values are used</summary>
-         */
+          * <summary>Retrieves the parameters for the PTS300 machine, if no parameters are found, default values are used</summary>
+          */
         public void GetParametersPTS300()
         {
             string ParamPath = Constants.MainPath + Constants.paramPath;
-
-            if (File.Exists(ParamPath+@"\PTS_300_PARAM.txt"))
+            AREProdFileGenerator AREGen = (AREProdFileGenerator)Gen;
+            if (File.Exists(ParamPath + @"\PTS_300_PARAM.txt"))
             {
-                ReadPTS300Parameters(ParamPath + @"\PTS_300_PARAM.txt");
+                AREGen.ReadPTS300Parameters(ParamPath + @"\PTS_300_PARAM.txt");
             }
             else
             {
-                GetDefaultPTS300Parameters();
-            }
-        }
-
-        /**
-         * <summary>Get the default parameters for the PTS300 machine from the default file, it should come with the app on installation</summary>
-         * <remarks>if the default file is not found, all parameters will be set to 0 and a message will be displayed</remarks>
-         */
-        private void GetDefaultPTS300Parameters()
-        {
-
-            string defaultParamPath = Constants.MainPath + Constants.paramPath + @"\default\PTS_300_PARAM.txt""";
-
-            //TODO make sure the file is always present in the default folder and contains the default parameters.
-
-            if (!File.Exists(defaultParamPath))
-            {
-                MessageBox.Show("Le fichier de paramètres par défaut pour la machine PTS300 est manquant, veuillez le créer et le placer dans le dossier de paramètres par défaut.");
-                return;
-            }
-            ReadPTS300Parameters(defaultParamPath + @"\PTS_300_PARAM.txt");
-
-        }
-
-
-        /**
-         * <summary>read the parameters of the PTS300 machine from a file and store them in the application for later use.</summary>
-         */
-        private void ReadPTS300Parameters(string filename)
-        {
-            string paramPath = Constants.MainPath + Constants.paramPath + filename;
-            string[] file;
-            try
-            {
-                 file = File.ReadAllLines(paramPath);
-                //TODO read the parameters from the file and store them in the application for later use
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("echec de l'ouverture des paramètres de la machine PTS300: " + e.Message + Environment.NewLine + "vous pouvez reinitialiser les paramètres");
-                return;
-            }
-
-            for (int numline = 0; numline < file.Length; numline++)
-            {
-                try
-                {
-                    PTS_300_PARAM[numline] = Convert.ToInt32(file[numline]);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("echec de la lecture d'un paramètre" + e.Message + Environment.NewLine + "valeur de paramètre invalide : " + file[numline]);
-                    return;
-                }
-            }
-
-        }
-
-        public void writePTS300Parameters()
-        {
-            string paramPath = Constants.MainPath + Constants.paramPath + @"PTS_300_PARAM.txt";
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(paramPath))
-                {
-                    for (int i = 0; i < PTS_300_PARAM.Length; i++)
-                    {
-                        sw.WriteLine(PTS_300_PARAM[i]);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("echec de l'écriture des paramètres de la machine PTS300: " + e.Message);
-                return;
+                AREGen.GetDefaultPTS300Parameters();
             }
         }
 

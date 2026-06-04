@@ -110,6 +110,7 @@ namespace MA400_export
                 case Machine.PTS300:
                     {
                         paramètresPTS300ToolStripMenuItem.Visible = true;
+                        fs.GetParametersPTS300();
                         break;
                     }
                 default:

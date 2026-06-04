@@ -46,10 +46,11 @@ namespace MA400_export
         protected PointF Offset;
         protected Scale Scalefact;
         protected double Rotation;
-        protected int[] parameters;
+        public int[] PTS_300_PARAM = new int[100];
 
 
-        public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation, ref int[] parameters)//should work but C# and ref being themselves 
+
+        public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation)//should work but C# and ref being themselves 
         {
             this.Studs = Studs;
             this.Entities = Entities;
@@ -58,7 +59,6 @@ namespace MA400_export
             this.Data = Data;
             this.Scalefact = Scalefact;
             this.Rotation = Rotation;
-            this.parameters = parameters;
 
         }
 

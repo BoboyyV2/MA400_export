@@ -17,8 +17,8 @@ namespace MA400_export
     {
 
         public CNCProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension,
-                                    PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation, ref int[] parameters)
-                                    : base (Studs,Entities,Dimension, Offset,Data,Scalefact,Rotation, ref parameters)
+                                    PointF Offset, GeneratorData Data, Scale Scalefact, double Rotation)
+                                    : base (Studs,Entities,Dimension, Offset,Data,Scalefact,Rotation)
         {
            
         }
