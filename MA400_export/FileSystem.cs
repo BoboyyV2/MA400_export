@@ -1337,10 +1337,13 @@ namespace MA400_export
             if (File.Exists(ParamPath + @"PTS_300_PARAM.txt"))
             {
                 AREGen.ReadPTS300Parameters(ParamPath + @"\PTS_300_PARAM.txt");
+                AREGen.SaveCurrentValues();
             }
             else
             {
                 AREGen.GetDefaultPTS300Parameters();
+                AREGen.SaveCurrentValues();
+                AREGen.writePTS300Parameters();
             }
         }
 
@@ -1348,38 +1351,43 @@ namespace MA400_export
          * <summary>Retrieves the parameters for the PTS300 machine</summary>
          * <returns>A reference to the array of parameters</returns>
          */
-        public ref int[] GetPTS300Parameters()
+        public ref int[] GetPTS300CurrentParameters()
         {
-            return ref Gen.PTS_300_PARAM;
+            return ref Gen.PTS_300_CURRENT_PARAM;
         }
 
         /**
          * <summary>Retrieves the comments for the PTS300 machine parameters</summary>
          * <returns>A reference to the array of comments</returns>
          */
-        public ref string[] GetPTS300Comments()
+        public ref string[] GetPTS300CurrentComments()
         {
-            return ref Gen.PTS_300_COMMENTS;
+            return ref Gen.PTS_300_CURRENT_COMMENTS;
         }
 
         /**
          * <summary>Retrieves the default parameters for the PTS300 machine</summary>
          * <returns>A reference to the array of parameters</returns>
          */
-        public ref int[] GetPTS300DefaultParameters()
+        public ref int[] GetPTS300SavedParameters()
         {
             //TODO : fill the default parameters array with the default values for the PTS300 machine
-            return ref Gen.PTS_300_PARAM;
+            return ref Gen.PTS_300_SAVE_PARAM;
         }
         
         /**
          * <summary>Retrieves the default comments for the PTS300 machine parameters</summary>
          * <returns>A reference to the array of comments</returns>
          */
-        public ref string[] GetPTS300DefaultComments()
+        public ref string[] GetPTS300SavedComments()
         {
             //TODO : fill the default comments array with the default comments for the PTS300 machine parameters
-            return ref Gen.PTS_300_COMMENTS;
+            return ref Gen.PTS_300_SAVE_COMMENTS;
+        }
+
+        public void ResetPTS300ParamToDefault()
+        {
+            (Gen as AREProdFileGenerator).GetDefaultPTS300Parameters();
         }
 
         /*______________________________________________*/

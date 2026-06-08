@@ -1236,10 +1236,14 @@ namespace MA400_export
             }
         }
 
+
+        /**
+         * <summary>Show the PTS300 settings form when the menu item is clicked</summary>
+         */
         private void paramètresPTS300ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //ouvre les options
-            using (PTS300Settings settingsWindow = new PTS300Settings(ref fs.GetPTS300Parameters(), ref fs.GetPTS300Comments()))
+            using (PTS300Settings settingsWindow = new PTS300Settings(ref fs.GetPTS300SavedParameters(), ref fs.GetPTS300SavedComments()))
             {
                 settingsWindow.mainParent = this;
                 settingsWindow.ShowDialog();

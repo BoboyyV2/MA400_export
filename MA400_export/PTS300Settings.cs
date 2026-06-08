@@ -75,30 +75,33 @@ namespace MA400_export
 
         private void buttonDefault_Click(object sender, EventArgs e)
         {
-            //TODO reset the settings to default values
             MA400_export Form1 = this.mainParent as MA400_export;
-            ref int[] defaultparameters =  ref Form1.fs.GetPTS300DefaultParameters();
-            ref string[] defaultcomment = ref Form1.fs.GetPTS300DefaultComments();
+            Form1.fs.ResetPTS300ParamToDefault();
+            ref int[] defaultparameters =  ref Form1.fs.GetPTS300CurrentParameters();
+            ref string[] defaultcomment = ref Form1.fs.GetPTS300CurrentComments();
 
             for (int i = 0; i < 100; i++)
             {
-                dataGridView1.Rows[i].SetValues(new object[] { Form1.fs.GetPTS300Parameters()[i], Form1.fs.GetPTS300Comments()[i] });
+                dataGridView1.Rows[i].SetValues(new object[] { defaultparameters[i], defaultcomment[i] });
             }
         }
 
-        private void reset()
+        /**
+         * <summary>reset the settings to the values they had when the form was last saved</summary>
+         */
+        private void resetToSavedValues()
         {
             MA400_export Form1 = this.mainParent as MA400_export;
             for (int i = 0; i < 100; i++)
             {
-                dataGridView1.Rows[i].SetValues(new object[] { Form1.fs.GetPTS300Parameters()[i], Form1.fs.GetPTS300Comments()[i] });
+                dataGridView1.Rows[i].SetValues(new object[] { Form1.fs.GetPTS300SavedParameters()[i], Form1.fs.GetPTS300SavedComments()[i] });
             }
 
         }
         private void buttonReset_Click(object sender, EventArgs e)
         {
             //TODO reset the settings to the values they had when the form was opened
-            reset();
+            resetToSavedValues();
         }
     }
 

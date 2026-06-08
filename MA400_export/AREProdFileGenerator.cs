@@ -59,9 +59,9 @@ namespace MA400_export
 
         private void WriteParameters(StreamWriter fw)
         {
-            for (int i = 0; i < PTS_300_PARAM.Length; i++)
+            for (int i = 0; i < PTS_300_SAVE_PARAM.Length; i++)
             {
-                fw.WriteLine(PTS_300_PARAM[i]);
+                fw.WriteLine(PTS_300_SAVE_PARAM[i]);
             }
         }
 
@@ -106,7 +106,6 @@ namespace MA400_export
             }
             //read the default file to get the default parameters
             ReadPTS300Parameters(defaultParamPath);
-            writePTS300Parameters();
 
         }
 
@@ -212,7 +211,8 @@ namespace MA400_export
             {
                 try
                 {
-                    PTS_300_PARAM[lineIndex] = Convert.ToInt32(file[lineIndex]);
+
+                    PTS_300_CURRENT_PARAM[lineIndex] = Convert.ToInt32(file[lineIndex]);
                 }
                 catch (Exception e)
                 {
@@ -221,39 +221,107 @@ namespace MA400_export
                 }
             }
 
-            //récupère les commentaires des paramètres du fichier, si il y en a
-            for (int lineIndex = 0; lineIndex < 100; lineIndex++)
+            //get les commentaires des paramètres du fichier si il y en a
+            for (int lineIndex = 100; lineIndex < file.Length; lineIndex++)
             {
+                //for each comment, get the line it belongs to
+                //format =
+                //$linenumer,1
+                //comment
                 if (lineIndex + 100 < file.Length)
                 {
-                    PTS_300_COMMENTS[lineIndex] = file[lineIndex + 100];
-                }
-                else
-                {
-                    PTS_300_COMMENTS[lineIndex] = "";
+                    int line = -1;
+                    string input = (file[lineIndex]);
+                   
+                    // Remove $ and ,1 characters => isolate the value
+                    string cleaned = input.Replace("$", "").Split(',')[0];
+
+                    //parse the cleaned string to an integer
+                    try
+                    {
+                        int.TryParse(cleaned, out line);
+                    }
+                    catch(Exception e)
+
+                    {
+                        MessageBox.Show("Erreur lors de la lecture des commentaires du fichier de paramètres. " + e.Message );
+                        return;
+                    }
+                    try
+                    {
+                        PTS_300_CURRENT_COMMENTS[line] = file[++lineIndex];
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Numero de commentaire invalide. " + e.Message);
+                    }
                 }
             }
 
         }
 
-        private void writePTS300Parameters()
+        public void writePTS300Parameters()
         {
             string paramPath = Constants.MainPath + Constants.paramPath + @"PTS_300_PARAM.txt";
-            try
+            using (StreamWriter sw = new StreamWriter(paramPath))
             {
-                using (StreamWriter sw = new StreamWriter(paramPath))
+                //PARAMS
+                try
                 {
-                    for (int i = 0; i < PTS_300_PARAM.Length; i++)
+
+                    for (int i = 0; i < PTS_300_SAVE_PARAM.Length; i++)
                     {
-                        sw.WriteLine(PTS_300_PARAM[i]);
+                        sw.WriteLine(PTS_300_SAVE_PARAM[i]);
                     }
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("echec de l'écriture des paramètres de la machine PTS300: " + e.Message);
+                    return;
+                }
+
+                //COMMENTS
+                try
+                {
+
+                    for (int i = 0; i < PTS_300_SAVE_COMMENTS.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(PTS_300_SAVE_COMMENTS[i]))
+                        {
+                            sw.WriteLine(PTS_300_SAVE_COMMENTS[i]);
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("echec de l'écriture des paramètres de la machine PTS300: " + e.Message);
+                    return;
                 }
             }
-            catch (Exception e)
-            {
-                MessageBox.Show("echec de l'écriture des paramètres de la machine PTS300: " + e.Message);
-                return;
-            }
+        }
+
+
+
+        /**
+         * <summary>Set the values of the parameters and comments that of the default file</summary>
+         */
+        public void SaveCurrentValues()
+        {
+            PTS_300_CURRENT_PARAM.CopyTo(PTS_300_SAVE_PARAM, 0);
+            PTS_300_CURRENT_COMMENTS.CopyTo(PTS_300_SAVE_COMMENTS, 0);
+
+        }
+
+        /**
+         * <summary>Reset the values of the parameters and comments to those of the default file, in case the user wants to discard his changes</summary>
+         * <remarks>this does not change the saved values.</remarks>
+         */
+        public void ResetCurrentValues()
+        {
+            PTS_300_SAVE_PARAM.CopyTo(PTS_300_CURRENT_PARAM, 0);
+            PTS_300_SAVE_COMMENTS.CopyTo(PTS_300_CURRENT_COMMENTS, 0);
         }
 
 
