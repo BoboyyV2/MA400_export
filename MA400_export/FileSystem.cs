@@ -1162,7 +1162,8 @@ namespace MA400_export
 
             ReadAREStuds(ref file, ref numline);
 
-            ReadAREComments(ref file, ref numline);
+            //ReadAREComments(ref file, ref numline);
+            //on ne lit pas les commentaires d'un fichier are, il n'y en a pas 
         }
 
         /**
@@ -1239,6 +1240,7 @@ namespace MA400_export
 
         /**
          * <summary>read the comments from the are file.</summary>
+         * <remarks>Unused</remarks>
          */
         public void ReadAREComments(ref string[] file, ref int numline)
         {
@@ -1442,7 +1444,7 @@ namespace MA400_export
         }
 
         /**
-         * <summary>Retrieves the default parameters for the PTS300 machine</summary>
+         * <summary>Retrieves the saved parameters for the PTS300 machine</summary>
          * <returns>A reference to the array of parameters</returns>
          */
         public ref int[] GetPTS300SavedParameters()
@@ -1451,7 +1453,7 @@ namespace MA400_export
         }
         
         /**
-         * <summary>Retrieves the default comments for the PTS300 machine parameters</summary>
+         * <summary>Retrieves the saved comments for the PTS300 machine parameters</summary>
          * <returns>A reference to the array of comments</returns>
          */
         public ref string[] GetPTS300SavedComments()
