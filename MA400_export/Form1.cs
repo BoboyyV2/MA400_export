@@ -997,16 +997,22 @@ namespace MA400_export
             {
                 case Machine.KTS850:
                     {
+                        //show form then gen
                         if (GetFormData())
                         {
-                            fs.GenerateProdFiles(fs.Studs, fs.Doc.Entities, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale, fs.rotation); // en dernier, une fois que tout est bien rempli
+                            fs.GenerateProdFiles(fs.Studs, fs.Doc.Entities, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale, fs.rotation, data.ProgramNumber.ToString()); // en dernier, une fois que tout est bien rempli
                         }
                         break;
                     }
                 case Machine.PTS300:
                     {
-                        fs.GenerateProdFiles(fs.Studs, fs.Doc.Entities, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale, fs.rotation);//most parameters are unused
-                        MessageBox.Show("Fichiers de production générés avec succès.");
+                        //opensave dialog
+                        if(saveFileDialogARE.ShowDialog() == DialogResult.OK)
+                        {
+                            fs.GenerateProdFiles(fs.Studs, fs.Doc.Entities, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale, fs.rotation, saveFileDialogARE.FileName);//most parameters are unused
+                            MessageBox.Show("Fichiers de production générés avec succès.");
+                        }
+                        
                         break;
                     }
                 default:
@@ -1189,28 +1195,31 @@ namespace MA400_export
          */
         private void ouvrirUnProgramAreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO, savoir comment ils sont stockés
-            //faire l'equivalent 
-
-            /*
-            using (ProgramNumberOpen programNumberWindow = new ProgramNumberOpen())
+            if (openFileDialogARE.ShowDialog() == DialogResult.OK)
             {
-                if (programNumberWindow.ShowDialog() == DialogResult.OK)
+                
+                string filename = this.openFileDialogARE.FileName;
+                if (filename == null || !File.Exists(filename) ) 
                 {
-                    int ProgramNumber = programNumberWindow.ProgramNumber;
-                    reset();
-                    data = fs.OpenAREProdFile(ProgramNumber);
-
-                    IsNew = false;
-
-                    gc.OpenCanvas();
-                    fs.OpenProdFileLayout(gc.layout);
-
-                    DisplayWhenOpen(true);
+                    MessageBox.Show("Fichier séléctionné invalide");
+                    return;
                 }
 
+                reset();
+                fs.OpenAREProdFile(filename);
+
+                IsNew = false;
+
+                gc.OpenCanvas();
+                fs.OpenProdFileLayout(gc.layout);
+
+                DisplayWhenOpen(true);
             }
-            */
+
+            
+            
+
+            
         }
 
         /**
@@ -1261,7 +1270,7 @@ namespace MA400_export
         private void paramètresPTS300ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //ouvre les options
-            using (PTS300Settings settingsWindow = new PTS300Settings(ref fs.GetPTS300SavedParameters(), ref fs.GetPTS300SavedComments()))
+            using (PTS300Settings settingsWindow = new PTS300Settings(ref fs.GetPTS300CurrentParameters(), ref fs.GetPTS300CurrentComments()))
             {
                 settingsWindow.mainParent = this;
                 settingsWindow.ShowDialog();

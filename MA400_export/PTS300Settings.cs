@@ -14,7 +14,8 @@ namespace MA400_export
     public partial class PTS300Settings : Form
     {
         public Form mainParent = null;
-
+        private int[] backupParam = new int[100];
+        private string[] backupComms = new string[100];
         public PTS300Settings()
         {
             InitializeComponent();
@@ -55,11 +56,17 @@ namespace MA400_export
 
         private void PTS300Settings_Load(object sender, EventArgs e)
         {
+            MA400_export Form1 = this.mainParent as MA400_export;
+            Form1.fs.GetPTS300CurrentParameters().CopyTo(backupParam, 0);
+            Form1.fs.GetPTS300CurrentComments().CopyTo(backupComms, 0);
 
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            MA400_export Form1 = this.mainParent as MA400_export;
+            backupParam.CopyTo(Form1.fs.GetPTS300CurrentParameters(), 0);
+            backupComms.CopyTo(Form1.fs.GetPTS300CurrentComments(), 0);
             DialogResult = DialogResult.Cancel;
         }
 
@@ -145,6 +152,8 @@ namespace MA400_export
             return true;
         }
 
+        
+
         private void buttonOK_Click(object sender, EventArgs e)
         {
             //make sure the values are of the correct format
@@ -157,9 +166,7 @@ namespace MA400_export
                 ref string[] Savedcomment = ref Form1.fs.GetPTS300CurrentComments();
                 if (SaveSettingsValues(ref Savedparameters, ref Savedcomment))
                 {
-                    Form1.fs.SavePTS300Settings();
                     DialogResult = DialogResult.OK;
-
                 }
             }
         }

@@ -1151,26 +1151,42 @@ namespace MA400_export
 
         /*_____________________________________ARE_____________________________________*/
 
-        private void ReadARE(string filename)
+        private void ReadARE(string filepath)
         {
 
-            string AREPath = Properties.Settings.Default.OutputPath + Constants.DatenPath + filename + ".ARE";
-
-            string[] file = File.ReadAllLines(AREPath);
+            string[] file = File.ReadAllLines(filepath);
 
             int numline = 0;
 
-            ReadAREParam(file, ref numline);
+            ReadAREParam(ref file, ref numline);
 
-            ReadAREStuds(file, ref numline);
+            ReadAREStuds(ref file, ref numline);
+
+            ReadAREComments(ref file, ref numline);
         }
 
         /**
          * <summary>Reads the parameters from the ARE file</summary>
          */
-        private void ReadAREParam(string[] file, ref int numline)
+        public void ReadAREParam(ref string[] file, ref int numline)
         {
-            //TODO read the parameters of the ARE file
+
+            ref int[] param = ref Gen.PTS_300_CURRENT_PARAM;
+            //get les valeurs des paramètres du fichier, si une valeur n'est pas un entier valide, affiche un message d'erreur et arrête la lecture des paramètres
+            while (numline < 100)
+            {
+                try
+                {
+
+                    param[numline] = Convert.ToInt32(file[numline]);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("echec de la lecture d'un paramètre" + e.Message + Environment.NewLine + "valeur de paramètre invalide : " + file[numline]);
+                    return;
+                }
+                numline++;
+            }
 
         }
 
@@ -1178,16 +1194,20 @@ namespace MA400_export
         /**
          * <summary>Reads the stud information from the ARE file and add them to the collection</summary>
          */
-        private void ReadAREStuds(string[] file, ref int numline)
+        private void ReadAREStuds(ref string[] file, ref int numline)
         {
+            if (numline < 100) {
+                return;
+            }
+
             int nbStuds = 0;
             double X = 0, Y = 0;
-            while (numline < file.Length)
+            while (numline < 1000)
             {
                 //X
                 try
                 {
-                    X = Convert.ToDouble(file[numline++], CultureInfo.InvariantCulture);
+                    X = Convert.ToDouble(file[numline++]);
                 }
                 catch (Exception e)
                 {
@@ -1198,7 +1218,7 @@ namespace MA400_export
                 //Y
                 try
                 {
-                    Y = Convert.ToDouble(file[numline++], CultureInfo.InvariantCulture);
+                    Y = Convert.ToDouble(file[numline++]);
                 }
                 catch (Exception e)
                 {
@@ -1208,8 +1228,63 @@ namespace MA400_export
                 }
 
                 //ajout du goujon à la liste
-                nbStuds++;
-                Studs.Add(new Stud(new Circle() { Center = new XYZ(X, Y, 0), Radius = Constants.StudRadius3, Color = ACadSharp.Color.Green }));
+                if (X != 0 || Y != 0)//si les deux sont à 0 alors c'est juste des 0 pour fill le fichier
+                {
+                    nbStuds++;
+                    Studs.Add(new Stud(new Circle() { Center = new XYZ(X, Y, 0), Radius = Constants.StudRadius3, Color = ACadSharp.Color.Green }));
+                }
+            }
+
+        }
+
+        /**
+         * <summary>read the comments from the are file.</summary>
+         */
+        public void ReadAREComments(ref string[] file, ref int numline)
+        {
+            if (numline < 1000)
+            {
+                return;
+            }
+
+            ref string[] comms = ref Gen.PTS_300_CURRENT_COMMENTS;
+
+
+            //get les commentaires des paramètres du fichier si il y en a
+            while (numline < file.Length)
+            {
+                //for each comment, get the line it belongs to
+                //format =
+                //$linenumer,1
+                //comment
+
+                int line = -1;
+                string input = (file[numline]);
+
+                // Remove $ and ,1 characters => isolate the value
+                string cleaned = input.Replace("$", "").Split(',')[0];
+
+                //parse the cleaned string to an integer
+                try
+                {
+                    int.TryParse(cleaned, out line);
+                }
+                catch (Exception e)
+
+                {
+                    MessageBox.Show("Erreur lors de la lecture des commentaires du fichier de paramètres. " + e.Message);
+                    return;
+                }
+                try
+                {
+                    comms[line] = file[++numline];
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Numero de commentaire invalide. " + e.Message);
+                }
+                numline++;
+
             }
 
         }
@@ -1308,10 +1383,11 @@ namespace MA400_export
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          * <remarks>Machine related information are managed by the generator type</remarks>
          */
-        public void GenerateProdFiles(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, double rotation)
+        public void GenerateProdFiles(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, double rotation, string filename)
         {
             Gen.UpdateData( Studs, Entities, Dimension, Offset, Scalefact, rotation);
-            Gen.GenerateProductionFiles(Data.ProgramNumber.ToString(), Data);
+            
+            Gen.GenerateProductionFiles(filename, Data);
         }
 
         /**

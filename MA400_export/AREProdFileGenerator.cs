@@ -28,13 +28,12 @@ namespace MA400_export
         */
         public override void GenerateProductionFiles(string name, GeneratorData Data)
         {
-            string are = Properties.Settings.Default.OutputPath + Constants.ArePath;
-
+            string arepath = Path.GetDirectoryName(name);
 
             try
             {
-                Directory.CreateDirectory(are);
-                Util.SetPermissions(are);
+                Directory.CreateDirectory(arepath);
+                Util.SetPermissions(arepath);
             }
             catch (DirectoryNotFoundException e)
             {
@@ -48,11 +47,12 @@ namespace MA400_export
             {
                 MessageBox.Show("Erreur lors de la generation des fichiers");
             }
-            string filepath = are + name + ".are";
-            using (StreamWriter sw = File.CreateText(filepath))
+            using (StreamWriter sw = File.CreateText(name))
             {
                 WriteParameters(sw);
-                writeStuds(sw);
+                WriteStuds(sw);
+                //WriteComments(sw);
+                //Pas de commentaires dans le fichier are
             }
 
         }
@@ -61,32 +61,45 @@ namespace MA400_export
          * <summary>Write all the parameters inside the ARE file </summary>
          * <remarks>uses the saved paramaters, not the current so make sure to save the parameters</remarks>
          */
-        private void WriteParameters(StreamWriter fw)
+        private void WriteParameters(StreamWriter sw)
         {
-            for (int i = 0; i < PTS_300_SAVE_PARAM.Length; i++)
+            for (int i = 0; i < PTS_300_CURRENT_PARAM.Length; i++)
             {
-                fw.WriteLine(PTS_300_SAVE_PARAM[i]);
+                sw.WriteLine(PTS_300_CURRENT_PARAM[i]);
             }
         }
 
         /**
          * <summary>Write the studs in the ARE file in a somewhat sorted order.</summary>
          */
-        private void writeStuds(StreamWriter fw)
+        private void WriteStuds(StreamWriter sw)
         {
             List<Stud> SortedStuds = Util.SortStuds(Studs);
             int numberOfLineToFill = 900;
 
             foreach (Stud stud in SortedStuds)
             {
-                fw.WriteLine(stud.circle.Center.X);
-                fw.WriteLine(stud.circle.Center.Y);
+                sw.WriteLine(stud.circle.Center.X);
+                sw.WriteLine(stud.circle.Center.Y);
                 numberOfLineToFill -= 2;
             }
             // Fill the remaining lines with default values if necessary
             for (int i = 0; i < numberOfLineToFill; i++)
             {
-                fw.WriteLine(0);
+                sw.WriteLine(0);
+            }
+        }
+
+        //unused
+        private void WriteComments(StreamWriter sw)
+        {
+            for (int i = 0; i < PTS_300_CURRENT_PARAM.Length; i++)
+            {
+                if (String.IsNullOrEmpty(PTS_300_CURRENT_COMMENTS[i]))
+                {
+                    sw.WriteLine("$"+i+",1");
+                    sw.WriteLine(PTS_300_CURRENT_PARAM[i]);
+                }
             }
         }
 

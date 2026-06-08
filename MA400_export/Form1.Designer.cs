@@ -92,6 +92,8 @@ namespace MA400_export
             this.labelHoveredCircle = new System.Windows.Forms.Label();
             this.labelHoveredCircleX = new System.Windows.Forms.Label();
             this.labelHoveredCircleY = new System.Windows.Forms.Label();
+            this.openFileDialogARE = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialogARE = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -256,14 +258,14 @@ namespace MA400_export
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // paramètresPTS300ToolStripMenuItem
             // 
             this.paramètresPTS300ToolStripMenuItem.Name = "paramètresPTS300ToolStripMenuItem";
-            this.paramètresPTS300ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.paramètresPTS300ToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
             this.paramètresPTS300ToolStripMenuItem.Text = "&Paramètres PTS 300";
             this.paramètresPTS300ToolStripMenuItem.Visible = false;
             this.paramètresPTS300ToolStripMenuItem.Click += new System.EventHandler(this.paramètresPTS300ToolStripMenuItem_Click);
@@ -578,6 +580,19 @@ namespace MA400_export
             this.labelHoveredCircleY.Size = new System.Drawing.Size(0, 13);
             this.labelHoveredCircleY.TabIndex = 24;
             // 
+            // openFileDialogARE
+            // 
+            this.openFileDialogARE.Filter = "are files (*.are)|*are";
+            // 
+            // saveFileDialogARE
+            // 
+            this.saveFileDialogARE.DefaultExt = "are";
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.OutputPath))
+            {
+                this.saveFileDialogARE.InitialDirectory = Properties.Settings.Default.OutputPath + Constants.ArePath;
+            }
+
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -677,6 +692,8 @@ namespace MA400_export
         private ToolStripMenuItem rotationToolStripMenuItem;
         private ToolStripMenuItem ouvrirUnProgramAreToolStripMenuItem;
         private ToolStripMenuItem paramètresPTS300ToolStripMenuItem;
+        private OpenFileDialog openFileDialogARE;
+        private SaveFileDialog saveFileDialogARE;
     }
 }
 
