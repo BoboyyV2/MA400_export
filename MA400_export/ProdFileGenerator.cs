@@ -1,5 +1,6 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
+using ACadSharp.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,7 +55,7 @@ namespace MA400_export
         public int[] PTS_300_CURRENT_PARAM = new int[100];
         public string[] PTS_300_CURRENT_COMMENTS = new string[100];
 
-        public ProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, Scale Scalefact, double Rotation)//should work but C# and ref being themselves 
+        public ProdFileGenerator(BindingList<Stud> Studs, ref CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, Scale Scalefact, double Rotation)//should work but C# and ref being themselves 
         {
             this.Studs = Studs;
             this.Entities = Entities;
@@ -161,12 +162,15 @@ namespace MA400_export
          * <param name="Data">The GeneratorData containing the data to write in the files.</param>
          */
         public abstract void GenerateProductionFiles(string name, GeneratorData Data);
-        public void UpdateData(BindingList<Stud> studs, RectangleF dimension, PointF offset, Scale scalefact)
+        public void UpdateData(BindingList<Stud> studs, CadObjectCollection<Entity> Entities, RectangleF dimension, PointF offset, Scale scalefact, double rotation)
         {
             this.Studs = studs;
+            this.Entities = Entities;
             this.Dimension = dimension;
             this.Offset = offset;
             this.Scalefact = scalefact;
+            this.Rotation = rotation;
+
         }
     }
 

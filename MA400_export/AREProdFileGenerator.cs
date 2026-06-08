@@ -16,7 +16,7 @@ namespace MA400_export
     {
         public AREProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension,
                                     PointF Offset, Scale Scalefact, double Rotation)
-                                    : base(Studs, Entities, Dimension, Offset, Scalefact, Rotation)
+                                    : base(Studs, ref Entities, Dimension, Offset, Scalefact, Rotation)
         {
 
         }

@@ -65,7 +65,7 @@ namespace MA400_export
         public Layout_Info layout { get; set; }
 
         //rotation variable
-        private double rotation = 0;
+        public double rotation{ get; private set; } = 0;
         private XYZ tl;
         private XYZ tr;
         private XYZ bl;
@@ -1308,9 +1308,9 @@ namespace MA400_export
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          * <remarks>Machine related information are managed by the generator type</remarks>
          */
-        public void GenerateProdFiles(BindingList<Stud> Studs, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact)
+        public void GenerateProdFiles(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension, PointF Offset, GeneratorData Data, Scale Scalefact, double rotation)
         {
-            Gen.UpdateData( Studs, Dimension, Offset, Scalefact);
+            Gen.UpdateData( Studs, Entities, Dimension, Offset, Scalefact, rotation);
             Gen.GenerateProductionFiles(Data.ProgramNumber.ToString(), Data);
         }
 
@@ -1318,9 +1318,9 @@ namespace MA400_export
          * <summary>Generates the productoin files necessary to the driver to function</summary>
          * <remarks>Machine related information are managed by the generator type</remarks>
          */
-        public void GenerateProdFiles(BindingList<Stud> Studs, GeneratorData Data, Layout_Info layout)
+        public void GenerateProdFiles(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, GeneratorData Data, Layout_Info layout, double rotation)
         {
-            Gen.UpdateData(Studs, layout.dimension, layout.offset, layout.scale);
+            Gen.UpdateData(Studs, Entities, layout.dimension, layout.offset, layout.scale, rotation);
 
             Gen.GenerateProductionFiles(Data.ProgramNumber.ToString(),Data);
         }

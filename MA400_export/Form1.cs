@@ -993,11 +993,29 @@ namespace MA400_export
                 return;
             }
 
-            //diff machine faite dans FormGenerateInfo & avec la méthode GenerateProdFiles, pas besoin de la faire ici aussi
-            if (GetFormData())
+            switch (machine)
             {
-                fs.GenerateProdFiles(fs.Studs, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale); // en dernier, une fois que tout est bien rempli
+                case Machine.KTS850:
+                    {
+                        if (GetFormData())
+                        {
+                            fs.GenerateProdFiles(fs.Studs, fs.Doc.Entities, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale, fs.rotation); // en dernier, une fois que tout est bien rempli
+                        }
+                        break;
+                    }
+                case Machine.PTS300:
+                    {
+                        fs.GenerateProdFiles(fs.Studs, fs.Doc.Entities, gc.layout.dimension, gc.layout.offset, data, gc.layout.scale, fs.rotation);//most parameters are unused
+                        MessageBox.Show("Fichiers de production générés avec succès.");
+                        break;
+                    }
+                default:
+                    {
+                        MessageBox.Show("impossible de générer les fichiers de production :\r\nMachine non sélectionnée.");
+                        return;
+                    }
             }
+            
 
         }
 
