@@ -57,6 +57,10 @@ namespace MA400_export
 
         }
 
+        /**
+         * <summary>Write all the parameters inside the ARE file </summary>
+         * <remarks>uses the saved paramaters, not the current so make sure to save the parameters</remarks>
+         */
         private void WriteParameters(StreamWriter fw)
         {
             for (int i = 0; i < PTS_300_SAVE_PARAM.Length; i++)
@@ -65,6 +69,9 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Write the studs in the ARE file in a somewhat sorted order.</summary>
+         */
         private void writeStuds(StreamWriter fw)
         {
             List<Stud> SortedStuds = Util.SortStuds(Studs);
@@ -109,6 +116,10 @@ namespace MA400_export
 
         }
 
+
+        /**
+         * <summary>generate the default parameters file from scratch.</summary>
+         */
         public void GenerateDefaultPTS300Parameters()
         {
             string defaultParamPath = Constants.MainPath + Constants.paramPath + @"\default\";
@@ -206,7 +217,7 @@ namespace MA400_export
                 return;
             }
 
-            //récupère les valeurs des paramètres du fichier, si une valeur n'est pas un entier valide, affiche un message d'erreur et arrête la lecture des paramètres
+            //get les valeurs des paramètres du fichier, si une valeur n'est pas un entier valide, affiche un message d'erreur et arrête la lecture des paramètres
             for (int lineIndex = 0; lineIndex < 100; lineIndex++)
             {
                 try
@@ -220,6 +231,7 @@ namespace MA400_export
                     return;
                 }
             }
+            PTS_300_CURRENT_COMMENTS = new string[100];
 
             //get les commentaires des paramètres du fichier si il y en a
             for (int lineIndex = 100; lineIndex < file.Length; lineIndex++)
@@ -228,38 +240,42 @@ namespace MA400_export
                 //format =
                 //$linenumer,1
                 //comment
-                if (lineIndex + 100 < file.Length)
-                {
-                    int line = -1;
-                    string input = (file[lineIndex]);
+                
+                int line = -1;
+                string input = (file[lineIndex]);
                    
-                    // Remove $ and ,1 characters => isolate the value
-                    string cleaned = input.Replace("$", "").Split(',')[0];
+                // Remove $ and ,1 characters => isolate the value
+                string cleaned = input.Replace("$", "").Split(',')[0];
 
-                    //parse the cleaned string to an integer
-                    try
-                    {
-                        int.TryParse(cleaned, out line);
-                    }
-                    catch(Exception e)
-
-                    {
-                        MessageBox.Show("Erreur lors de la lecture des commentaires du fichier de paramètres. " + e.Message );
-                        return;
-                    }
-                    try
-                    {
-                        PTS_300_CURRENT_COMMENTS[line] = file[++lineIndex];
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show("Numero de commentaire invalide. " + e.Message);
-                    }
+                //parse the cleaned string to an integer
+                try
+                {
+                    int.TryParse(cleaned, out line);
                 }
+                catch(Exception e)
+
+                {
+                    MessageBox.Show("Erreur lors de la lecture des commentaires du fichier de paramètres. " + e.Message );
+                    return;
+                }
+                try
+                {
+                    PTS_300_CURRENT_COMMENTS[line] = file[++lineIndex];
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Numero de commentaire invalide. " + e.Message);
+                }
+                
             }
 
         }
 
+
+        /**
+         * <summary>Write the saved parameters to the parameters file.</summary>
+         * <remarks>should be done everytime the save button is pressed and whenever a full reset occur.</remarks>
+         */
         public void writePTS300Parameters()
         {
             string paramPath = Constants.MainPath + Constants.paramPath + @"PTS_300_PARAM.txt";
@@ -289,6 +305,7 @@ namespace MA400_export
                     {
                         if (!string.IsNullOrEmpty(PTS_300_SAVE_COMMENTS[i]))
                         {
+                            sw.WriteLine("$" + (i+1).ToString() + ",1");
                             sw.WriteLine(PTS_300_SAVE_COMMENTS[i]);
                         }
                     }
@@ -305,7 +322,7 @@ namespace MA400_export
 
 
         /**
-         * <summary>Set the values of the parameters and comments that of the default file</summary>
+         * <summary>Set the values of the parameters and comments to that of the default file</summary>
          */
         public void SaveCurrentValues()
         {

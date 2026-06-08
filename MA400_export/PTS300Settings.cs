@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ACadSharp.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -62,17 +63,129 @@ namespace MA400_export
             DialogResult = DialogResult.Cancel;
         }
 
+        private bool ValidateSettingsFormat()
+        {
+
+            string[] values = new string[100];
+            int numline = 0;
+            //get all values
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                // Skip the new row placeholder
+                if (!row.IsNewRow)
+                {
+                    try 
+                    {
+                        values[numline++] = (row.Cells[0].Value.ToString());
+                    }catch(Exception e)
+                    {
+                        MessageBox.Show("Erreur lors de la verification des paramètres, " + e.Message);
+                        return false;
+                    }
+                }
+                
+            }
+            if(numline != 100)
+            {
+                MessageBox.Show("Nombre de paramètres récuperés invalide.");
+                return false;
+            }
+
+            for (int i = 0 ; i < numline ; i++ )
+            { 
+                try
+                {
+                    Convert.ToInt32(values[i]);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Valeur de paramètre invalide à la ligne " + (i + 1) +". " + e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool SaveSettingsValues(ref int[]CurrentSettings, ref string[]CurrentComments)
+        {
+            string[] Comments = new string[100];
+            int[] Settings = new int[100];
+
+            int numline = 0;
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                //fill the values
+                if (!row.IsNewRow)
+                {
+                    try
+                    {
+                        Settings[numline] = Convert.ToInt32(row.Cells[0].Value.ToString());
+                        string comment = "";
+                        if (row.Cells[1].Value != null)
+                        {
+                            comment = row.Cells[1].Value.ToString();
+                        }   
+                        Comments[numline] = comment;
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Erreur lors de la sauvegarde, " + e.Message);
+                        return false;
+                    }
+                    numline++;
+                }
+
+            }
+
+            //fill values
+            Array.Copy(Settings, CurrentSettings, Settings.Length);
+            Array.Copy(Comments, CurrentComments, Comments.Length);
+
+            return true;
+        }
+
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            //TODO: do some shit
-            DialogResult = DialogResult.OK;
+            //make sure the values are of the correct format
+            string[] values;
+            if (ValidateSettingsFormat())
+            {
+                //save the values
+                MA400_export Form1 = this.mainParent as MA400_export;
+                ref int[] Savedparameters = ref Form1.fs.GetPTS300CurrentParameters();
+                ref string[] Savedcomment = ref Form1.fs.GetPTS300CurrentComments();
+                if (SaveSettingsValues(ref Savedparameters, ref Savedcomment))
+                {
+                    Form1.fs.SavePTS300Settings();
+                    DialogResult = DialogResult.OK;
+
+                }
+            }
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            //TODO save the settings to a file
+            //make sure the values are of the correct format
+            string[] values;
+            if (ValidateSettingsFormat())
+            {
+                //save the values
+                MA400_export Form1 = this.mainParent as MA400_export;
+                ref int[] Savedparameters = ref Form1.fs.GetPTS300CurrentParameters();
+                ref string[] Savedcomment = ref Form1.fs.GetPTS300CurrentComments();
+                if (SaveSettingsValues(ref Savedparameters, ref Savedcomment))
+                {
+                    Form1.fs.SavePTS300Settings();
+                }
+            }
+
         }
 
+
+        /**
+         * <summary>Reset the current settings to the default values</summary>
+         */
         private void buttonDefault_Click(object sender, EventArgs e)
         {
             MA400_export Form1 = this.mainParent as MA400_export;
@@ -86,22 +199,20 @@ namespace MA400_export
             }
         }
 
-        /**
-         * <summary>reset the settings to the values they had when the form was last saved</summary>
-         */
-        private void resetToSavedValues()
-        {
-            MA400_export Form1 = this.mainParent as MA400_export;
-            for (int i = 0; i < 100; i++)
-            {
-                dataGridView1.Rows[i].SetValues(new object[] { Form1.fs.GetPTS300SavedParameters()[i], Form1.fs.GetPTS300SavedComments()[i] });
-            }
 
-        }
+
+        /**
+         * <summary>Reset the settings to the values they had when the form was last saved</summary>
+         */
         private void buttonReset_Click(object sender, EventArgs e)
         {
-            //TODO reset the settings to the values they had when the form was opened
-            resetToSavedValues();
+            MA400_export Form1 = this.mainParent as MA400_export;
+            ref int[] Savedparameters = ref Form1.fs.GetPTS300SavedParameters();
+            ref string[] Savedcomment = ref Form1.fs.GetPTS300SavedComments();
+            for (int i = 0; i < 100; i++)
+            {
+                dataGridView1.Rows[i].SetValues(new object[] { Savedparameters[i], Savedcomment[i] });
+            }
         }
     }
 

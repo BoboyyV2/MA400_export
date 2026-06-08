@@ -1371,7 +1371,6 @@ namespace MA400_export
          */
         public ref int[] GetPTS300SavedParameters()
         {
-            //TODO : fill the default parameters array with the default values for the PTS300 machine
             return ref Gen.PTS_300_SAVE_PARAM;
         }
         
@@ -1381,13 +1380,26 @@ namespace MA400_export
          */
         public ref string[] GetPTS300SavedComments()
         {
-            //TODO : fill the default comments array with the default comments for the PTS300 machine parameters
             return ref Gen.PTS_300_SAVE_COMMENTS;
         }
 
+        /**
+         * <summary>Resets the PTS300 parameters to their default values</summary>
+         */
         public void ResetPTS300ParamToDefault()
         {
             (Gen as AREProdFileGenerator).GetDefaultPTS300Parameters();
+        }
+
+
+        /**
+         * <summary>Saves the current PTS300 parameters</summary>
+         */
+        public void SavePTS300Settings()
+        {
+            (Gen as AREProdFileGenerator).SaveCurrentValues();
+            (Gen as AREProdFileGenerator).writePTS300Parameters();
+
         }
 
         /*______________________________________________*/
