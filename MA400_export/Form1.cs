@@ -1431,7 +1431,7 @@ namespace MA400_export
             SerialConnection reciever = new SerialConnection();
 
             SerialData outputdata = new SerialData();
-            outputdata.COM = "COM11";
+            outputdata.COM = "COM10";
             outputdata.ParityBit = serialData.ParityBit;
             outputdata.StopBit = serialData.StopBit;
             outputdata.DataBits = serialData.DataBits;
