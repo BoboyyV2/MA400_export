@@ -79,8 +79,8 @@ namespace MA400_export
 
             foreach (Stud stud in SortedStuds)
             {
-                sw.WriteLine(stud.circle.Center.X);
-                sw.WriteLine(stud.circle.Center.Y);
+                sw.WriteLine( (stud.circle.Center.X).ToString("0.0000") );//limite le nombre de 0 quand meme
+                sw.WriteLine( (stud.circle.Center.Y).ToString("0.0000") );
                 numberOfLineToFill -= 2;
             }
             // Fill the remaining lines with default values if necessary
