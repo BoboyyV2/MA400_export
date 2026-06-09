@@ -42,6 +42,9 @@
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.UpdateIntervalLabel = new System.Windows.Forms.Label();
+            this.numericUpDownUpdateInterval = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUpdateInterval)).BeginInit();
             this.SuspendLayout();
             // 
             // ActiveCom
@@ -49,23 +52,23 @@
             this.ActiveCom.AutoSize = true;
             this.ActiveCom.Location = new System.Drawing.Point(35, 25);
             this.ActiveCom.Name = "ActiveCom";
-            this.ActiveCom.Size = new System.Drawing.Size(49, 13);
+            this.ActiveCom.Size = new System.Drawing.Size(51, 13);
             this.ActiveCom.TabIndex = 0;
-            this.ActiveCom.Text = "Port actif";
+            this.ActiveCom.Text = "Port cible";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(35, 95);
+            this.label3.Location = new System.Drawing.Point(35, 135);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(169, 13);
+            this.label3.Size = new System.Drawing.Size(116, 13);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Changer la vitesse de transmission";
+            this.label3.Text = "Vitesse de transmission";
             // 
             // TransmissionFormat
             // 
             this.TransmissionFormat.AutoSize = true;
-            this.TransmissionFormat.Location = new System.Drawing.Point(331, 25);
+            this.TransmissionFormat.Location = new System.Drawing.Point(339, 25);
             this.TransmissionFormat.Name = "TransmissionFormat";
             this.TransmissionFormat.Size = new System.Drawing.Size(114, 13);
             this.TransmissionFormat.TabIndex = 4;
@@ -74,7 +77,7 @@
             // comboBoxActiveCOM
             // 
             this.comboBoxActiveCOM.FormattingEnabled = true;
-            this.comboBoxActiveCOM.Location = new System.Drawing.Point(90, 22);
+            this.comboBoxActiveCOM.Location = new System.Drawing.Point(72, 41);
             this.comboBoxActiveCOM.Name = "comboBoxActiveCOM";
             this.comboBoxActiveCOM.Size = new System.Drawing.Size(99, 21);
             this.comboBoxActiveCOM.TabIndex = 5;
@@ -82,7 +85,7 @@
             // StopBitLabel
             // 
             this.StopBitLabel.AutoSize = true;
-            this.StopBitLabel.Location = new System.Drawing.Point(335, 125);
+            this.StopBitLabel.Location = new System.Drawing.Point(289, 125);
             this.StopBitLabel.Name = "StopBitLabel";
             this.StopBitLabel.Size = new System.Drawing.Size(91, 13);
             this.StopBitLabel.TabIndex = 6;
@@ -91,7 +94,7 @@
             // ParityLabel
             // 
             this.ParityLabel.AutoSize = true;
-            this.ParityLabel.Location = new System.Drawing.Point(363, 90);
+            this.ParityLabel.Location = new System.Drawing.Point(317, 90);
             this.ParityLabel.Name = "ParityLabel";
             this.ParityLabel.Size = new System.Drawing.Size(63, 13);
             this.ParityLabel.TabIndex = 7;
@@ -100,7 +103,7 @@
             // DataBitsLabel
             // 
             this.DataBitsLabel.AutoSize = true;
-            this.DataBitsLabel.Location = new System.Drawing.Point(343, 55);
+            this.DataBitsLabel.Location = new System.Drawing.Point(297, 55);
             this.DataBitsLabel.Name = "DataBitsLabel";
             this.DataBitsLabel.Size = new System.Drawing.Size(83, 13);
             this.DataBitsLabel.TabIndex = 8;
@@ -114,7 +117,7 @@
             "1",
             "2",
             "1,5"});
-            this.comboBoxStopBit.Location = new System.Drawing.Point(432, 122);
+            this.comboBoxStopBit.Location = new System.Drawing.Point(386, 122);
             this.comboBoxStopBit.Name = "comboBoxStopBit";
             this.comboBoxStopBit.Size = new System.Drawing.Size(99, 21);
             this.comboBoxStopBit.TabIndex = 9;
@@ -126,7 +129,7 @@
             "aucun",
             "pair",
             "impair"});
-            this.comboBoxParity.Location = new System.Drawing.Point(432, 87);
+            this.comboBoxParity.Location = new System.Drawing.Point(386, 87);
             this.comboBoxParity.Name = "comboBoxParity";
             this.comboBoxParity.Size = new System.Drawing.Size(99, 21);
             this.comboBoxParity.TabIndex = 10;
@@ -139,7 +142,7 @@
             "7",
             "6",
             "5"});
-            this.comboBoxDataBits.Location = new System.Drawing.Point(432, 52);
+            this.comboBoxDataBits.Location = new System.Drawing.Point(386, 52);
             this.comboBoxDataBits.Name = "comboBoxDataBits";
             this.comboBoxDataBits.Size = new System.Drawing.Size(99, 21);
             this.comboBoxDataBits.TabIndex = 11;
@@ -154,7 +157,7 @@
             "57600",
             "115200",
             "230400"});
-            this.comboBoxBaudRate.Location = new System.Drawing.Point(90, 122);
+            this.comboBoxBaudRate.Location = new System.Drawing.Point(72, 151);
             this.comboBoxBaudRate.Name = "comboBoxBaudRate";
             this.comboBoxBaudRate.Size = new System.Drawing.Size(99, 21);
             this.comboBoxBaudRate.TabIndex = 12;
@@ -162,7 +165,7 @@
             // buttonApply
             // 
             this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonApply.Location = new System.Drawing.Point(321, 197);
+            this.buttonApply.Location = new System.Drawing.Point(266, 197);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(124, 27);
             this.buttonApply.TabIndex = 21;
@@ -174,7 +177,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(451, 197);
+            this.buttonCancel.Location = new System.Drawing.Point(396, 197);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(101, 27);
             this.buttonCancel.TabIndex = 20;
@@ -184,7 +187,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(214, 197);
+            this.buttonOK.Location = new System.Drawing.Point(159, 197);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(101, 27);
             this.buttonOK.TabIndex = 19;
@@ -192,12 +195,35 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // UpdateIntervalLabel
+            // 
+            this.UpdateIntervalLabel.AutoSize = true;
+            this.UpdateIntervalLabel.Location = new System.Drawing.Point(35, 80);
+            this.UpdateIntervalLabel.Name = "UpdateIntervalLabel";
+            this.UpdateIntervalLabel.Size = new System.Drawing.Size(132, 13);
+            this.UpdateIntervalLabel.TabIndex = 22;
+            this.UpdateIntervalLabel.Text = "Interval de mise à jour (ms)";
+            // 
+            // numericUpDownUpdateInterval
+            // 
+            this.numericUpDownUpdateInterval.Location = new System.Drawing.Point(72, 96);
+            this.numericUpDownUpdateInterval.Maximum = new decimal(new int[] {
+            2500,
+            0,
+            0,
+            0});
+            this.numericUpDownUpdateInterval.Name = "numericUpDownUpdateInterval";
+            this.numericUpDownUpdateInterval.Size = new System.Drawing.Size(99, 20);
+            this.numericUpDownUpdateInterval.TabIndex = 23;
+            // 
             // SerialPortSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(564, 236);
+            this.ClientSize = new System.Drawing.Size(509, 236);
+            this.Controls.Add(this.numericUpDownUpdateInterval);
+            this.Controls.Add(this.UpdateIntervalLabel);
             this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -216,6 +242,7 @@
             this.Name = "SerialPortSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Paramètres d\'interface";
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownUpdateInterval)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -237,5 +264,7 @@
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Label UpdateIntervalLabel;
+        private System.Windows.Forms.NumericUpDown numericUpDownUpdateInterval;
     }
 }

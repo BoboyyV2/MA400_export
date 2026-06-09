@@ -185,6 +185,7 @@
       <DependentUpon>PTS300Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Scale.cs" />
+    <Compile Include="SerialConnection.cs" />
     <Compile Include="SerialPortSettings.cs">
       <SubType>Form</SubType>
     </Compile>

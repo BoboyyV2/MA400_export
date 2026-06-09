@@ -124,6 +124,14 @@ namespace MA400_export
                         {
                             serialData = Util.readSerialDataJson(Constants.MainPath + Constants.paramPath + "SerialData.json");
                         }
+                        else
+                        {
+                            serialData.DataBits = 8;
+                            serialData.ParityBit = System.IO.Ports.Parity.None;
+                            serialData.StopBit = System.IO.Ports.StopBits.One;
+                            serialData.BaudRate = 9600;
+                            serialData.UpdateInterval = 502;
+                        }
 
                         break;
                     }

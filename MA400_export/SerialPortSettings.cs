@@ -23,6 +23,8 @@ namespace MA400_export
         public int DataBits;
         public Parity ParityBit;
         public StopBits StopBit;
+
+        public int UpdateInterval;//time in milliseconde between each echange
     }
 
     /**
@@ -70,6 +72,9 @@ namespace MA400_export
             comboBoxDataBits.Text = data.DataBits.ToString();
 
             comboBoxParity.Text = data.ParityBit.ToString();
+
+            numericUpDownUpdateInterval.Value = data.UpdateInterval;
+
             switch (data.ParityBit)
             {
                 case Parity.None:
@@ -116,11 +121,17 @@ namespace MA400_export
             StopBits StopBit;
             int Databits;
             int BaudRate;
-            string COM;
 
-            data.COM = comboBoxActiveCOM.Text;
+            string COM = comboBoxActiveCOM.Text;
+            if ( !(SerialPort.GetPortNames().Contains(COM) ) )
+            {
+                MessageBox.Show("Port cible invalide.");
+                return false;
+            }
             //TODO gestion des COM actifs
             //détection, utilisation...
+
+            int UpdateInterval = Convert.ToInt32(numericUpDownUpdateInterval.Value);
 
             try
             {
@@ -189,6 +200,8 @@ namespace MA400_export
             data.StopBit = StopBit;
             data.BaudRate = BaudRate;
             data.ParityBit = ParityBit;
+            data.UpdateInterval = UpdateInterval;
+            data.COM = COM;
 
             return true;
 
