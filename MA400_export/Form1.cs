@@ -112,6 +112,11 @@ namespace MA400_export
                     {
                         paramètresPTS300ToolStripMenuItem.Visible = true;
                         fs.GetParametersPTS300();
+
+                        if (!string.IsNullOrEmpty(Properties.Settings.Default.OutputPath))
+                        {
+                            this.saveFileDialogARE.InitialDirectory = Properties.Settings.Default.OutputPath + Constants.ArePath;
+                        }
                         break;
                     }
                 default:
