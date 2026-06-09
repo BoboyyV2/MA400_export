@@ -49,6 +49,7 @@ namespace MA400_export
         //Edit variables
         public EditMode editMode = EditMode.Cursor;
         GeneratorData data = new GeneratorData();
+        SerialData serialData = new SerialData();
         public bool IsNew = true;
 
         private double currentFramedCircleHash = -1.0;
@@ -111,6 +112,7 @@ namespace MA400_export
                 case Machine.PTS300:
                     {
                         paramètresPTS300ToolStripMenuItem.Visible = true;
+                        paramètresInterfaceToolStripMenuItem.Visible = true;
                         fs.GetParametersPTS300();
 
                         if (!string.IsNullOrEmpty(Properties.Settings.Default.OutputPath))
@@ -1283,6 +1285,19 @@ namespace MA400_export
             }
         }
 
+        private void paramètresInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO menu de paramètres du port série
+            //ouvre les options
+            using (SerialPortSettings serialSettings = new SerialPortSettings() )
+            {
+
+                serialSettings.ShowDialog();
+                serialData = serialSettings.data;
+                //c'est tout
+            }
+        }
+
         /*___________________________________________ROTATE___________________________________________*/
 
 
@@ -1391,6 +1406,8 @@ namespace MA400_export
         }
 
         
+
+
 
 
 
