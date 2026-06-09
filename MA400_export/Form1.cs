@@ -119,6 +119,12 @@ namespace MA400_export
                         {
                             this.saveFileDialogARE.InitialDirectory = Properties.Settings.Default.OutputPath + Constants.ArePath;
                         }
+
+                        if(File.Exists(Constants.MainPath + Constants.paramPath + "SerialData.json"))
+                        {
+                            serialData = Util.readSerialDataJson(Constants.MainPath + Constants.paramPath + "SerialData.json");
+                        }
+
                         break;
                     }
                 default:
@@ -1289,7 +1295,7 @@ namespace MA400_export
         {
             //TODO menu de paramètres du port série
             //ouvre les options
-            using (SerialPortSettings serialSettings = new SerialPortSettings() )
+            using (SerialPortSettings serialSettings = new SerialPortSettings(serialData) )
             {
 
                 serialSettings.ShowDialog();

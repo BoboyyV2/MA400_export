@@ -1,5 +1,6 @@
 ﻿using ACadSharp.Entities;
 using CSMath;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -150,6 +151,35 @@ namespace MA400_export
             PropagationFlags.None,
             AccessControlType.Allow));
             info.SetAccessControl(ds);
+        }
+
+
+        /**
+         * <summary>Write an object data in a json file</summary>
+         * <param name="filePath"> the full path to the file, containing the extension</param>
+         * <param name="o">the object to write to json</param>
+         */
+        public static void writeToJson(Object o, string filePath)
+        {
+            string json = JsonConvert.SerializeObject(o);
+            using (StreamWriter sw = File.CreateText(filePath) )
+            {
+                sw.Write(json);
+            }
+
+        }
+
+        /**
+         * <summary>read a json file containing the data from a SerialData object </summary>
+         * <param name="filePath"> the full path to the file, containing the extension</param>
+         * <returns>a Serial data object filled with the data contained inside the json</returns>
+         */
+        public static SerialData readSerialDataJson(string filePath)
+        {
+            //string[] file = File.ReadAllLines(filePath);
+            string file = File.ReadAllText(filePath);
+            return ( JsonConvert.DeserializeObject<SerialData>(file) );
+
         }
 
 

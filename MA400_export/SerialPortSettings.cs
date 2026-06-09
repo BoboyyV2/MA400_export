@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MA400_export
 {
@@ -34,23 +36,81 @@ namespace MA400_export
         public SerialPortSettings()
         {
             InitializeComponent();
+
+            string[] portsnames = SerialPort.GetPortNames(); 
+            foreach (string port in portsnames)
+            {
+                comboBoxActiveCOM.Items.Add(new { Text = port, Value = port });
+            }
+
             data = new SerialData();
+            displayDataValues();
         }
 
-        /**
-         * <summary>check the settings input to make sure they are all valid, show an error otherwise.</summary>
-         * <returns>true if all is correct, false otherwise.</returns>
-         */
-        private bool checkInput()
+        public SerialPortSettings(SerialData data)
         {
-            return true;
-            //TODO un vrai check
+            InitializeComponent();
+
+            string[] portsnames = SerialPort.GetPortNames();
+            foreach( string port in portsnames)
+            {
+                comboBoxActiveCOM.Items.Add(port);
+            }
+
+            this.data = data;
+            displayDataValues();
+        }
+
+        private void displayDataValues()
+        {
+            comboBoxActiveCOM.Text = data.COM;
+
+            comboBoxBaudRate.Text = data.BaudRate.ToString();
+
+            comboBoxDataBits.Text = data.DataBits.ToString();
+
+            comboBoxParity.Text = data.ParityBit.ToString();
+            switch (data.ParityBit)
+            {
+                case Parity.None:
+                    comboBoxParity.Text = "aucun";
+                    break;
+                case Parity.Odd:
+                    comboBoxParity.Text = "impaire";
+                    break;
+                case Parity.Even:
+                    comboBoxParity.Text = "paire";
+                    break;
+
+                default:
+                    comboBoxParity.Text = "aucun";
+                    break;
+            }
+
+            switch (data.StopBit)
+            {
+                case StopBits.None:
+                    comboBoxStopBit.Text = "0";
+                    break;
+                case StopBits.One:
+                    comboBoxStopBit.Text = "1";
+                    break;
+                case StopBits.Two:
+                    comboBoxStopBit.Text = "2";
+                    break;
+                case StopBits.OnePointFive:
+                    comboBoxStopBit.Text = "1,5";
+                    break;
+                default:
+                    comboBoxStopBit.Text = "1";
+                    break;
+            }
         }
 
         /**
-         * <summary>fill the value of the SerialData object with the user inputed values in the form.</summary>
+         * <summary>fill the value of the SerialData object with the user's given values in the form, if the values are correct, show an error message otherwise.</summary>
          */
-        private void fillDataValues()
+        private bool fillDataValues()
         {
             Parity ParityBit;
             StopBits StopBit;
@@ -69,7 +129,7 @@ namespace MA400_export
             catch (Exception e)
             {
                 MessageBox.Show("Le format de la valeur de la vitesse de transmission est invalide, un entier est attendu. " + e.Message);
-                return;
+                return false;
             }
 
             try
@@ -79,12 +139,12 @@ namespace MA400_export
             catch (Exception e)
             {
                 MessageBox.Show("Le format de la valeur du databit est invalide, un entier est attendu. " + e.Message);
-                return;
+                return false;
             } 
             if (Databits > 8 || Databits < 5)
             {
                 MessageBox.Show("Le nombre de bits de donnée doit être compris entre 5 et 8");
-                return;
+                return false;
             }
 
 
@@ -101,10 +161,9 @@ namespace MA400_export
                     break;
                 default:
                     MessageBox.Show("Veuillez choisir la valeur du bit de parité parmis celles proposées uniquement.");
-                    return;
+                    return false;
             }
 
-            //data.StopBit = StopBits.
             switch (comboBoxStopBit.Text)
             {
                 case "0":
@@ -122,7 +181,7 @@ namespace MA400_export
                     break;
                 default:
                     MessageBox.Show("Veuillez choisir la valeur du bit de fin de trame parmis celles proposées uniquement.");
-                    return;
+                    return false;
             }
 
             //set les valurs une fois qu'elle sont toutes validées
@@ -131,21 +190,22 @@ namespace MA400_export
             data.BaudRate = BaudRate;
             data.ParityBit = ParityBit;
 
+            return true;
+
 
         }
+
+        
 
         /**
          * <summary>handle the click bahavior for apply</summary>
          */
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            //do nothing if the values are not correct
-            if (!checkInput())//s'occupe aussi des messages d'erreurs
+            if (fillDataValues())
             {
-                return;
+                Util.writeToJson(data, Constants.MainPath + Constants.paramPath + "SerialData.json");
             }
-            fillDataValues();
-            
         }
 
         /**
@@ -153,14 +213,16 @@ namespace MA400_export
          */
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            //do nothing if the values are not correct
-            if (!checkInput())
+           
+            if (fillDataValues())
             {
-                return;
+                Util.writeToJson(data, Constants.MainPath + Constants.paramPath + "SerialData.json");
+                DialogResult = DialogResult.OK;
             }
-            fillDataValues();
-            DialogResult = DialogResult.OK;
 
         }
+
+
+
     }
 }
