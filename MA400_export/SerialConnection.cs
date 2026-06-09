@@ -4,17 +4,20 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MA400_export
 {
     public class SerialConnection
     {
         private SerialPort _serialPort;
+        private bool _isListening;
 
-        public SerialConnection(SerialPort port)
+        public SerialConnection()
         {
-            _serialPort = port;
+            _isListening = false;
         }
 
         /*___________________________________________________________________ CONNECTION ___________________________________________________________________*/
@@ -29,9 +32,11 @@ namespace MA400_export
                     Parity = data.ParityBit,
                     StopBits = data.StopBit,
                     Handshake = Handshake.None,
-                    ReadTimeout = 3000,
-                    WriteTimeout = 3000
+                    ReadTimeout = 500,
+                    WriteTimeout = 500,
                 };
+                _serialPort.DataReceived += new SerialDataReceivedEventHandler(OnDataReceived);
+
 
                 if (!_serialPort.IsOpen)
                 {
@@ -71,13 +76,14 @@ namespace MA400_export
 
         /*___________________________________________________________________ DATASENDER ___________________________________________________________________*/
 
-        
+
 
         public bool SendString(string data)
         {
             if (!_serialPort.IsOpen)
             {
                 Console.WriteLine("Port is not open for sending data.");
+                MessageBox.Show("Impossible d'envoyer les données, le port de communication est fermé.");
                 return false;
             }
 
@@ -95,6 +101,8 @@ namespace MA400_export
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Error sending data: {ex.Message}");
+                MessageBox.Show($"Echec d'envoie des données. {ex.Message}");
+
                 return false;
             }
         }
@@ -104,6 +112,8 @@ namespace MA400_export
             if (!_serialPort.IsOpen)
             {
                 Console.WriteLine("Port is not open for binary transmission.");
+                MessageBox.Show("Impossible d'envoyer les données, le port de communication est fermé.");
+
                 return false;
             }
 
@@ -121,6 +131,8 @@ namespace MA400_export
             catch (Exception ex)
             {
                 Console.WriteLine($"Binary transmission failed: {ex.Message}");
+                MessageBox.Show($"Echec d'envoie des données. {ex.Message}");
+
                 return false;
             }
         }
@@ -141,6 +153,7 @@ namespace MA400_export
             catch (Exception ex)
             {
                 Console.WriteLine($"Hex command conversion failed: {ex.Message}");
+
                 return false;
             }
         }
@@ -148,7 +161,117 @@ namespace MA400_export
 
         /*___________________________________________________________________ DATARECVER ___________________________________________________________________*/
 
+
+
+        public string ReadStringData()
+        {
+            if (!_serialPort.IsOpen)
+            {
+                Console.WriteLine("Port is not open for reading.");
+                return null;
+            }
+
+            try
+            {
+
+                string receivedData = _serialPort.ReadLine();
+                Console.WriteLine($"Received: {receivedData}");
+                return receivedData.Trim();
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine("Timeout occurred while reading data.");
+                MessageBox.Show("Timeout lors de la récupération de données. ");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading data: {ex.Message}");
+                MessageBox.Show($"Erreur lors de la récupération de données. {ex.Message}");
+
+                return null;
+            }
+        }
+
+        public byte[] ReadBinaryData(int expectedBytes)
+        {
+            if (!_serialPort.IsOpen)
+                return null;
+
+            try
+            {
+                byte[] buffer = new byte[expectedBytes];
+                int bytesRead = _serialPort.Read(buffer, 0, expectedBytes);
+
+                if (bytesRead > 0)
+                {
+                    byte[] actualData = new byte[bytesRead];
+                    Array.Copy(buffer, actualData, bytesRead);
+                    return actualData;
+                }
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine("Timeout while reading binary data.");
+                MessageBox.Show("Timeout lors de la récupération de données binaire. ");
+
+            }
+
+            return null;
+        }
+
+
+        /*___________________________________________________________________ ASYNC DATARECVER ___________________________________________________________________*/
+
+
+        private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            if (!_isListening)
+                return;
+
+            try
+            {
+                if (_serialPort.BytesToRead > 0)
+                {
+                    // Read as string
+                    string stringData = _serialPort.ReadExisting();
+                    if (!string.IsNullOrEmpty(stringData))
+                    {
+                        //DataReceived?.Invoke(this, stringData);
+                        MessageBox.Show("got something : " + stringData);
+                    }
+
+                    // For binary data reception
+                    if (_serialPort.BytesToRead > 0)
+                    {
+                        byte[] binaryData = new byte[_serialPort.BytesToRead];
+                        _serialPort.Read(binaryData, 0, binaryData.Length);
+                        //BinaryDataReceived?.Invoke(this, binaryData);
+                        MessageBox.Show("got some binary shee : " + stringData);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in async data reception: {ex.Message}");
+            }
+        }
+
+        public void StartListening()
+        {
+            _isListening = true;
+            Console.WriteLine("Started listening for serial data...");
+        }
+
+        public void StopListening()
+        {
+            _isListening = false;
+            Console.WriteLine("Stopped listening for serial data.");
+        }
     }
 
 }
+
+
 

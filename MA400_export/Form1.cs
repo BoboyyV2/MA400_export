@@ -113,6 +113,7 @@ namespace MA400_export
                     {
                         paramètresPTS300ToolStripMenuItem.Visible = true;
                         paramètresInterfaceToolStripMenuItem.Visible = true;
+                        this.buttonStart.Visible = true;
                         fs.GetParametersPTS300();
 
                         if (!string.IsNullOrEmpty(Properties.Settings.Default.OutputPath))
@@ -1419,7 +1420,44 @@ namespace MA400_export
             helper.ShowPreview(this);//this = fenetre parente (owner)
         }
 
-        
+
+        /*___________________________________________ SERIAL PORT FUNSIES ___________________________________________*/
+
+
+
+        private void buttonExecuteProgram_Click(object sender, EventArgs e)
+        {
+            //DEBUG
+            SerialConnection reciever = new SerialConnection();
+
+            SerialData outputdata = new SerialData();
+            outputdata.COM = "COM11";
+            outputdata.ParityBit = serialData.ParityBit;
+            outputdata.StopBit = serialData.StopBit;
+            outputdata.DataBits = serialData.DataBits;
+            outputdata.BaudRate = serialData.BaudRate;
+            outputdata.UpdateInterval = serialData.UpdateInterval;
+
+            reciever.OpenConnection(outputdata);
+            reciever.StartListening();
+            /*____________________________________*/
+
+            SerialConnection sc = new SerialConnection();
+            sc.OpenConnection(serialData);
+
+            sc.SendString("truite");
+
+            sc.CloseConnection();
+
+            /*____________________________________*/
+
+            reciever.StopListening();
+            reciever.CloseConnection();
+
+           
+        }
+
+
 
 
 

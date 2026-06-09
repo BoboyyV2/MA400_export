@@ -39,8 +39,8 @@ namespace MA400_export
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MA400_export));
-            this.WorkZone = new DoubleBufferedPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.WorkZone = new DoubleBufferedPanel();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirprogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -94,6 +94,8 @@ namespace MA400_export
             this.labelHoveredCircleY = new System.Windows.Forms.Label();
             this.openFileDialogARE = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialogARE = new System.Windows.Forms.SaveFileDialog();
+            this.buttonStart = new System.Windows.Forms.Button();
+            this.transmissionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -118,7 +120,8 @@ namespace MA400_export
             this.fichierToolStripMenuItem,
             this.generationToolStripMenuItem,
             this.parametreToolStripMenuItem,
-            this.VueToolStripMenuItem});
+            this.VueToolStripMenuItem,
+            this.transmissionToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -589,11 +592,31 @@ namespace MA400_export
             // 
             this.saveFileDialogARE.DefaultExt = "are";
             // 
+            // buttonStart
+            // 
+            this.buttonStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            this.buttonStart.Location = new System.Drawing.Point(848, 444);
+            this.buttonStart.Name = "buttonStart";
+            this.buttonStart.Size = new System.Drawing.Size(160, 55);
+            this.buttonStart.TabIndex = 27;
+            this.buttonStart.Text = "Lancer";
+            this.buttonStart.UseVisualStyleBackColor = true;
+            this.buttonStart.Visible = false;
+            this.buttonStart.Click += new System.EventHandler(this.buttonExecuteProgram_Click);
+            // 
+            // transmissionToolStripMenuItem
+            // 
+            this.transmissionToolStripMenuItem.Name = "transmissionToolStripMenuItem";
+            this.transmissionToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.transmissionToolStripMenuItem.Text = "&Transmission";
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1064, 681);
+            this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.labelHoveredCircle);
             this.Controls.Add(this.labelHoveredCircleX);
             this.Controls.Add(this.labelHoveredCircleY);
@@ -690,6 +713,8 @@ namespace MA400_export
         private OpenFileDialog openFileDialogARE;
         private SaveFileDialog saveFileDialogARE;
         private ToolStripMenuItem paramètresInterfaceToolStripMenuItem;
+        private Button buttonStart;
+        private ToolStripMenuItem transmissionToolStripMenuItem;
     }
 }
 
