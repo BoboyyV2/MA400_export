@@ -40,7 +40,7 @@ namespace MA400_export
             string[] portsnames = SerialPort.GetPortNames(); 
             foreach (string port in portsnames)
             {
-                comboBoxActiveCOM.Items.Add(new { Text = port, Value = port });
+                comboBoxActiveCOM.Items.Add(port);
             }
 
             data = new SerialData();
