@@ -250,7 +250,7 @@ namespace MA400_export
         }
 
         /**
-         * <summary>Open & setup the Canvas to draw the ddxf file on the graphics aswell as setting the layout informations</summary>
+         * <summary>Open and setup the Canvas to draw the ddxf file on the graphics aswell as setting the layout informations</summary>
          */
         public void OpenCanvas()
         {

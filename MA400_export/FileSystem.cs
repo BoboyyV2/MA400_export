@@ -558,6 +558,26 @@ namespace MA400_export
         /*_____________________________________FLIP_____________________________________*/
 
         /**
+         * <summary>flip a stud on the X axis</summary>
+         */
+        private XYZ FlipStudCenterX(Circle c)//should work without ref as we are manipulating s.circle.center => references within an instance
+        {
+            double Y = layout.dimension.Height - c.Center.Y;
+            return new XYZ(c.Center.X, Y, c.Center.Z);
+        }
+
+        /**
+         * <summary>flip each stud of the studs list on the X axis</summary>
+         */
+        private void FlipStudsX()
+        {
+            foreach (Stud s in Studs)
+            {
+                s.circle.Center = FlipStudCenterX(s.circle);//should work without ref as we are manipulating s.circle.center => references within an instance
+            }
+        }
+
+        /**
          * <summary>flip a single entity in the document on the X axis</summary>
          * <remarks>handle arcs angles aswell</remarks>
          */
@@ -685,9 +705,71 @@ namespace MA400_export
 
         
 
+        public void FlipPartX()
+        {
+            open = false;
+            string tmpPath = Constants.MainPath + Constants.tmpPath;
+            
+            //save dans un fichier temporaire pour l'affichage / traitement
+            try
+            {
+                Directory.CreateDirectory(tmpPath);
+                Util.SetPermissions(tmpPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de la rotation");
+            }
 
-        
+            //flip the whole part
+            FlipEntitiesX();
+            FlipStudsX();
 
+            //save les studs dans une liste temporaire avant de reset pour l'affichage
+            BindingList<Stud> oldStuds = new BindingList<Stud>();
+            foreach (Stud s in Studs)
+            {
+                oldStuds.Add(s);
+            }
+
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+
+            //ré open le fichier tmp en ddxf
+            OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
+
+            //save the rotated studs => used in OpenFlipFileLayout()
+            StudsTMP = oldStuds;
+            
+
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+        }
+
+        /**
+         * <summary>Get the layout of a dxf file when it is opening as well as performing a scan to get the studs</summary>
+         */
+        public void OpenFlipFileLayout(Layout_Info layout)
+        {
+            //set the new layout
+            this.layout = layout;
+
+
+            //no addrange defined 
+            //fill the local stud list with the temporary one then clear and void the temporary list
+            foreach (Stud stud in StudsTMP)
+            {
+                Studs.Add(stud);
+            }
+            StudsTMP.Clear();
+            StudsTMP = null;
+        }
 
         /*_____________________________________DDXF_____________________________________*/
 
@@ -833,6 +915,9 @@ namespace MA400_export
 
             ScanDxfEntities();
         }
+
+
+        
 
 
 
@@ -1486,6 +1571,8 @@ namespace MA400_export
             (Gen as AREProdFileGenerator).ReadRecievedAREProgram(recived);
             
         }
+
+        
 
         /*______________________________________________*/
 

@@ -100,6 +100,7 @@ namespace MA400_export
             this.saveFileDialogARE = new System.Windows.Forms.SaveFileDialog();
             this.buttonStart = new System.Windows.Forms.Button();
             this.openFileDialogARETransfer = new System.Windows.Forms.OpenFileDialog();
+            this.renverserLaPièceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -279,7 +280,8 @@ namespace MA400_export
             this.VueToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.rotateToolStripMenuItem,
             this.Rotate90ToolStripMenuItem,
-            this.toolStripSeparator5});
+            this.toolStripSeparator5,
+            this.renverserLaPièceToolStripMenuItem});
             this.VueToolStripMenuItem.Name = "VueToolStripMenuItem";
             this.VueToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.VueToolStripMenuItem.Text = "&Vue";
@@ -287,21 +289,21 @@ namespace MA400_export
             // rotateToolStripMenuItem
             // 
             this.rotateToolStripMenuItem.Name = "rotateToolStripMenuItem";
-            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rotateToolStripMenuItem.Text = "&Tourner à 180°";
             this.rotateToolStripMenuItem.Click += new System.EventHandler(this.rotateToolStripMenuItem_Click);
             // 
             // Rotate90ToolStripMenuItem
             // 
             this.Rotate90ToolStripMenuItem.Name = "Rotate90ToolStripMenuItem";
-            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.Rotate90ToolStripMenuItem.Text = "&Tourner à 90°";
             this.Rotate90ToolStripMenuItem.Click += new System.EventHandler(this.Rotate90ToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(147, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // transmissionToolStripMenuItem
             // 
@@ -645,6 +647,13 @@ namespace MA400_export
             // 
             this.openFileDialogARETransfer.Filter = "are files (*.are)|*are";
             // 
+            // renverserLaPièceToolStripMenuItem
+            // 
+            this.renverserLaPièceToolStripMenuItem.Name = "renverserLaPièceToolStripMenuItem";
+            this.renverserLaPièceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renverserLaPièceToolStripMenuItem.Text = "&Renverser la pièce";
+            this.renverserLaPièceToolStripMenuItem.Click += new System.EventHandler(this.renverserLaPièceToolStripMenuItem_Click);
+            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -754,6 +763,7 @@ namespace MA400_export
         private ToolStripMenuItem lireLeProgrammeEnMémoireToolStripMenuItem;
         private ToolStripMenuItem transmettreUnProgrammeToolStripMenuItem;
         private OpenFileDialog openFileDialogARETransfer;
+        private ToolStripMenuItem renverserLaPièceToolStripMenuItem;
     }
 }
 

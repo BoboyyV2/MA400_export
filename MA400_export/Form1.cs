@@ -1378,7 +1378,25 @@ namespace MA400_export
             WorkZone.Invalidate();
         }
 
+        private void renverserLaPièceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!fs.open)
+            {
+                MessageBox.Show("aucun fichier ou programme ouvert.");
+                return;
+            }
 
+            fs.FlipPartX();
+
+            gc.reset();
+            gc.OpenCanvas();
+
+            fs.OpenFlipFileLayout(gc.layout);
+            DisplayWhenOpen(true);
+            WorkZone.Invalidate();
+        }
+
+        //currently bugged
         /**
          * <summary>Handle the behavior when the rotation button is clicked.<br></br>
          * Call the getRotationValue form to get the rotation angle then rotate the part.</summary>
@@ -1643,6 +1661,8 @@ namespace MA400_export
 
             ExecutingSerialCommand = false;//fini
         }
+
+        
 
 
 
