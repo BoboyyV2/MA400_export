@@ -287,21 +287,21 @@ namespace MA400_export
             // rotateToolStripMenuItem
             // 
             this.rotateToolStripMenuItem.Name = "rotateToolStripMenuItem";
-            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rotateToolStripMenuItem.Text = "&Tourner à 180°";
             this.rotateToolStripMenuItem.Click += new System.EventHandler(this.rotateToolStripMenuItem_Click);
             // 
             // Rotate90ToolStripMenuItem
             // 
             this.Rotate90ToolStripMenuItem.Name = "Rotate90ToolStripMenuItem";
-            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.Rotate90ToolStripMenuItem.Text = "&Tourner à 90°";
             this.Rotate90ToolStripMenuItem.Click += new System.EventHandler(this.Rotate90ToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(147, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // transmissionToolStripMenuItem
             // 
@@ -317,7 +317,7 @@ namespace MA400_export
             // 
             this.RecalibrerLaMachineToolStripMenuItem.Name = "RecalibrerLaMachineToolStripMenuItem";
             this.RecalibrerLaMachineToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.RecalibrerLaMachineToolStripMenuItem.Text = "&Rcalibrer la machine";
+            this.RecalibrerLaMachineToolStripMenuItem.Text = "&Recalibrer la machine";
             this.RecalibrerLaMachineToolStripMenuItem.Click += new System.EventHandler(this.RecalibrerLaMachineToolStripMenuItem_Click);
             // 
             // lireLeProgrammeEnMémoireToolStripMenuItem
@@ -677,9 +677,8 @@ namespace MA400_export
             this.Name = "MA400_export";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MA400_Export";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_Close);
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.FormClosing += new FormClosingEventHandler(this.Form1_Close);
-
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
