@@ -1,6 +1,7 @@
 ﻿using ACadSharp.Tables;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -15,17 +16,68 @@ namespace MA400_export
         private SerialPort _serialPort;
         private bool _isListening;
 
+        private Queue<string> _queue = new Queue<string>();
+        private Queue<PointF> _HeadPositionBuffer = new Queue<PointF>();
+
         public SerialConnection()
         {
             _isListening = false;
         }
+        /*___________________________________________________________________ UTIL ___________________________________________________________________*/
 
+        /**
+         * <returns>true if the derial port is open</returns>
+         */
         public bool IsOpen()
         {
             return _serialPort.IsOpen;
         }
 
+        /**
+         * <summary>Add a byte array to the recieved data buffer.</summary>
+         * <remarks>depending on the format recieved, this should either be useless or heaviely modifiede</remarks>
+         */
+        private void AddByteLineToBuffer(byte[] line)
+        {
+            //TODO connaitre le typage et le formatage des données transmise, sans quoi je ne peux rien faire
+            string stringline = "";
+            _queue.Enqueue(stringline);
+        }
+
+        /**
+         * <summary>Attempt to add a new position to the buffer containing the welding head position</summary>
+         */
+        private void TryAddHeadPositionToBuffer() 
+        {
+            if(_queue.Count < 2)
+            {
+                return;
+            }
+            double Y;
+            double X;
+            try
+            {
+                string Xstring = _queue.Dequeue();
+                string Ystring = _queue.Dequeue();
+
+                X = Convert.ToDouble(Xstring);
+                Y = Convert.ToDouble(Ystring);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to get the Position of the Welding head. " + ex.Message);
+                return;
+            }
+            _HeadPositionBuffer.Enqueue(new PointF( (float)X, (float)Y));
+        }
+
         /*___________________________________________________________________ CONNECTION ___________________________________________________________________*/
+       
+        /**
+         * <summary>Open a port with the specified data</summary>
+         * <param name="data">the port data containing all the relevent informations.</param>
+         */
         public bool OpenConnection(SerialData data)
         {
             try
@@ -69,9 +121,12 @@ namespace MA400_export
             return false;
         }
 
+        /**
+         * <summary>Close the port if it was open</summary>
+         */
         public void CloseConnection()
         {
-            if (_serialPort?.IsOpen == true)
+            if (IsOpen())
             {
                 _serialPort.Close();
                 _serialPort.Dispose();
@@ -82,7 +137,9 @@ namespace MA400_export
         /*___________________________________________________________________ DATASENDER ___________________________________________________________________*/
 
 
-
+        /**
+         * <summary>Send a string into the port if it is open.</summary>
+         */
         public bool SendString(string data)
         {
             if (!_serialPort.IsOpen)
@@ -112,6 +169,9 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Send binary data into the port if it is open.</summary>
+         */
         public bool SendBinaryData(byte[] data)
         {
             if (!_serialPort.IsOpen)
@@ -142,6 +202,9 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>Send Hexa data into the port if it's open.</summary>
+         */
         public bool SendHexCommand(string hexString)
         {
             try
@@ -167,7 +230,9 @@ namespace MA400_export
         /*___________________________________________________________________ DATARECVER ___________________________________________________________________*/
 
 
-
+        /**
+         * <summary>read a string from the port if it's open.</summary>
+         */
         public string ReadStringData()
         {
             if (!_serialPort.IsOpen)
@@ -198,6 +263,9 @@ namespace MA400_export
             }
         }
 
+        /**
+         * <summary>read binary data from the port if it's open.</summary>
+         */
         public byte[] ReadBinaryData(int expectedBytes)
         {
             if (!_serialPort.IsOpen)
@@ -285,11 +353,7 @@ namespace MA400_export
             }
         }
 
-        /// <summary>
-        /// Envoie une commande et attend une réponse binaire de taille connue.
-        /// À appeler depuis un thread non-UI (Task.Run).
-        /// </summary>
-        /// 
+        
         /** <summary>
         * Send a command and await a certain number of bytes in response.<br></br>
         * Should be called from a non-UI thread ( Task.Run() ).
@@ -311,7 +375,6 @@ namespace MA400_export
                 _isListening = false; //async listen
             }
             int ReadTimeout = _serialPort.ReadTimeout;//sauvegarde
-            int i = 0;
             try
             {
                 _serialPort.DiscardInBuffer();
@@ -355,7 +418,12 @@ namespace MA400_export
 
         /*___________________________________________________________________ ASYNC DATARECVER ___________________________________________________________________*/
 
-
+        /**
+         * <summary>
+         * handle the behavior when reciving data (welding head position) into the port.<br></br>
+         * Send it to a buffer.
+         * </summary>
+         */
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             if (!_isListening)
@@ -370,6 +438,7 @@ namespace MA400_export
                     if (!string.IsNullOrEmpty(stringData))
                     {
                         //DataReceived?.Invoke(this, stringData);
+                        _queue.Enqueue(stringData);
                         MessageBox.Show("got something : " + stringData);
                     }
 
@@ -379,7 +448,8 @@ namespace MA400_export
                         byte[] binaryData = new byte[_serialPort.BytesToRead];
                         _serialPort.Read(binaryData, 0, binaryData.Length);
                         //BinaryDataReceived?.Invoke(this, binaryData);
-                        MessageBox.Show("got some binary shee : " + stringData);
+                        AddByteLineToBuffer(binaryData);
+                        MessageBox.Show("got some binary shee : " + binaryData);
 
                     }
                 }
@@ -388,14 +458,23 @@ namespace MA400_export
             {
                 Console.WriteLine($"Error in async data reception: {ex.Message}");
             }
+            TryAddHeadPositionToBuffer();
         }
 
+        /**
+         * <summary>Start listening to the port</summary>
+         */
         public void StartListening()
         {
+            //_serialPort.DiscardInBuffer(); rique de casse
             _isListening = true;
             Console.WriteLine("Started listening for serial data...");
         }
 
+
+        /**
+         * <summary>Stop listening to the port</summary>
+         */
         public void StopListening()
         {
             _isListening = false;

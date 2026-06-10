@@ -62,6 +62,7 @@ namespace MA400_export
 
         //Serial
         public SerialConnection _serial = null;
+        public bool ExecutingSerialCommand = false;
 
         public MA400_export()
         {
@@ -1446,6 +1447,9 @@ namespace MA400_export
 
         /*___________________________________________ SERIAL PORT FUNSIES ___________________________________________*/
 
+        /**
+         * <summary>Connect to the new serial port.</summary>
+         */
         private void connect_serial()
         {
             if (_serial == null)
@@ -1459,7 +1463,7 @@ namespace MA400_export
             }
             if (_serial.OpenConnection(serialData))
             {
-                _serial.StartListening();   //démarage de l'écoute (positions X/Y ?)    
+                _serial.StartListening();   //démarage de l'écoute (positions X/Y ?) donc au when ?
                 MessageBox.Show($"Connecté sur {serialData.COM}");
             }
             else
@@ -1467,11 +1471,18 @@ namespace MA400_export
                 MessageBox.Show("Connexion échouée. Vérifiez le port et les paramètres d'interface.");
             }
         }
-         private void disconnect_serial()
+
+        /**
+         * <summary>disconnect from the serial port</summary>
+         */
+        private void disconnect_serial()
          {
             _serial.CloseConnection();
          }
 
+        /**
+         * <summary>handle the behavior for when the launch programme button is pressed : launch the program and provide feedback of the head position.</summary>
+         */
         private void buttonExecuteProgram_Click(object sender, EventArgs e)
         {
             if (_serial == null || !_serial.IsOpen())
@@ -1479,13 +1490,25 @@ namespace MA400_export
                 MessageBox.Show("Connectez-vous d'abord à la machine via le menu de paramète.");
                 return;
             }
+
+            if (ExecutingSerialCommand)
+            {
+                MessageBox.Show("Veuillez patientez jusqu'a ce que la commande courante ce termine avant d'en executer une nouvelle.");
+                return;
+            }
+            ExecutingSerialCommand = true;
+
             //TODO : remplacer par la vraie commande
             _serial.SendString("CMD_RUN");
-            //maybe more to do
+            //TODO : traquer la tête de soudage
             
+            ExecutingSerialCommand = false; //fini
            
         }
 
+        /**
+         * <summary>handle the behavior for when the recalibrate button is pressed : recalibrate the machine head, may give feedback on the head posistion.</summary>
+         */
         private void RecalibrerLaMachineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO découvrir quel signal on utilise pour damander un recalibrage
@@ -1494,10 +1517,24 @@ namespace MA400_export
                 MessageBox.Show("Connectez-vous d'abord à la machine.");
                 return;
             }
+
+            if (ExecutingSerialCommand)
+            {
+                MessageBox.Show("Veuillez patientez jusqu'a ce que la commande courante ce termine avant d'en executer une nouvelle.");
+                return;
+            }
+            ExecutingSerialCommand = true;
+
             // TODO : remplacer "CMD_REF" par la vraie commande une fois connue
+            // TODO : traquer la tête de soudage ?
             _serial.SendString("CMD_REF");
+
+            ExecutingSerialCommand = false;//fini
         }
 
+        /**
+         * <summary>handle the behavior for when read loaded programme is pressed : reciev the program, display it and set the current parameters.</summary>
+         */
         private void lireLeProgrammeEnMémoireToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO découvrir le signal
@@ -1507,6 +1544,14 @@ namespace MA400_export
                 MessageBox.Show("Connectez-vous d'abord à la machine.");
                 return;
             }
+
+            if (ExecutingSerialCommand)
+            {
+                MessageBox.Show("Veuillez patientez jusqu'a ce que la commande courante ce termine avant d'en executer une nouvelle.");
+                return;
+            }
+            ExecutingSerialCommand = true;
+
             //recupere le programme
             string[] lines = null;
             string message = "";
@@ -1534,9 +1579,15 @@ namespace MA400_export
             }
 
             fs.ReadRecivedAREProgram(lines);
+            //TODO : display & param
+
+            ExecutingSerialCommand = false;//fini
 
         }
 
+        /**
+         * <summary>handle the behavior for when the tranfer program button is pressed : transfer the whole are program to the machine.</summary>
+         */
         private void transmettreUnProgrammeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO découvrir le signal
@@ -1547,6 +1598,12 @@ namespace MA400_export
                 return;
             }
 
+            if (ExecutingSerialCommand)
+            {
+                MessageBox.Show("Veuillez patientez jusqu'a ce que la commande courante ce termine avant d'en executer une nouvelle.");
+                return;
+            }
+            ExecutingSerialCommand = true;
 
             // TODO menu openfile dialog pour fichier are
             if (openFileDialogARETransfer.ShowDialog() != DialogResult.OK)
@@ -1554,6 +1611,8 @@ namespace MA400_export
                 MessageBox.Show("Fichier are invalide.");
                 return;
             }
+
+            
 
             string arepath = openFileDialogARETransfer.FileName;
 
@@ -1576,6 +1635,8 @@ namespace MA400_export
                 this.Invoke(new Action(() => MessageBox.Show("Transfert terminé."))); //pas dans le thread d'écriture
 
             });
+
+            ExecutingSerialCommand = false;//fini
         }
 
 
