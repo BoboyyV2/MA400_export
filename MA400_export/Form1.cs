@@ -126,6 +126,7 @@ namespace MA400_export
                         paramètresPTS300ToolStripMenuItem.Visible = true;
                         paramètresInterfaceToolStripMenuItem.Visible = true;
                         this.buttonStart.Visible = true;
+                        this.transmissionToolStripMenuItem.Visible = true;
                         fs.GetParametersPTS300();
 
                         if (!string.IsNullOrEmpty(Properties.Settings.Default.OutputPath))

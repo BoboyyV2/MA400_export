@@ -29,6 +29,10 @@ namespace MA400_export
 
         private Circle FramedCircle;
 
+        public bool displayWeldingHead;
+        public PointF WeldingHeadPosition;
+
+
         public GraphicsContainer(Graphics graphics)
         {
             this.graphics = graphics;
@@ -44,7 +48,8 @@ namespace MA400_export
             open = false;
             layout = new Layout_Info();
             FramedCircle = null;
-
+            displayWeldingHead = false;
+            WeldingHeadPosition = new PointF();
         }
 
         /**
@@ -380,6 +385,32 @@ namespace MA400_export
                 DrawFrameOverCircle(FramedCircle);
             }
         }
+
+
+        private void DrawWeldingHead()
+        {
+            if (displayWeldingHead)
+            {
+                //lagreur scale avec le rayon
+                Pen pen = new Pen(Color.Red, 0.7f);
+
+                //get les points où on commence les traits
+                PointF topleft     = new PointF(WeldingHeadPosition.X - 15 + Constants.Origin_Coord.X , WeldingHeadPosition.Y - 15 + Constants.Origin_Coord.Y);
+                PointF bottomleft  = new PointF(WeldingHeadPosition.X - 15 + Constants.Origin_Coord.X , WeldingHeadPosition.Y + 15 + Constants.Origin_Coord.Y); 
+                PointF topright    = new PointF(WeldingHeadPosition.X + 15 + Constants.Origin_Coord.X , WeldingHeadPosition.Y - 15 + Constants.Origin_Coord.Y); 
+                PointF bottomright = new PointF(WeldingHeadPosition.X + 15 + Constants.Origin_Coord.X , WeldingHeadPosition.Y + 15 + Constants.Origin_Coord.Y);
+
+                //draw
+
+                graphics.DrawLine(pen, topleft, topright);
+                graphics.DrawLine(pen, topright, bottomright);
+                graphics.DrawLine(pen, bottomright, bottomleft);
+                graphics.DrawLine(pen, bottomleft, topleft);
+
+
+            }
+        }
+
         /**
          * <summary>Paint everything onto the graphics</summary>
          */

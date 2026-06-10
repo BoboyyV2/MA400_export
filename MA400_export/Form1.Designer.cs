@@ -287,21 +287,21 @@ namespace MA400_export
             // rotateToolStripMenuItem
             // 
             this.rotateToolStripMenuItem.Name = "rotateToolStripMenuItem";
-            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.rotateToolStripMenuItem.Text = "&Tourner à 180°";
             this.rotateToolStripMenuItem.Click += new System.EventHandler(this.rotateToolStripMenuItem_Click);
             // 
             // Rotate90ToolStripMenuItem
             // 
             this.Rotate90ToolStripMenuItem.Name = "Rotate90ToolStripMenuItem";
-            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.Rotate90ToolStripMenuItem.Text = "&Tourner à 90°";
             this.Rotate90ToolStripMenuItem.Click += new System.EventHandler(this.Rotate90ToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(147, 6);
             // 
             // transmissionToolStripMenuItem
             // 
@@ -312,6 +312,7 @@ namespace MA400_export
             this.transmissionToolStripMenuItem.Name = "transmissionToolStripMenuItem";
             this.transmissionToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
             this.transmissionToolStripMenuItem.Text = "&Transmission";
+            this.transmissionToolStripMenuItem.Visible = false;
             // 
             // RecalibrerLaMachineToolStripMenuItem
             // 
