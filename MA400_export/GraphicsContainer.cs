@@ -436,7 +436,7 @@ namespace MA400_export
 
 
             DrawFramedCircle();
-
+            DrawWeldingHead();
 
         }
 

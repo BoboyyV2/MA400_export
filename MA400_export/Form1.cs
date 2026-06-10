@@ -1498,13 +1498,17 @@ namespace MA400_export
                 return;
             }
             ExecutingSerialCommand = true;
+            gc.displayWeldingHead = true;
 
             //TODO : remplacer par la vraie commande
             _serial.SendString("CMD_RUN");
             //TODO : traquer la tête de soudage
             
             ExecutingSerialCommand = false; //fini
-           
+            gc.displayWeldingHead = true;
+            WorkZone.Invalidate();
+
+
         }
 
         /**
