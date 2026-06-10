@@ -20,6 +20,11 @@ namespace MA400_export
             _isListening = false;
         }
 
+        public bool IsOpen()
+        {
+            return _serialPort.IsOpen;
+        }
+
         /*___________________________________________________________________ CONNECTION ___________________________________________________________________*/
         public bool OpenConnection(SerialData data)
         {
@@ -220,6 +225,133 @@ namespace MA400_export
             return null;
         }
 
+        /** <summary>
+         * Send a command and await a certain number of lines in response.<br></br>
+         * Should be called from a non-UI thread ( Task.Run() ).
+         * </summary>
+         * <param name="command">The command to send</param>
+         * <param name="expectedLines">The expected number of lines</param>
+         * <param name="timeoutPerLineMs">The max delay between two lines in ms</param>
+         * <returns>Liste des lignes reçues.</returns>
+         * */
+        public string[] SendAndReceiveLines(string command, int expectedLines, int timeoutPerLineMs = 250)//potentiellement super long 
+        {
+            if (!IsOpen()) return null;
+
+            var result = new string[expectedLines];
+            bool wasListening = false;
+            if (_isListening)
+            {
+                wasListening = true;
+                _isListening = false; //async listen
+            }
+            int ReadTimeout = _serialPort.ReadTimeout;//sauvegarde
+            int i = 0;
+            try
+            {
+                _serialPort.DiscardInBuffer();
+                _serialPort.ReadTimeout = timeoutPerLineMs;
+
+                _serialPort.WriteLine(command);
+                Console.WriteLine($"Envoyé : {command}, attente de {expectedLines} lignes.");
+
+                for ( i = 0 ; i < expectedLines; i++)
+                {
+                    string line = _serialPort.ReadLine();//
+                    result[i] = line;
+                }
+
+                return result;
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine($"Envoyé : {command}, Timeout après {i}/{expectedLines} lignes.");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Envoyé : {command}, Erreur : {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                //reset to previous values
+                _serialPort.ReadTimeout = ReadTimeout;
+                if (wasListening)
+                {
+                    _isListening = true;
+                }
+                
+            }
+        }
+
+        /// <summary>
+        /// Envoie une commande et attend une réponse binaire de taille connue.
+        /// À appeler depuis un thread non-UI (Task.Run).
+        /// </summary>
+        /// 
+        /** <summary>
+        * Send a command and await a certain number of bytes in response.<br></br>
+        * Should be called from a non-UI thread ( Task.Run() ).
+        * </summary>
+        * <param name="command">The command to send</param>
+        * <param name="expectedBytes">The expected number of bytes</param>
+        * <param name="timeoutMs">The max delay between two bytes in ms</param>
+        * <returns>Liste des lignes reçues.</returns>
+        * */
+        public byte[] SendAndReceiveBytes(byte[] command, int expectedBytes, int timeoutMs = 100)
+        {
+            
+            if (!IsOpen()) return null;
+
+            bool wasListening = false;
+            if (_isListening)
+            {
+                wasListening = true;
+                _isListening = false; //async listen
+            }
+            int ReadTimeout = _serialPort.ReadTimeout;//sauvegarde
+            int i = 0;
+            try
+            {
+                _serialPort.DiscardInBuffer();
+                _serialPort.ReadTimeout = timeoutMs;
+
+                _serialPort.Write(command, 0, command.Length);
+
+                byte[] buffer = new byte[expectedBytes];
+                int totalRead = 0;
+                while (totalRead < expectedBytes)
+                {
+                    int read = _serialPort.Read(buffer, totalRead, expectedBytes - totalRead);
+                    if (read == 0) break;
+                    totalRead += read;
+                }
+
+                byte[] result = new byte[totalRead];
+                Array.Copy(buffer, result, totalRead);
+                return result;
+            }
+            catch (TimeoutException)
+            {
+                Console.WriteLine($"[Request] Timeout binaire.");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Request] Erreur : {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                //reset to previous values
+                _serialPort.ReadTimeout = ReadTimeout;
+                if (wasListening)
+                {
+                    _isListening = true;
+                }
+            }
+        }
 
         /*___________________________________________________________________ ASYNC DATARECVER ___________________________________________________________________*/
 

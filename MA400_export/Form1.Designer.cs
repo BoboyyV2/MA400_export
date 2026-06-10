@@ -40,7 +40,6 @@ namespace MA400_export
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MA400_export));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.WorkZone = new DoubleBufferedPanel();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirprogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +63,11 @@ namespace MA400_export
             this.rotateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Rotate90ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.transmissionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RecalibrerLaMachineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lireLeProgrammeEnMémoireToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.transmettreUnProgrammeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.WorkZone = new DoubleBufferedPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.StudList_Display = new System.Windows.Forms.ListBox();
             this.StudsMenuLabel = new System.Windows.Forms.Label();
@@ -95,23 +99,11 @@ namespace MA400_export
             this.openFileDialogARE = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialogARE = new System.Windows.Forms.SaveFileDialog();
             this.buttonStart = new System.Windows.Forms.Button();
-            this.transmissionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialogARETransfer = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
             this.SuspendLayout();
-            // 
-            // WorkZone
-            // 
-            this.WorkZone.AutoSize = true;
-            this.WorkZone.Location = new System.Drawing.Point(1, 52);
-            this.WorkZone.Name = "WorkZone";
-            this.WorkZone.Size = new System.Drawing.Size(800, 600);
-            this.WorkZone.TabIndex = 10;
-            this.WorkZone.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkZone_Paint);
-            this.WorkZone.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Click);
-            this.WorkZone.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorkZone_MouseMove);
-            this.WorkZone.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Zoom);
             // 
             // menuStrip1
             // 
@@ -310,6 +302,49 @@ namespace MA400_export
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(147, 6);
+            // 
+            // transmissionToolStripMenuItem
+            // 
+            this.transmissionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RecalibrerLaMachineToolStripMenuItem,
+            this.lireLeProgrammeEnMémoireToolStripMenuItem,
+            this.transmettreUnProgrammeToolStripMenuItem});
+            this.transmissionToolStripMenuItem.Name = "transmissionToolStripMenuItem";
+            this.transmissionToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.transmissionToolStripMenuItem.Text = "&Transmission";
+            // 
+            // RecalibrerLaMachineToolStripMenuItem
+            // 
+            this.RecalibrerLaMachineToolStripMenuItem.Name = "RecalibrerLaMachineToolStripMenuItem";
+            this.RecalibrerLaMachineToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.RecalibrerLaMachineToolStripMenuItem.Text = "&Rcalibrer la machine";
+            this.RecalibrerLaMachineToolStripMenuItem.Click += new System.EventHandler(this.RecalibrerLaMachineToolStripMenuItem_Click);
+            // 
+            // lireLeProgrammeEnMémoireToolStripMenuItem
+            // 
+            this.lireLeProgrammeEnMémoireToolStripMenuItem.Name = "lireLeProgrammeEnMémoireToolStripMenuItem";
+            this.lireLeProgrammeEnMémoireToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.lireLeProgrammeEnMémoireToolStripMenuItem.Text = "&Lire le programme en mémoire";
+            this.lireLeProgrammeEnMémoireToolStripMenuItem.Click += new System.EventHandler(this.lireLeProgrammeEnMémoireToolStripMenuItem_Click);
+            // 
+            // transmettreUnProgrammeToolStripMenuItem
+            // 
+            this.transmettreUnProgrammeToolStripMenuItem.Name = "transmettreUnProgrammeToolStripMenuItem";
+            this.transmettreUnProgrammeToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.transmettreUnProgrammeToolStripMenuItem.Text = "&Transmettre un programme";
+            this.transmettreUnProgrammeToolStripMenuItem.Click += new System.EventHandler(this.transmettreUnProgrammeToolStripMenuItem_Click);
+            // 
+            // WorkZone
+            // 
+            this.WorkZone.AutoSize = true;
+            this.WorkZone.Location = new System.Drawing.Point(1, 52);
+            this.WorkZone.Name = "WorkZone";
+            this.WorkZone.Size = new System.Drawing.Size(800, 600);
+            this.WorkZone.TabIndex = 10;
+            this.WorkZone.Paint += new System.Windows.Forms.PaintEventHandler(this.WorkZone_Paint);
+            this.WorkZone.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Click);
+            this.WorkZone.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorkZone_MouseMove);
+            this.WorkZone.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.WorkZone_Zoom);
             // 
             // toolStrip1
             // 
@@ -605,11 +640,9 @@ namespace MA400_export
             this.buttonStart.Visible = false;
             this.buttonStart.Click += new System.EventHandler(this.buttonExecuteProgram_Click);
             // 
-            // transmissionToolStripMenuItem
+            // openFileDialogARETransfer
             // 
-            this.transmissionToolStripMenuItem.Name = "transmissionToolStripMenuItem";
-            this.transmissionToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
-            this.transmissionToolStripMenuItem.Text = "&Transmission";
+            this.openFileDialogARETransfer.Filter = "are files (*.are)|*are";
             // 
             // MA400_export
             // 
@@ -645,6 +678,8 @@ namespace MA400_export
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MA400_Export";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.FormClosing += new FormClosingEventHandler(this.Form1_Close);
+
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -715,6 +750,10 @@ namespace MA400_export
         private ToolStripMenuItem paramètresInterfaceToolStripMenuItem;
         private Button buttonStart;
         private ToolStripMenuItem transmissionToolStripMenuItem;
+        private ToolStripMenuItem RecalibrerLaMachineToolStripMenuItem;
+        private ToolStripMenuItem lireLeProgrammeEnMémoireToolStripMenuItem;
+        private ToolStripMenuItem transmettreUnProgrammeToolStripMenuItem;
+        private OpenFileDialog openFileDialogARETransfer;
     }
 }
 

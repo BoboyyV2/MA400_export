@@ -1174,7 +1174,7 @@ namespace MA400_export
 
             ref int[] param = ref Gen.PTS_300_CURRENT_PARAM;
             //get les valeurs des paramètres du fichier, si une valeur n'est pas un entier valide, affiche un message d'erreur et arrête la lecture des paramètres
-            while (numline < 100)
+            while (numline < AREProdFileGenerator.AREParameterSize )
             {
                 try
                 {
@@ -1197,13 +1197,13 @@ namespace MA400_export
          */
         private void ReadAREStuds(ref string[] file, ref int numline)
         {
-            if (numline < 100) {
+            if (numline < AREProdFileGenerator.AREParameterSize) {
                 return;
             }
 
             int nbStuds = 0;
             double X = 0, Y = 0;
-            while (numline < 1000)
+            while (numline < AREProdFileGenerator.AREProgramSize)
             {
                 //X
                 try
@@ -1244,7 +1244,7 @@ namespace MA400_export
          */
         public void ReadAREComments(ref string[] file, ref int numline)
         {
-            if (numline < 1000)
+            if (numline < AREProdFileGenerator.AREProgramSize)
             {
                 return;
             }
@@ -1478,6 +1478,13 @@ namespace MA400_export
             (Gen as AREProdFileGenerator).SaveCurrentValues();
             (Gen as AREProdFileGenerator).writePTS300Parameters();
 
+        }
+
+        internal void ReadRecivedAREProgram(object[] recived )
+        {
+
+            (Gen as AREProdFileGenerator).ReadRecievedAREProgram(recived);
+            
         }
 
         /*______________________________________________*/

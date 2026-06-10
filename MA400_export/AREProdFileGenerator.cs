@@ -14,6 +14,10 @@ namespace MA400_export
 {
     public class AREProdFileGenerator : ProdFileGenerator
     {
+
+        public static int AREProgramSize = 1000;
+        public static int AREParameterSize = 100;//TODO : remplacer les occurence des nb magiques
+
         public AREProdFileGenerator(BindingList<Stud> Studs, CadObjectCollection<Entity> Entities, RectangleF Dimension,
                                     PointF Offset, Scale Scalefact, double Rotation)
                                     : base(Studs, ref Entities, Dimension, Offset, Scalefact, Rotation)
@@ -231,7 +235,7 @@ namespace MA400_export
             }
 
             //get les valeurs des paramètres du fichier, si une valeur n'est pas un entier valide, affiche un message d'erreur et arrête la lecture des paramètres
-            for (int lineIndex = 0; lineIndex < 100; lineIndex++)
+            for (int lineIndex = 0; lineIndex < AREParameterSize; lineIndex++)
             {
                 try
                 {
@@ -244,10 +248,10 @@ namespace MA400_export
                     return;
                 }
             }
-            PTS_300_CURRENT_COMMENTS = new string[100];
+            PTS_300_CURRENT_COMMENTS = new string[AREParameterSize];
 
             //get les commentaires des paramètres du fichier si il y en a
-            for (int lineIndex = 100; lineIndex < file.Length; lineIndex++)
+            for (int lineIndex = AREParameterSize; lineIndex < file.Length; lineIndex++)
             {
                 //for each comment, get the line it belongs to
                 //format =
@@ -352,6 +356,26 @@ namespace MA400_export
         {
             PTS_300_SAVE_PARAM.CopyTo(PTS_300_CURRENT_PARAM, 0);
             PTS_300_SAVE_COMMENTS.CopyTo(PTS_300_CURRENT_COMMENTS, 0);
+        }
+
+        internal void ReadRecievedAREProgram(object[] recieved)
+        {
+            if(recieved.Length != AREProgramSize)// taille d'un program
+            {
+                MessageBox.Show("Taille du programme reçu invalide.");
+                return;
+            }
+
+            //params
+            for(int i = 0 ; i < AREParameterSize ; i++)
+            {
+                PTS_300_CURRENT_PARAM[i] = Convert.ToInt32(recieved[i]);
+            }
+
+            for(int i = AREParameterSize ;i < AREProgramSize ; i++)
+            {
+
+            }
         }
 
 

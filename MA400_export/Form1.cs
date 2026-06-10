@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Security;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
@@ -58,12 +59,22 @@ namespace MA400_export
 
         //name of the opened file without the extension, used for the name of the output files
         public string fileName = "";
-        //the print utilities
+
+        //Serial
+        public SerialConnection _serial = null;
 
         public MA400_export()
         {
             InitializeComponent();
             StudList_Display.DataSource = fs.Studs;
+        }
+
+        private void Form1_Close(object sender, FormClosingEventArgs e)
+        {
+            if (_serial != null)
+            { 
+            _serial.CloseConnection();
+            }
         }
 
         /**
@@ -1298,8 +1309,13 @@ namespace MA400_export
                 settingsWindow.ShowDialog();
                 //c'est tout
             }
+            
         }
 
+        /**
+         * <summary>Show the serial port settings form when the menu item is clicked</summary>
+         * <remarks>also open the serial connection at the end</remarks>
+         */
         private void paramètresInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO menu de paramètres du port série
@@ -1309,8 +1325,15 @@ namespace MA400_export
 
                 serialSettings.ShowDialog();
                 serialData = serialSettings.data;
-                //c'est tout
+
+                if (serialSettings.tryConnect)
+                {
+                    //connect
+                    connect_serial();
+                    serialSettings.tryConnect = false;
+                }
             }
+            
         }
 
         /*___________________________________________ROTATE___________________________________________*/
@@ -1423,38 +1446,136 @@ namespace MA400_export
 
         /*___________________________________________ SERIAL PORT FUNSIES ___________________________________________*/
 
-
+        private void connect_serial()
+        {
+            if (_serial == null)
+            {
+                _serial = new SerialConnection();
+            }
+            else
+            {
+                disconnect_serial();
+                _serial = new SerialConnection();
+            }
+            if (_serial.OpenConnection(serialData))
+            {
+                _serial.StartListening();   //démarage de l'écoute (positions X/Y ?)    
+                MessageBox.Show($"Connecté sur {serialData.COM}");
+            }
+            else
+            {
+                MessageBox.Show("Connexion échouée. Vérifiez le port et les paramètres d'interface.");
+            }
+        }
+         private void disconnect_serial()
+         {
+            _serial.CloseConnection();
+         }
 
         private void buttonExecuteProgram_Click(object sender, EventArgs e)
         {
-            //DEBUG
-            SerialConnection reciever = new SerialConnection();
-
-            SerialData outputdata = new SerialData();
-            outputdata.COM = "COM10";
-            outputdata.ParityBit = serialData.ParityBit;
-            outputdata.StopBit = serialData.StopBit;
-            outputdata.DataBits = serialData.DataBits;
-            outputdata.BaudRate = serialData.BaudRate;
-            outputdata.UpdateInterval = serialData.UpdateInterval;
-
-            reciever.OpenConnection(outputdata);
-            reciever.StartListening();
-            /*____________________________________*/
-
-            SerialConnection sc = new SerialConnection();
-            sc.OpenConnection(serialData);
-
-            sc.SendString("truite");
-
-            sc.CloseConnection();
-
-            /*____________________________________*/
-
-            reciever.StopListening();
-            reciever.CloseConnection();
-
+            if (_serial == null || !_serial.IsOpen())
+            {
+                MessageBox.Show("Connectez-vous d'abord à la machine via le menu de paramète.");
+                return;
+            }
+            //TODO : remplacer par la vraie commande
+            _serial.SendString("CMD_RUN");
+            //maybe more to do
+            
            
+        }
+
+        private void RecalibrerLaMachineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO découvrir quel signal on utilise pour damander un recalibrage
+            if (_serial == null || !_serial.IsOpen())
+            {
+                MessageBox.Show("Connectez-vous d'abord à la machine.");
+                return;
+            }
+            // TODO : remplacer "CMD_REF" par la vraie commande une fois connue
+            _serial.SendString("CMD_REF");
+        }
+
+        private void lireLeProgrammeEnMémoireToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO découvrir le signal
+            //recup le programme, le lis, affiche les goujons et met les paramètres dans current
+            if (_serial == null || !_serial.IsOpen())
+            {
+                MessageBox.Show("Connectez-vous d'abord à la machine.");
+                return;
+            }
+            //recupere le programme
+            string[] lines = null;
+            string message = "";
+            Task task = Task.Run(() =>
+            {
+                // TODO : adapter la commande de lecture
+                lines = _serial.SendAndReceiveLines("CMD_READ_PROGRAM", expectedLines: AREProdFileGenerator.AREProgramSize);
+
+                if (lines == null || lines.Length == 0)
+                {
+                    message += "Aucune donnée reçue.";
+                }
+                else
+                {
+                    message += $"Programme reçu : {lines.Length} lignes.";//toujours 1000
+                }
+            });
+
+            task.Wait();
+            
+            if(!String.IsNullOrEmpty(message))
+            { 
+                MessageBox.Show(message);
+                return;
+            }
+
+            fs.ReadRecivedAREProgram(lines);
+
+        }
+
+        private void transmettreUnProgrammeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //TODO découvrir le signal
+            //on envoie notre programme 
+            if (_serial == null || !_serial.IsOpen())
+            {
+                MessageBox.Show("Connectez-vous d'abord à la machine.");
+                return;
+            }
+
+
+            // TODO menu openfile dialog pour fichier are
+            if (openFileDialogARETransfer.ShowDialog() != DialogResult.OK)
+            {
+                MessageBox.Show("Fichier are invalide.");
+                return;
+            }
+
+            string arepath = openFileDialogARETransfer.FileName;
+
+            string[] areContent = File.ReadAllLines(arepath);
+
+            //En arrière-plan pour ne pas bloquer l'UI
+            Task.Run(() =>
+            {
+                //TODO : trouver la commande de démarrage de transfert
+                _serial.SendString("CMD_SEND_PROGRAM");
+                
+
+                //envoie du contenu ligne par ligne
+                foreach (string line in areContent)
+                {
+                    bool ok = _serial.SendString(line);
+                    if (!ok) break;
+                }
+
+                this.Invoke(new Action(() => MessageBox.Show("Transfert terminé."))); //pas dans le thread d'écriture
+
+            });
         }
 
 

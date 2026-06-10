@@ -35,6 +35,9 @@ namespace MA400_export
     public partial class SerialPortSettings : Form
     {
         public SerialData data;
+
+        //bool set when apply or ok is pressed and it succed, signal to the main form that a new connection is necessary
+        public bool tryConnect = false;
         public SerialPortSettings()
         {
             InitializeComponent();
@@ -218,6 +221,7 @@ namespace MA400_export
             if (fillDataValues())
             {
                 Util.writeToJson(data, Constants.MainPath + Constants.paramPath + "SerialData.json");
+                tryConnect = true;
             }
         }
 
@@ -230,6 +234,7 @@ namespace MA400_export
             if (fillDataValues())
             {
                 Util.writeToJson(data, Constants.MainPath + Constants.paramPath + "SerialData.json");
+                tryConnect = true;
                 DialogResult = DialogResult.OK;
             }
 

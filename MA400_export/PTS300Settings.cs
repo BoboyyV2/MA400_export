@@ -14,8 +14,8 @@ namespace MA400_export
     public partial class PTS300Settings : Form
     {
         public Form mainParent = null;
-        private int[] backupParam = new int[100];
-        private string[] backupComms = new string[100];
+        private int[] backupParam = new int[AREProdFileGenerator.AREParameterSize];
+        private string[] backupComms = new string[AREProdFileGenerator.AREParameterSize];
         public PTS300Settings()
         {
             InitializeComponent();
@@ -28,7 +28,7 @@ namespace MA400_export
         {
             InitializeComponent();
 
-            for(int i = 0; i<100; i++)
+            for(int i = 0; i< AREProdFileGenerator.AREParameterSize; i++)
             {
                 this.dataGridView1.Rows.Add(settingsvalue[i], comments[i]);
             }
@@ -73,7 +73,7 @@ namespace MA400_export
         private bool ValidateSettingsFormat()
         {
 
-            string[] values = new string[100];
+            string[] values = new string[AREProdFileGenerator.AREParameterSize];
             int numline = 0;
             //get all values
             foreach (DataGridViewRow row in dataGridView1.Rows)
@@ -92,7 +92,7 @@ namespace MA400_export
                 }
                 
             }
-            if(numline != 100)
+            if(numline != AREProdFileGenerator.AREParameterSize)
             {
                 MessageBox.Show("Nombre de paramètres récuperés invalide.");
                 return false;
@@ -115,8 +115,8 @@ namespace MA400_export
 
         private bool SaveSettingsValues(ref int[]CurrentSettings, ref string[]CurrentComments)
         {
-            string[] Comments = new string[100];
-            int[] Settings = new int[100];
+            string[] Comments = new string[AREProdFileGenerator.AREParameterSize];
+            int[] Settings = new int[AREProdFileGenerator.AREParameterSize];
 
             int numline = 0;
 
@@ -200,7 +200,7 @@ namespace MA400_export
             ref int[] defaultparameters =  ref Form1.fs.GetPTS300CurrentParameters();
             ref string[] defaultcomment = ref Form1.fs.GetPTS300CurrentComments();
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < AREProdFileGenerator.AREParameterSize; i++)
             {
                 dataGridView1.Rows[i].SetValues(new object[] { defaultparameters[i], defaultcomment[i] });
             }
