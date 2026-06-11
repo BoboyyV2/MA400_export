@@ -1629,7 +1629,7 @@ namespace MA400_export
 
                 if (lines == null || lines.Length == 0)
                 {
-                    message += "Aucune donnée reçue.";
+                    message += "Aucune donnée reçue, vérifier la connexion à la machine.";
                 }
                 else
                 {
@@ -1714,10 +1714,11 @@ namespace MA400_export
                 }
 
                 this.Invoke(new Action(() => MessageBox.Show("Transfert terminé."))); //pas dans le thread d'écriture
+                this.Invoke(new Action(() => ExecutingSerialCommand = false));//fini
 
             });
 
-            ExecutingSerialCommand = false;//fini
+            //ExecutingSerialCommand = false;//fini on met ça dans le run invoke
         }
 
         
