@@ -362,7 +362,7 @@ namespace MA400_export
 
         internal void ReadRecievedAREProgram(object[] recieved)
         {
-            if(recieved.Length != AREProgramSize)// taille d'un program
+            if(recieved == null ||recieved.Length != AREProgramSize)// taille d'un program
             {
                 MessageBox.Show("Taille du programme reçu invalide.");
                 return;

@@ -8,6 +8,7 @@ using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Security;
 using System.Threading.Tasks;
 using System.Web;
@@ -1575,6 +1576,29 @@ namespace MA400_export
             ExecutingSerialCommand = false;//fini
         }
 
+        private void endReadMemoryProgram(string message, string[] lines)
+        {
+            if (!String.IsNullOrEmpty(message))
+            {
+                MessageBox.Show(message);
+                ExecutingSerialCommand = false;//fini
+                return;
+            }
+
+            reset();
+            fs.ReadRecivedAREProgram(lines);
+
+            IsNew = false;
+
+            gc.OpenCanvas();
+            fs.OpenProdFileLayout(gc.layout);
+
+            DisplayWhenOpen(true);
+            //TODO : display & param
+
+            ExecutingSerialCommand = false;//fini
+        }
+
         /**
          * <summary>handle the behavior for when read loaded programme is pressed : reciev the program, display it and set the current parameters.</summary>
          */
@@ -1612,8 +1636,10 @@ namespace MA400_export
                     message += $"Programme reçu : {lines.Length} lignes.";//toujours 1000
                 }
             });
-
-            task.Wait();
+            this.Invoke(new Action(() => endReadMemoryProgram(message, lines) ));
+                
+            /*
+             * task.Wait();
             
             if(!String.IsNullOrEmpty(message))
             { 
@@ -1634,6 +1660,7 @@ namespace MA400_export
             //TODO : display & param
 
             ExecutingSerialCommand = false;//fini
+            */
 
         }
 
