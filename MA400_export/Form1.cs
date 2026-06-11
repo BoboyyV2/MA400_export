@@ -1351,6 +1351,13 @@ namespace MA400_export
                 MessageBox.Show("aucun fichier ou programme ouvert.");
                 return;
             }
+
+            if (fs.isAreProgram)
+            {
+                MessageBox.Show("Les Prgoramme are ne peuvent pas être tournés, ils n'ont pas d'information de placement");
+                return;
+            }
+
             fs.RotatePart180();
             gc.reset();
             gc.OpenCanvas();
@@ -1370,6 +1377,13 @@ namespace MA400_export
                 MessageBox.Show("aucun fichier ou programme ouvert.");
                 return;
             }
+
+            if (fs.isAreProgram)
+            {
+                MessageBox.Show("Les Prgoramme are ne peuvent pas être tournés, ils n'ont pas d'information de placement");
+                return;
+            }
+
             fs.RotatePart90();
             gc.reset();
             gc.OpenCanvas();
@@ -1383,6 +1397,12 @@ namespace MA400_export
             if (!fs.open)
             {
                 MessageBox.Show("aucun fichier ou programme ouvert.");
+                return;
+            }
+
+            if (fs.isAreProgram)
+            {
+                MessageBox.Show("Les Prgoramme are ne peuvent pas être renversés, ils n'ont pas d'information de placement");
                 return;
             }
 

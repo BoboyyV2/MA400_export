@@ -71,6 +71,8 @@ namespace MA400_export
         private XYZ bl;
         private XYZ br;
 
+        public bool isAreProgram { get; private set; }
+
 
 
         /**
@@ -98,6 +100,7 @@ namespace MA400_export
             Doc = new CadDocument();
             Studs.Clear();
             layout = new Layout_Info();//must be initialized later on before scanning the entities
+            isAreProgram = false;
 
         }
 
@@ -255,6 +258,14 @@ namespace MA400_export
             return ((angle % 360) + 360) % 360;
         }
 
+
+        private void initCorner()
+        {
+            tl = new XYZ(0, 0, 0);
+            tr = new XYZ(layout.dimension.Width, 0, 0);
+            bl = new XYZ(0, layout.dimension.Height, 0);
+            br = new XYZ(layout.dimension.Width, layout.dimension.Height, 0);
+        }
         
 
         /*_____________________________________FRAME_____________________________________*/
@@ -540,6 +551,7 @@ namespace MA400_export
         {
             //set the new layout
             this.layout = layout;
+            initCorner();
 
 
             //no addrange defined 
@@ -759,6 +771,7 @@ namespace MA400_export
         {
             //set the new layout
             this.layout = layout;
+            initCorner();
 
 
             //no addrange defined 
@@ -836,6 +849,8 @@ namespace MA400_export
         public void OpenDdxfFileLayout(Layout_Info layout, string path)
         {
             this.layout = layout;
+            initCorner();
+
             //read the sdxf for the studs
             ScanDdxfEntities(path);
         }
@@ -908,10 +923,8 @@ namespace MA400_export
         {
             //init the layout
             this.layout = layout;
-            tl = new XYZ(0, 0, 0);
-            tr = new XYZ(layout.dimension.Width, 0, 0);
-            bl = new XYZ(0, layout.dimension.Height, 0);
-            br = new XYZ(layout.dimension.Width, layout.dimension.Height, 0);
+            
+            initCorner();
 
             ScanDxfEntities();
         }
@@ -992,6 +1005,8 @@ namespace MA400_export
         public void OpenProdFileLayout(Layout_Info layout)
         {
             this.layout = layout;
+            initCorner();
+
         }
 
 
@@ -1231,6 +1246,7 @@ namespace MA400_export
             SaveToFile(tmpPath + @"\dxftmp.ddxf");
 
             open = true;
+            isAreProgram = true;
 
         }
 
@@ -1565,10 +1581,10 @@ namespace MA400_export
 
         }
 
-        internal void ReadRecivedAREProgram(object[] recived )
+        internal void ReadRecivedAREProgram(object[] recieved )
         {
 
-            (Gen as AREProdFileGenerator).ReadRecievedAREProgram(recived);
+            (Gen as AREProdFileGenerator).ReadRecievedAREProgram(recieved);
             
         }
 
