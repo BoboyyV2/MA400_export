@@ -10,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Security;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI.WebControls;
@@ -1542,12 +1543,16 @@ namespace MA400_export
             //TODO : remplacer par la vraie commande
             _serial.SendString("CMD_RUN");
             //TODO : traquer la tête de soudage
-            
+            //jusqu'a ce qu'on reçoive l'info que tout est bon
+
+            //debug to see if it works, it does
+            WorkZone.Refresh();
+            Thread.Sleep(2000);
+
             ExecutingSerialCommand = false; //fini
-            gc.displayWeldingHead = true;
+            gc.displayWeldingHead = false;
+
             WorkZone.Invalidate();
-
-
         }
 
         /**
@@ -1576,6 +1581,11 @@ namespace MA400_export
             ExecutingSerialCommand = false;//fini
         }
 
+
+        /**
+         * <summary>check if the program recieved is valid and properly end the reading</summary>
+         * <remarks>this function is part of the lireLeProgrammeEnMémoireToolStripMenuItem_Click function and is used in an invoke</remarks>
+         */
         private void endReadMemoryProgram(string message, string[] lines)
         {
             if (!String.IsNullOrEmpty(message))
@@ -1718,7 +1728,6 @@ namespace MA400_export
 
             });
 
-            //ExecutingSerialCommand = false;//fini on met ça dans le run invoke
         }
 
         

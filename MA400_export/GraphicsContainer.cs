@@ -392,13 +392,13 @@ namespace MA400_export
             if (displayWeldingHead)
             {
                 //lagreur scale avec le rayon
-                Pen pen = new Pen(Color.Red, 0.7f);
+                Pen pen = new Pen(Color.White, 0.8f);
 
                 //get les points où on commence les traits
-                PointF topleft     = new PointF(WeldingHeadPosition.X - 15 + Constants.Origin_Coord.X , WeldingHeadPosition.Y - 15 + Constants.Origin_Coord.Y);
-                PointF bottomleft  = new PointF(WeldingHeadPosition.X - 15 + Constants.Origin_Coord.X , WeldingHeadPosition.Y + 15 + Constants.Origin_Coord.Y); 
-                PointF topright    = new PointF(WeldingHeadPosition.X + 15 + Constants.Origin_Coord.X , WeldingHeadPosition.Y - 15 + Constants.Origin_Coord.Y); 
-                PointF bottomright = new PointF(WeldingHeadPosition.X + 15 + Constants.Origin_Coord.X , WeldingHeadPosition.Y + 15 + Constants.Origin_Coord.Y);
+                PointF topleft     = new PointF(WeldingHeadPosition.X - 12 + Constants.Origin_Coord.X , WeldingHeadPosition.Y - 12 + Constants.Origin_Coord.Y);
+                PointF bottomleft  = new PointF(WeldingHeadPosition.X - 12 + Constants.Origin_Coord.X , WeldingHeadPosition.Y + 12 + Constants.Origin_Coord.Y); 
+                PointF topright    = new PointF(WeldingHeadPosition.X + 12 + Constants.Origin_Coord.X , WeldingHeadPosition.Y - 12 + Constants.Origin_Coord.Y); 
+                PointF bottomright = new PointF(WeldingHeadPosition.X + 12 + Constants.Origin_Coord.X , WeldingHeadPosition.Y + 12 + Constants.Origin_Coord.Y);
 
                 //draw
 
