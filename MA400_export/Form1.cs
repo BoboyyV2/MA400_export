@@ -1633,10 +1633,11 @@ namespace MA400_export
                 }
                 else
                 {
-                    message += $"Programme reçu : {lines.Length} lignes.";//toujours 1000
+                    Console.WriteLine($"Programme reçu : {lines.Length} lignes.");//toujours 1000
                 }
+                this.Invoke(new Action(() => endReadMemoryProgram(message, lines)));
+
             });
-            this.Invoke(new Action(() => endReadMemoryProgram(message, lines) ));
                 
             /*
              * task.Wait();
