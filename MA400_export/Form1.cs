@@ -1618,6 +1618,7 @@ namespace MA400_export
             if(!String.IsNullOrEmpty(message))
             { 
                 MessageBox.Show(message);
+                ExecutingSerialCommand = false;//fini
                 return;
             }
 
@@ -1652,6 +1653,7 @@ namespace MA400_export
             if (openFileDialogARETransfer.ShowDialog() != DialogResult.OK)
             {
                 MessageBox.Show("Fichier are invalide.");
+                ExecutingSerialCommand = false;//fini
                 return;
             }
 
