@@ -1313,9 +1313,8 @@ namespace MA400_export
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Fichier ARE mal formé, lecture de la position X d'un goujon impossible, passage au suivant" + e.Message);
-                    numline += 2;
-                    continue;
+                    Console.WriteLine("found an incorrect value in are file studs");
+                    return;//stop at first inconvenience
                 }
                 //Y
                 try
@@ -1324,9 +1323,8 @@ namespace MA400_export
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Fichier ARE mal formé, lecture de la position Y d'un goujon impossible, passage au suivant" + e.Message);
-                    numline += 1;
-                    continue;
+                    Console.WriteLine("found an incorrect value in are file studs");
+                    return;//stop at first inconvenience
                 }
 
                 //ajout du goujon à la liste
