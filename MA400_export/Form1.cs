@@ -1318,13 +1318,11 @@ namespace MA400_export
 
         /**
          * <summary>Show the serial port settings form when the menu item is clicked</summary>
-         * <remarks>also open the serial connection at the end</remarks>
+         * <remarks>also open the serial connection if the form is correctly filled</remarks>
          */
-        private void paramètresInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenSerialPortSettings()
         {
-            //TODO menu de paramètres du port série
-            //ouvre les options
-            using (SerialPortSettings serialSettings = new SerialPortSettings(serialData) )
+            using (SerialPortSettings serialSettings = new SerialPortSettings(serialData))
             {
 
                 serialSettings.ShowDialog();
@@ -1337,6 +1335,16 @@ namespace MA400_export
                     serialSettings.tryConnect = false;
                 }
             }
+        }
+
+        /**
+         * <summary>Show the serial port settings form when the menu item is clicked</summary>
+         * <remarks>also open the serial connection at the end</remarks>
+         */
+        private void paramètresInterfaceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //ouvre les options
+            OpenSerialPortSettings();
             
         }
 
@@ -1528,7 +1536,8 @@ namespace MA400_export
         {
             if (_serial == null || !_serial.IsOpen())
             {
-                MessageBox.Show("Connectez-vous d'abord à la machine via le menu de paramète.");
+                MessageBox.Show("Aucune connexion via port série détectée, ouverture du menu des paramètres de l'inerface...");
+                OpenSerialPortSettings();
                 return;
             }
 
@@ -1563,7 +1572,8 @@ namespace MA400_export
             //TODO découvrir quel signal on utilise pour damander un recalibrage
             if (_serial == null || !_serial.IsOpen())
             {
-                MessageBox.Show("Connectez-vous d'abord à la machine.");
+                MessageBox.Show("Aucune connexion via port série détectée, ouverture du menu des paramètres de l'inerface...");
+                OpenSerialPortSettings();
                 return;
             }
 
@@ -1618,7 +1628,8 @@ namespace MA400_export
             //recup le programme, le lis, affiche les goujons et met les paramètres dans current
             if (_serial == null || !_serial.IsOpen())
             {
-                MessageBox.Show("Connectez-vous d'abord à la machine.");
+                MessageBox.Show("Aucune connexion via port série détectée, ouverture du menu des paramètres de l'inerface...");
+                OpenSerialPortSettings();
                 return;
             }
 
@@ -1684,7 +1695,8 @@ namespace MA400_export
             //on envoie notre programme 
             if (_serial == null || !_serial.IsOpen())
             {
-                MessageBox.Show("Connectez-vous d'abord à la machine.");
+                MessageBox.Show("Aucune connexion via port série détectée, ouverture du menu des paramètres de l'inerface...");
+                OpenSerialPortSettings();
                 return;
             }
 
