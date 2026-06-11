@@ -1622,7 +1622,15 @@ namespace MA400_export
                 return;
             }
 
+            reset();
             fs.ReadRecivedAREProgram(lines);
+
+            IsNew = false;
+
+            gc.OpenCanvas();
+            fs.OpenProdFileLayout(gc.layout);
+
+            DisplayWhenOpen(true);
             //TODO : display & param
 
             ExecutingSerialCommand = false;//fini
@@ -1652,7 +1660,7 @@ namespace MA400_export
             // TODO menu openfile dialog pour fichier are
             if (openFileDialogARETransfer.ShowDialog() != DialogResult.OK)
             {
-                MessageBox.Show("Fichier are invalide.");
+                MessageBox.Show("Fichier .are invalide.");
                 ExecutingSerialCommand = false;//fini
                 return;
             }

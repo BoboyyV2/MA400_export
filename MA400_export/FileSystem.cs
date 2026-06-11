@@ -409,7 +409,7 @@ namespace MA400_export
          */
         private XYZ BringToOrigin(XYZ point)
         {
-            return new XYZ(point.X - layout.offset.X, point.Y - layout.offset.Y, point.Y);
+            return new XYZ(point.X - layout.offset.X, point.Y - layout.offset.Y, point.Z);
         }
 
         /**
@@ -761,7 +761,7 @@ namespace MA400_export
             StudsTMP = oldStuds;
             
 
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            //SaveToFile(tmpPath + @"\dxftmp.ddxf");
         }
 
         /**
@@ -1217,7 +1217,7 @@ namespace MA400_export
         */
         public void OpenAREProdFile(string filename)
         {
-            string tmpPath = Properties.Settings.Default.OutputPath + Constants.tmpPath;
+            string tmpPath = Constants.MainPath + Constants.tmpPath;
             try
             {
                 Directory.CreateDirectory(tmpPath);
@@ -1309,7 +1309,7 @@ namespace MA400_export
                 //X
                 try
                 {
-                    X = Convert.ToDouble(file[numline++]);
+                    X = Convert.ToDouble(file[numline++], CultureInfo.GetCultureInfo("fr-FR"));
                 }
                 catch (Exception e)
                 {
@@ -1320,7 +1320,7 @@ namespace MA400_export
                 //Y
                 try
                 {
-                    Y = Convert.ToDouble(file[numline++]);
+                    Y = Convert.ToDouble(file[numline++], CultureInfo.GetCultureInfo("fr-FR"));
                 }
                 catch (Exception e)
                 {
@@ -1515,7 +1515,7 @@ namespace MA400_export
             AREProdFileGenerator AREGen = (AREProdFileGenerator)Gen;
             if (File.Exists(ParamPath + @"PTS_300_PARAM.txt"))
             {
-                AREGen.ReadPTS300Parameters(ParamPath + @"\PTS_300_PARAM.txt");
+                AREGen.ReadPTS300Parameters(ParamPath + @"PTS_300_PARAM.txt");
                 AREGen.SaveCurrentValues();
             }
             else
@@ -1583,8 +1583,37 @@ namespace MA400_export
 
         internal void ReadRecivedAREProgram(object[] recieved )
         {
+            string tmpPath = Constants.MainPath + Constants.tmpPath;
+            try
+            {
+                Directory.CreateDirectory(tmpPath);
+                Util.SetPermissions(tmpPath);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            catch
+            {
+                MessageBox.Show("Erreur lors de l'ouverture d'un fichier");
+            }
+
+            /*___________________________________*/
+
+            //si on a les fichiers =>
+            reset();
 
             (Gen as AREProdFileGenerator).ReadRecievedAREProgram(recieved);
+
+            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+
+            open = true;
+            isAreProgram = true;
+
             
         }
 

@@ -1,9 +1,11 @@
 ﻿using ACadSharp;
 using ACadSharp.Entities;
+using CSMath;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -369,12 +371,53 @@ namespace MA400_export
             //params
             for(int i = 0 ; i < AREParameterSize ; i++)
             {
-                PTS_300_CURRENT_PARAM[i] = Convert.ToInt32(recieved[i]);
+                try
+                {
+                    PTS_300_CURRENT_PARAM[i] = Convert.ToInt32(recieved[i]);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("echec de la lecture d'un paramètre" + e.Message + Environment.NewLine + "valeur de paramètre invalide : " + recieved[i]);
+                    return;
+                }
             }
 
-            for(int i = AREParameterSize ;i < AREProgramSize ; i++)
+            int nbStuds = 0;
+            double X = 0, Y = 0;
+            for (int i = AREParameterSize ;i < AREProgramSize ; i++)
             {
+            
+            
+            
+                //X
+                try
+                {
+                    X = Convert.ToDouble(recieved[i++], CultureInfo.GetCultureInfo("fr-FR"));
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Fichier ARE mal formé, lecture de la position X d'un goujon impossible, passage au suivant" + e.Message);
+                    i++;
+                    continue;
+                }
+                //Y
+                try
+                {
+                    Y = Convert.ToDouble(recieved[i], CultureInfo.GetCultureInfo("fr-FR"));
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Fichier ARE mal formé, lecture de la position Y d'un goujon impossible, passage au suivant" + e.Message);
+                    i++;
+                    continue;
+                }
 
+                //ajout du goujon à la liste
+                if (X != 0 || Y != 0)//si les deux sont à 0 alors c'est juste des 0 pour fill le fichier
+                {
+                    nbStuds++;
+                    Studs.Add(new Stud(new Circle() { Center = new XYZ(X, Y, 0), Radius = Constants.StudRadius3, Color = ACadSharp.Color.Green }));
+                }
             }
         }
 
