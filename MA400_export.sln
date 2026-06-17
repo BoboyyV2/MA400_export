@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MA400_export", "MA400_expor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{C18B7F1A-B47F-43FA-B75E-ADE40C50C1AA}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupWizard", "SetupWizard\SetupWizard.vdproj", "{CA0A3DDB-7917-4BF1-BE02-2F0D73BB58B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,12 @@ Global
 		{C18B7F1A-B47F-43FA-B75E-ADE40C50C1AA}.Release|x64.Build.0 = Release|x64
 		{C18B7F1A-B47F-43FA-B75E-ADE40C50C1AA}.Release|x86.ActiveCfg = Release|x86
 		{C18B7F1A-B47F-43FA-B75E-ADE40C50C1AA}.Release|x86.Build.0 = Release|x86
+		{CA0A3DDB-7917-4BF1-BE02-2F0D73BB58B0}.Debug|Any CPU.ActiveCfg = Debug
+		{CA0A3DDB-7917-4BF1-BE02-2F0D73BB58B0}.Debug|x64.ActiveCfg = Debug
+		{CA0A3DDB-7917-4BF1-BE02-2F0D73BB58B0}.Debug|x86.ActiveCfg = Debug
+		{CA0A3DDB-7917-4BF1-BE02-2F0D73BB58B0}.Release|Any CPU.ActiveCfg = Release
+		{CA0A3DDB-7917-4BF1-BE02-2F0D73BB58B0}.Release|x64.ActiveCfg = Release
+		{CA0A3DDB-7917-4BF1-BE02-2F0D73BB58B0}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
