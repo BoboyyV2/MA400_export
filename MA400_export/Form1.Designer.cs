@@ -427,7 +427,7 @@ namespace MA400_export
             // 
             // openFileDialogOpen
             // 
-            this.openFileDialogOpen.Filter = "dxf files (*.dxf)|*dxf|ddxf files(*.ddxf)|*.ddxf";
+            this.openFileDialogOpen.Filter = "dxf files (*.dxf)|*.dxf|ddxf files(*.ddxf)|*.ddxf";
             this.openFileDialogOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialogOpen_FileOk);
             // 
             // YCoord_Display

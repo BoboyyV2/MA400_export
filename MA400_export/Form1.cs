@@ -1,4 +1,5 @@
 ﻿using ACadSharp.Entities;
+using ACadSharp.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,10 +36,14 @@ namespace MA400_export
         //used variables
 
         //Zoom variables
+
+        //the a ctual zoom
         public float _Zoom = 1.0f;
+
+        //the delta factor when zooming or dezooming
         float zoomValue = 0.2f;
 
-        //position variables
+        //position variables for the zoom
         public PointF Origin_Offset = new PointF(0f, 0f);
         public PointF CursorPosition = new PointF(0f, 0f);
 
@@ -209,6 +214,9 @@ namespace MA400_export
             //including but not restricted to :
             //the background, the rectangular coordinate system, the scale
             //the workzone, the landmarks
+
+            Console.WriteLine("zoom = " + _Zoom);
+
 
             gc.graphics = e.Graphics;
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
@@ -1097,7 +1105,7 @@ namespace MA400_export
             reset();
             bool open = false;
             string filename = this.openFileDialogOpen.FileName;
-            string extension = Path.GetExtension(filename);
+            string extension = Path.GetExtension(filename).ToLowerInvariant();
             fileName = Path.GetFileNameWithoutExtension(filename);
 
             switch (extension)
@@ -1154,7 +1162,7 @@ namespace MA400_export
                     return;
             }
 
-
+            ImportRescale();
             DisplayWhenOpen(open);
         }
 
@@ -1220,6 +1228,7 @@ namespace MA400_export
                     gc.OpenCanvas();
                     fs.OpenProdFileLayout(gc.layout);
 
+                    ImportRescale();
                     DisplayWhenOpen(true);
                 }
 
@@ -1250,6 +1259,7 @@ namespace MA400_export
                 gc.OpenCanvas();
                 fs.OpenProdFileLayout(gc.layout);
 
+                ImportRescale();
                 DisplayWhenOpen(true);
             }
 
@@ -1613,6 +1623,7 @@ namespace MA400_export
             gc.OpenCanvas();
             fs.OpenProdFileLayout(gc.layout);
 
+            ImportRescale();
             DisplayWhenOpen(true);
             //TODO : display & param
 
@@ -1660,29 +1671,7 @@ namespace MA400_export
 
             });
                 
-            /*
-             * task.Wait();
-            
-            if(!String.IsNullOrEmpty(message))
-            { 
-                MessageBox.Show(message);
-                ExecutingSerialCommand = false;//fini
-                return;
-            }
-
-            reset();
-            fs.ReadRecivedAREProgram(lines);
-
-            IsNew = false;
-
-            gc.OpenCanvas();
-            fs.OpenProdFileLayout(gc.layout);
-
-            DisplayWhenOpen(true);
-            //TODO : display & param
-
-            ExecutingSerialCommand = false;//fini
-            */
+           
 
         }
 
@@ -1742,11 +1731,48 @@ namespace MA400_export
 
         }
 
-        
+
+        /*___________________________________________RESCALE___________________________________________*/
 
 
+        /**
+         * <summary>Rescale the workzone on import and center the part </summary>
+         */
+        public void ImportRescale()
+        {
+            //calcul le ratio de mise a l'échelle
+            float x = gc.layout.dimension.Width;
+            float y = gc.layout.dimension.Height;
 
+            float Xratio = WorkZone.Size.Width  / x;
+            float Yratio = WorkZone.Size.Height / y;
 
+            if(Xratio <= Yratio)
+            {
+                _Zoom = (Xratio * 0.7f);
+            }else{
+                _Zoom = (Yratio * 0.8f);
+            }
+
+            //et rescalte
+
+            if (_Zoom > Constants.Max_Zoom)
+            {
+                _Zoom = Constants.Max_Zoom;
+            }
+            else if (_Zoom < Constants.Min_Zoom)
+            {
+                _Zoom = Constants.Min_Zoom;
+            }
+
+            //centre la pièce 
+            float offsetx = Constants.Origin_Coord.X + x / 2 - x * 0.7f;
+            float offsety = Constants.Origin_Coord.Y + y / 2 - y * 0.8f;
+            Origin_Offset = new PointF(offsetx,offsety);
+
+            WorkZone.Invalidate();
+
+        }
 
 
 
