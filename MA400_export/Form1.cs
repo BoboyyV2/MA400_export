@@ -930,49 +930,59 @@ namespace MA400_export
          */
         private void WorkZone_Click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            //check if the control key is pressed
-            if ((Control.ModifierKeys & Keys.Control) != 0)
+            
+            switch(e.Button)
             {
-                WorkZone_Click_Turn_Framed_Circle_Into_Stud();
-                return;
-            }
-
-            if (e.Button == MouseButtons.Left)
-            {
-                switch (editMode)
+                case MouseButtons.Left:
                 {
-
-                    //select
-                    case EditMode.SelectStud:
-                        WorkZone_Click_SelectStud();
-                        break;
-
-                    //add
-                    case EditMode.AddStud:
-                        WorkZone_Click_AddStud();
-                        break;
-
-                    //remove
-                    case EditMode.RemoveStud:
-                        WorkZone_Click_RemoveStud();
-                        break;
-
-                    default:
-                        //cursor
-                        break;
-                }
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-
-                switch (editMode)
-                {
-
-                    //add
-                    case EditMode.AddStud:
+                    //check if the control key is pressed
+                    if ((Control.ModifierKeys & Keys.Control) != 0)
+                    {
                         WorkZone_Click_Turn_Framed_Circle_Into_Stud();
-                        break;
+                        return;
+                    }
+                    switch (editMode)
+                    {
+
+                        //select
+                        case EditMode.SelectStud:
+                            WorkZone_Click_SelectStud();
+                            break;
+
+                        //add
+                        case EditMode.AddStud:
+                            WorkZone_Click_AddStud();
+                            break;
+
+                        //remove
+                        case EditMode.RemoveStud:
+                            WorkZone_Click_RemoveStud();
+                            break;
+
+                        default:
+                            //cursor
+                            break;
+                    }
+
+                    
                 }
+                    break;
+
+                case MouseButtons.Right :
+                    switch (editMode)
+                    {
+                        //add
+                        case EditMode.AddStud:
+                            WorkZone_Click_Turn_Framed_Circle_Into_Stud();
+                            break;
+
+                        default:
+                            //cursor
+                            break;
+                    }
+                    break;
+
+                default : break;
             }
 
         }
