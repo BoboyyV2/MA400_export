@@ -221,8 +221,6 @@ namespace MA400_export
             //the background, the rectangular coordinate system, the scale
             //the workzone, the landmarks
 
-            Console.WriteLine("zoom = " + _Zoom);
-
             gc.graphics = e.Graphics;
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
