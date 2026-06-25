@@ -63,6 +63,7 @@ namespace MA400_export
             this.rotateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Rotate90ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.renverserLaPièceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.transmissionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RecalibrerLaMachineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lireLeProgrammeEnMémoireToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -100,7 +101,6 @@ namespace MA400_export
             this.saveFileDialogARE = new System.Windows.Forms.SaveFileDialog();
             this.buttonStart = new System.Windows.Forms.Button();
             this.openFileDialogARETransfer = new System.Windows.Forms.OpenFileDialog();
-            this.renverserLaPièceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemBindingSource)).BeginInit();
@@ -290,21 +290,28 @@ namespace MA400_export
             // rotateToolStripMenuItem
             // 
             this.rotateToolStripMenuItem.Name = "rotateToolStripMenuItem";
-            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rotateToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.rotateToolStripMenuItem.Text = "&Tourner à 180°";
             this.rotateToolStripMenuItem.Click += new System.EventHandler(this.rotateToolStripMenuItem_Click);
             // 
             // Rotate90ToolStripMenuItem
             // 
             this.Rotate90ToolStripMenuItem.Name = "Rotate90ToolStripMenuItem";
-            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Rotate90ToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.Rotate90ToolStripMenuItem.Text = "&Tourner à 90°";
             this.Rotate90ToolStripMenuItem.Click += new System.EventHandler(this.Rotate90ToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(165, 6);
+            // 
+            // renverserLaPièceToolStripMenuItem
+            // 
+            this.renverserLaPièceToolStripMenuItem.Name = "renverserLaPièceToolStripMenuItem";
+            this.renverserLaPièceToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.renverserLaPièceToolStripMenuItem.Text = "&Renverser la pièce";
+            this.renverserLaPièceToolStripMenuItem.Click += new System.EventHandler(this.renverserLaPièceToolStripMenuItem_Click);
             // 
             // transmissionToolStripMenuItem
             // 
@@ -648,13 +655,6 @@ namespace MA400_export
             // 
             this.openFileDialogARETransfer.Filter = "are files (*.are)|*are";
             // 
-            // renverserLaPièceToolStripMenuItem
-            // 
-            this.renverserLaPièceToolStripMenuItem.Name = "renverserLaPièceToolStripMenuItem";
-            this.renverserLaPièceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.renverserLaPièceToolStripMenuItem.Text = "&Renverser la pièce";
-            this.renverserLaPièceToolStripMenuItem.Click += new System.EventHandler(this.renverserLaPièceToolStripMenuItem_Click);
-            // 
             // MA400_export
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -684,6 +684,7 @@ namespace MA400_export
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.WorkZone);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(780, 540);
             this.Name = "MA400_export";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

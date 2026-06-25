@@ -97,6 +97,9 @@
   <PropertyGroup>
     <StartupObject>MA400_export.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>construction.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ACadSharp, Version=3.4.29.0, Culture=neutral, PublicKeyToken=835670d357149d36, processorArchitecture=MSIL">
       <HintPath>..\packages\ACadSharp.3.4.29\lib\netstandard2.0\ACadSharp.dll</HintPath>
@@ -275,6 +278,9 @@
       <Project>{e1083e6f-23ee-4ec0-beb5-6eaf10169c79}</Project>
       <Name>DXFImporter</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="construction.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
