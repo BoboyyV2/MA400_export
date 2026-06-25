@@ -34,7 +34,7 @@ namespace MA400_export
 
     public partial class MA400_export : Form
     {
-
+        public int WindowID;
         //used variables
 
         //workzone size
@@ -46,15 +46,15 @@ namespace MA400_export
         public float _Zoom = 1.0f;
 
         //the delta factor when zooming or dezooming
-        float zoomValue = 0.2f;
+        readonly float zoomValue = 0.2f;
 
         //position variables for the zoom
         public PointF Origin_Offset = new PointF(0f, 0f);
         public PointF CursorPosition = new PointF(0f, 0f);
 
 
-        public FileSystem fs = new FileSystem();
-        public GraphicsContainer gc = new GraphicsContainer();
+        public FileSystem fs;
+        public GraphicsContainer gc;
 
 
         private string savepath = string.Empty;
@@ -76,11 +76,20 @@ namespace MA400_export
         public SerialConnection _serial = null;
         public bool ExecutingSerialCommand = false;
 
+        public void SetID(int ID)
+        {
+            this.WindowID = ID;
+            this.gc.ID = ID;
+            this.fs.ID = ID;
+        }
         public MA400_export()
         {
             InitializeComponent();
+            fs = new FileSystem();
+            gc = new GraphicsContainer();
             StudList_Display.DataSource = fs.Studs;
             WorkZone_Size = new Size(WorkZone.Size.Width, WorkZone.Size.Height);
+            
         }
 
         private void Form1_Close(object sender, FormClosingEventArgs e)
@@ -1202,7 +1211,7 @@ namespace MA400_export
          */
         private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Close();
         }
 
 

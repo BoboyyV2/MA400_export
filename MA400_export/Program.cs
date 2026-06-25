@@ -13,7 +13,7 @@ namespace MA400_export
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MA400_export());
+            Application.Run(new MDIParent());
         }
     }
 }

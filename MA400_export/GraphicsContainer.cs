@@ -32,6 +32,7 @@ namespace MA400_export
         public bool displayWeldingHead;
         public PointF WeldingHeadPosition;
 
+        public int ID;
 
         public GraphicsContainer(Graphics graphics)
         {
@@ -39,7 +40,6 @@ namespace MA400_export
             open = false;
             layout = new Layout_Info();
             FramedCircle = null;
-
         }
 
         public GraphicsContainer()
@@ -50,6 +50,7 @@ namespace MA400_export
             FramedCircle = null;
             displayWeldingHead = false;
             WeldingHeadPosition = new PointF();
+
         }
 
         /**
@@ -254,7 +255,7 @@ namespace MA400_export
          */
         public void OpenCanvas()
         {
-            canvas.ReadFromFile(Constants.MainPath + Constants.tmpPath + @"\dxftmp.ddxf");
+            canvas.ReadFromFile(Constants.MainPath + Constants.tmpPath + @"\dxftmp" + ID + ".ddxf");
             open = true;
 
             GetLayout();

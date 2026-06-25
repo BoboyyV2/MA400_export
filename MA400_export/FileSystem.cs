@@ -72,7 +72,7 @@ namespace MA400_export
         private XYZ br;
 
         public bool isAreProgram { get; private set; }
-
+        public int ID;
 
 
         /**
@@ -84,7 +84,6 @@ namespace MA400_export
             open = false;
             Studs = new BindingList<Stud>();
             layout = new Layout_Info();//must be initialized later on before scanning the entities
-
         }
 
 
@@ -514,10 +513,10 @@ namespace MA400_export
                 oldStuds.Add(s);
             }
 
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            SaveToFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf"));
 
             //ré open le fichier tmp en ddxf
-            OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
+            OpenDDxfFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf"));
 
             //save the rotated studs => used in OpenFlipFileLayout()
             StudsTMP = oldStuds;
@@ -752,16 +751,15 @@ namespace MA400_export
                 oldStuds.Add(s);
             }
 
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            SaveToFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf"));
 
             //ré open le fichier tmp en ddxf
-            OpenDDxfFile(tmpPath + @"\dxftmp.ddxf");
+            OpenDDxfFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf"));
 
             //save the rotated studs => used in OpenFlipFileLayout()
             StudsTMP = oldStuds;
             
 
-            //SaveToFile(tmpPath + @"\dxftmp.ddxf");
         }
 
         /**
@@ -834,8 +832,7 @@ namespace MA400_export
 
 
             //save dans un fichier temporaire pour l'affichage / traitement
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
-
+            SaveToFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf") );
             open = true;
 
             return true;
@@ -907,7 +904,7 @@ namespace MA400_export
 
 
             //save dans un fichier temporaire pour l'affichage / traitement
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            SaveToFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf"));
 
             open = true;
 
@@ -994,7 +991,7 @@ namespace MA400_export
 
 
 
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            SaveToFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf") );
 
             open = true;
 
@@ -1243,7 +1240,7 @@ namespace MA400_export
 
             ReadARE(filename); 
 
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            SaveToFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf") );
 
             open = true;
             isAreProgram = true;
@@ -1607,7 +1604,7 @@ namespace MA400_export
 
             (Gen as AREProdFileGenerator).ReadRecievedAREProgram(recieved);
 
-            SaveToFile(tmpPath + @"\dxftmp.ddxf");
+            SaveToFile(Path.Combine(tmpPath, "dxftmp" + ID + ".ddxf"));
 
             open = true;
             isAreProgram = true;
