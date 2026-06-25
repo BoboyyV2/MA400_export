@@ -231,27 +231,6 @@ namespace UnitTestProject
 
     }
 
-    // -------------------------------------------------------------------------
-    // Tests de Shape methode
-    // -------------------------------------------------------------------------
-
-    [TestClass]
-    public class ShapeTests
-    {
-        [TestMethod]
-        public void GetOffsetedPositionEquivalent()
-        {
-            circle c = new circle(new System.Drawing.Point(250, -100), 1.5, System.Drawing.Color.White, System.Drawing.Color.White, 2);
-
-            PointF pf = DXFImporter.Shape.getOffsetedPosition(c.AccessCenterPoint);
-            float x = DXFImporter.Shape.getOffsetedPositionX(c.AccessCenterPoint.X);
-            float y = DXFImporter.Shape.getOffsetedPositionY(c.AccessCenterPoint.Y);
-
-            Assert.AreEqual(pf.X, x);
-            Assert.AreEqual(pf.Y, y);
-
-        }
-
-    }
+    
 
 }

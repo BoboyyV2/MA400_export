@@ -270,11 +270,11 @@ namespace MA400_export
         public void CloseCanvas()
         {
             canvas = new Canvas();
-            DXFImporter.Shape.Dimension = new RectangleF();
-            DXFImporter.Shape.PartOffset = new PointF();
+            canvas.Dimensions = new RectangleF();
+            canvas.PartOffset = new PointF();
 
             //may not be needed
-            DXFImporter.Shape.OriginOffset = new PointF();
+            canvas.OriginOffsetForDisplay = new PointF();
         }
 
         /**
