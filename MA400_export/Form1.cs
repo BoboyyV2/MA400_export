@@ -1,9 +1,11 @@
 ﻿using ACadSharp.Entities;
 using ACadSharp.Objects;
+using CSMath;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.Globalization;
@@ -221,7 +223,6 @@ namespace MA400_export
 
             Console.WriteLine("zoom = " + _Zoom);
 
-
             gc.graphics = e.Graphics;
             gc.graphics.ScaleTransform(_Zoom, _Zoom);
             gc.graphics.TranslateTransform(-Origin_Offset.X, -Origin_Offset.Y);
@@ -342,43 +343,8 @@ namespace MA400_export
 
 
         /*_________________________________________ZOOM_________________________________________*/
-        /**
-         * <summary>function used to compute the zoom offset </summary>
-         */
-        private void updateOrigin_Offset(PointF predicted_offset, float offsetX_min, float offsetX_max, float offsetY_min, float offsetY_max, float zoom_delta)
-        {
-
-            //offsetX
-            if (predicted_offset.X < offsetX_min)
-            {
-                Origin_Offset.X = offsetX_min;
-
-            }
-            else if (predicted_offset.X > offsetX_max)
-            {
-                Origin_Offset.X = offsetX_max;
-            }
-            else
-            {
-                Origin_Offset.X = predicted_offset.X;
-            }
-
-            //offsetY
-            if (predicted_offset.Y < offsetY_min)
-            {
-                Origin_Offset.Y = offsetY_min;
-
-            }
-            else if (predicted_offset.Y > offsetY_max)
-            {
-                Origin_Offset.Y = offsetY_max;
-            }
-            else
-            {
-                Origin_Offset.Y = predicted_offset.Y;
-            }
-
-        }
+        
+        
 
         /**
          * <summary>Zoom or dezoom on the workzone whenever the mouse is scrolled.</summary>
@@ -388,27 +354,46 @@ namespace MA400_export
         {
             //compute the zoom values
             float zoom_delta = (e.Delta > 0 ? zoomValue : -zoomValue);
-            float new_Zoom = Math.Max(Math.Min(_Zoom + zoom_delta, Constants.Max_Zoom), Constants.Min_Zoom);
+            float new_Zoom ;
 
+            if(zoom_delta > 0)
+            {
+                new_Zoom = Math.Max(Math.Min( _Zoom * (1 + zoomValue), Constants.Max_Zoom), Constants.Min_Zoom);
+            }
+            else
+            {
+                new_Zoom = Math.Max(Math.Min(_Zoom * (1 - zoomValue), Constants.Max_Zoom), Constants.Min_Zoom);
+            }
             //if needs be
             if (new_Zoom != _Zoom)
             {
-                //update mouse position
-                UpdateCoords();
-                zoom_delta = new_Zoom - _Zoom;
+                zoom_delta = new_Zoom / _Zoom;
 
+                //get cursor position
+                PointF cursorpos = WorkZone.PointToClient(Cursor.Position);
+
+                
                 //check if we stay in bounds
-                PointF predicted_offset = new PointF(Origin_Offset.X + CursorPosition.X / _Zoom * zoom_delta, Origin_Offset.Y + CursorPosition.Y / _Zoom * zoom_delta);
-                float offsetX_min = -Constants.Origin_Coord.X - 141.6f;
-                float offsetY_min = -Constants.Origin_Coord.X;
+                //PointF predicted_offset = new PointF(Origin_Offset.X + (CursorPosition.X / WorkZone.Size.Width) * zoom_delta, Origin_Offset.Y + (CursorPosition.Y / WorkZone.Size.Height) * zoom_delta);
+                SizeF CurrentWorkzoneSize = new SizeF(WorkZone.Size.Width / _Zoom, WorkZone.Size.Height / _Zoom);
 
+                SizeF zoomedWorkzoneSize = new SizeF(WorkZone.Size.Width / new_Zoom, WorkZone.Size.Height / new_Zoom);
+                PointF predicted_offset = new PointF(Origin_Offset.X + (cursorpos.X / WorkZone.Size.Width ) * (CurrentWorkzoneSize.Width  - zoomedWorkzoneSize.Width ),
+                                                     Origin_Offset.Y + (cursorpos.Y / WorkZone.Size.Height ) * (CurrentWorkzoneSize.Height - zoomedWorkzoneSize.Height));
 
-                //depends on the zoom (can't see further away than 50 out of the worspace)
-                float offsetX_max = Constants.WorkZoneLimits_Coord.X + Constants.Origin_Coord.X - (WorkZone.Width / new_Zoom) + 141.6f;
-                float offsetY_max = Constants.WorkZoneLimits_Coord.Y + Constants.Origin_Coord.Y - (WorkZone.Height / new_Zoom);
+                float offsetX_min = -Constants.Origin_Coord.X - 100;
+                float offsetY_min = -Constants.Origin_Coord.Y - 100;
 
+                float offsetX_max = Constants.WorkZoneLimits_Coord.X + Constants.Origin_Coord.X - (WorkZone.Width / new_Zoom) + 200;
+                float offsetY_max = Constants.WorkZoneLimits_Coord.Y + Constants.Origin_Coord.Y - (WorkZone.Height / new_Zoom) + 200;
 
-                updateOrigin_Offset(predicted_offset, offsetX_min, offsetX_max, offsetY_min, offsetY_max, zoom_delta);
+                //offsetX
+                Origin_Offset.X = Math.Min(offsetX_max, Math.Max(offsetX_min, predicted_offset.X));
+
+                //offsetY
+                Origin_Offset.Y = Math.Min(offsetY_max, Math.Max(offsetY_min, predicted_offset.Y));
+
+             
 
                 setZoom(new_Zoom);
                 UpdateCoords();
