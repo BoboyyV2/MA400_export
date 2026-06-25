@@ -35,9 +35,12 @@ namespace MA400_export
 
         //used variables
 
+        //workzone size
+        Size WorkZone_Size;
+
         //Zoom variables
 
-        //the a ctual zoom
+        //the actual zoom
         public float _Zoom = 1.0f;
 
         //the delta factor when zooming or dezooming
@@ -75,6 +78,7 @@ namespace MA400_export
         {
             InitializeComponent();
             StudList_Display.DataSource = fs.Studs;
+            WorkZone_Size = new Size(WorkZone.Size.Width, WorkZone.Size.Height);
         }
 
         private void Form1_Close(object sender, FormClosingEventArgs e)
@@ -406,8 +410,7 @@ namespace MA400_export
 
                 updateOrigin_Offset(predicted_offset, offsetX_min, offsetX_max, offsetY_min, offsetY_max, zoom_delta);
 
-                _Zoom = new_Zoom;
-
+                setZoom(new_Zoom);
                 UpdateCoords();
                 //reframe a circle if needed
                 TryFrame();
@@ -1473,13 +1476,37 @@ namespace MA400_export
 
         /**
          * <summary>change the Worzone size whenever we resize the form</summary>
+         * <remarks>always repaint on resize</remarks>
          */
         private void Form1_Resize(object sender, EventArgs e)
         {
+            WorkZone_Size = WorkZone.Size;//save the old value
             WorkZone.Size = new Size(this.ClientSize.Width - Constants.Client_panel_delta_width, this.ClientSize.Height - Constants.Client_panel_delta_height);
+
+            //scale en fonction de la longeur
+            float scalefactor = (float)WorkZone.Size.Width / (float)WorkZone_Size.Width ;// new / old
+            mulitpyZoom(scalefactor);
 
         }
 
+
+        /**
+         * <summary>Multiply the zoom by factor and keep it in the limits</summary>
+         */
+        private void mulitpyZoom(float factor)
+        {
+            _Zoom = Math.Min(Constants.Max_Zoom, Math.Max(Constants.Min_Zoom, _Zoom * factor));
+            
+        }
+
+        /**
+         * <summary>ste the zoom to value and keep it in the limits</summary>
+         */
+        private void setZoom(float value)
+        {
+            _Zoom = Math.Min(Constants.Max_Zoom, Math.Max(Constants.Min_Zoom, value));
+
+        }
 
         /*___________________________________________PRINT___________________________________________*/
 
@@ -1747,28 +1774,19 @@ namespace MA400_export
             float Xratio = WorkZone.Size.Width  / x;
             float Yratio = WorkZone.Size.Height / y;
 
+            //et rescale
             if(Xratio <= Yratio)
             {
-                _Zoom = (Xratio * 0.7f);
+                setZoom(Xratio * 0.7f);
             }else{
-                _Zoom = (Yratio * 0.8f);
+                setZoom(Yratio * 0.7f);
             }
-
-            //et rescalte
-
-            if (_Zoom > Constants.Max_Zoom)
-            {
-                _Zoom = Constants.Max_Zoom;
-            }
-            else if (_Zoom < Constants.Min_Zoom)
-            {
-                _Zoom = Constants.Min_Zoom;
-            }
+           
 
             //centre la pièce 
-            float offsetx = Constants.Origin_Coord.X + x / 2 - x * 0.7f;
-            float offsety = Constants.Origin_Coord.Y + y / 2 - y * 0.8f;
-            Origin_Offset = new PointF(offsetx,offsety);
+            float offsetX = Constants.Origin_Coord.X + x / 2 - x * 0.7f;
+            float offsetY = Constants.Origin_Coord.Y + y / 2 - y * 0.7f;
+            Origin_Offset = new PointF(offsetX,offsetY);
 
             WorkZone.Invalidate();
 
